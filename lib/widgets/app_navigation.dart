@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'package:method_conf_app/theme.dart';
+import 'package:method_conf_app/utils/app_icons.dart';
+import 'package:method_conf_app/widgets/app_navigator.dart';
 import 'package:method_conf_app/screens/more_screen.dart';
 import 'package:method_conf_app/screens/not_found_screen.dart';
 import 'package:method_conf_app/screens/partners_screen.dart';
 import 'package:method_conf_app/screens/schedule_screen.dart';
 import 'package:method_conf_app/screens/social_feed_screen.dart';
-import 'package:method_conf_app/theme.dart';
-import 'package:method_conf_app/utils/app_icons.dart';
-import 'package:method_conf_app/widgets/app_navigator.dart';
+import 'package:method_conf_app/screens/speakers_screen.dart';
 
 class AppNavigation extends StatefulWidget {
   @override
@@ -20,7 +21,7 @@ class _AppNavigationState extends State<AppNavigation> {
     '/social-feed': (context) => SocialFeedScreen(),
     '/partners': (context) => PartnersScreen(),
     '/more': (context) => MoreScreen(),
-    '/more/nested': (context) => NestedMoreScreen(),
+    '/more/speakers': (context) => SpeakersScreen(),
   };
 
 

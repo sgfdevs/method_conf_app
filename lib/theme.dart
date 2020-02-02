@@ -10,7 +10,8 @@ class AppColors {
   static const primaryLight = Color(0xff484848);
   static const neutral = Color(0xff979797);
   static const neutralMidLight = Color(0xffb7b7b7);
-  static const neutralLight = Color(0xfff3f3f3);
+  static const neutralLight = Color(0xffd8d8d8);
+  static const neutralExtraLight = Color(0xfff3f3f3);
   static const twitterPrimary = Color(0xff1da1F2);
 }
 
