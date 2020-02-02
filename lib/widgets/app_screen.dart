@@ -24,7 +24,15 @@ class AppScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[_buildHeader(context), Expanded(child: body)],
+      children: <Widget>[
+        _buildHeader(context),
+        Expanded(
+          child: Container(
+            color: Colors.white,
+            child: SizedBox(width: double.infinity ,child: body),
+          ),
+        ),
+      ],
     );
   }
 

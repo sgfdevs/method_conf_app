@@ -20,7 +20,7 @@ class AppNavigator extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if(_navigatorKey.currentState.canPop()) {
+        if (_navigatorKey.currentState.canPop()) {
           _navigatorKey.currentState.pop();
           return false;
         }
@@ -30,25 +30,35 @@ class AppNavigator extends StatelessWidget {
       child: Navigator(
         key: _navigatorKey,
         initialRoute: initialRoute,
-        observers: [_AppNavigationObserver(onRouteChange: _onRouteChangeHandler)],
+        observers: [
+          _AppNavigationObserver(onRouteChange: _onRouteChangeHandler)
+        ],
         onUnknownRoute: (settings) {
-          return MaterialPageRoute(builder: notFoundBuilder, settings: settings);
+          return MaterialPageRoute(
+            builder: notFoundBuilder,
+            settings: settings,
+            maintainState: false,
+          );
         },
         onGenerateRoute: (settings) {
           var builder = routes[settings.name];
 
-          if(builder == null) {
+          if (builder == null) {
             return null;
           }
 
-          return MaterialPageRoute(builder: builder, settings: settings);
+          return MaterialPageRoute(
+            builder: builder,
+            settings: settings,
+            maintainState: false,
+          );
         },
       ),
     );
   }
 
   void _onRouteChangeHandler(Route newRoute) {
-    if(onRouteChange == null) {
+    if (onRouteChange == null) {
       return;
     }
 
@@ -60,7 +70,8 @@ class AppNavigator extends StatelessWidget {
   }
 
   static Future<T> pushNamed<T extends Object>(routeName, {Object arguments}) {
-    return _navigatorKey.currentState.pushNamed<T>(routeName, arguments: arguments);
+    return _navigatorKey.currentState
+        .pushNamed<T>(routeName, arguments: arguments);
   }
 
   static bool pop<T extends Object>([T result]) {
