@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
 import 'package:method_conf_app/screens/more_screen.dart';
@@ -8,52 +10,42 @@ import 'package:method_conf_app/screens/social_feed_screen.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 
-Map<String, WidgetBuilder> routes = {
-  '/schedule': (context) => ScheduleScreen(),
-  '/social-feed': (context) => SocialFeedScreen(),
-  '/partners': (context) => PartnersScreen(),
-  '/more': (context) => MoreScreen(),
-  '/more/nested': (context) => NestedMoreScreen(),
-};
-
-var navigationItems  = [
-  _NavigationItem(
-    route: '/schedule',
-    item: BottomNavigationBarItem(
-      icon: Icon(Icons.home),
-      title: Text('Schedule'),
-    ),
-  ),
-  _NavigationItem(
-    route: '/social-feed',
-    item: BottomNavigationBarItem(
-      icon: Icon(Icons.business),
-      title: Text('MethodConf'),
-    ),
-  ),
-  _NavigationItem(
-    route: '/partners',
-    item: BottomNavigationBarItem(
-      icon: Icon(Icons.school),
-      title: Text('Partners'),
-    ),
-  ),
-  _NavigationItem(
-    route: '/more',
-    item: BottomNavigationBarItem(
-      icon: Icon(Icons.details),
-      title: Text('More'),
-    ),
-  ),
-];
-
-
 class AppNavigation extends StatefulWidget {
   @override
   _AppNavigationState createState() => _AppNavigationState();
 }
 
 class _AppNavigationState extends State<AppNavigation> {
+  final Map<String, WidgetBuilder> routes = {
+    '/schedule': (context) => ScheduleScreen(),
+    '/social-feed': (context) => SocialFeedScreen(),
+    '/partners': (context) => PartnersScreen(),
+    '/more': (context) => MoreScreen(),
+    '/more/nested': (context) => NestedMoreScreen(),
+  };
+
+
+  List<_NavigationItem> get navigationItems {
+    return [
+      _NavigationItem(
+        route: '/schedule',
+        item: _buildNavigationBarItem(Icons.home, 'Schedule'),
+      ),
+      _NavigationItem(
+        route: '/social-feed',
+        item: _buildNavigationBarItem(Icons.business, 'MethodConf'),
+      ),
+      _NavigationItem(
+        route: '/partners',
+        item: _buildNavigationBarItem(Icons.school, 'Partners'),
+      ),
+      _NavigationItem(
+        route: '/more',
+        item: _buildNavigationBarItem(Icons.more_horiz, 'More'),
+      ),
+    ];
+  }
+
   int _selectedIndex = 0;
 
   @override
@@ -65,16 +57,29 @@ class _AppNavigationState extends State<AppNavigation> {
         notFoundBuilder: (context) => NotFoundScreen(),
         onRouteChange: _updateTabIndexOnRouteChange,
       ),
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(canvasColor: AppColors.primaryDark),
+      bottomNavigationBar: Container(
+        color: AppColors.primary,
         child: BottomNavigationBar(
+          backgroundColor: Colors.transparent,
           type: BottomNavigationBarType.fixed,
           items: navigationItems.map((i) => i.item).toList(),
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.white,
           unselectedItemColor: AppColors.primaryLight,
+          selectedFontSize: 12,
+          unselectedFontSize: 12,
           onTap: _onItemTapped,
         ),
+      ),
+    );
+  }
+
+  BottomNavigationBarItem _buildNavigationBarItem(IconData icon, String text) {
+    return BottomNavigationBarItem(
+      icon: Icon(icon, size: 25),
+      title: Text(
+        text,
+        style: TextStyle(fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -84,17 +89,13 @@ class _AppNavigationState extends State<AppNavigation> {
   }
 
   void _updateTabIndexOnRouteChange(Route newRoute) {
-    if(!mounted) {
-      return;
-    }
-
     var routes = navigationItems.map((i) => i.route).toList();
     var newIndex = 0;
 
     for (var index in Iterable<int>.generate(routes.length)) {
       var route = routes[index];
 
-      if(newRoute.settings.name.startsWith(route)) {
+      if (newRoute.settings.name.startsWith(route)) {
         newIndex = index;
         break;
       }
