@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 
 import 'package:method_conf_app/screens/more_screen.dart';
@@ -8,6 +6,7 @@ import 'package:method_conf_app/screens/partners_screen.dart';
 import 'package:method_conf_app/screens/schedule_screen.dart';
 import 'package:method_conf_app/screens/social_feed_screen.dart';
 import 'package:method_conf_app/theme.dart';
+import 'package:method_conf_app/utils/app_icons.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 
 class AppNavigation extends StatefulWidget {
@@ -29,15 +28,15 @@ class _AppNavigationState extends State<AppNavigation> {
     return [
       _NavigationItem(
         route: '/schedule',
-        item: _buildNavigationBarItem(Icons.home, 'Schedule'),
+        item: _buildNavigationBarItem(AppIcons.schedule, 'Schedule'),
       ),
       _NavigationItem(
         route: '/social-feed',
-        item: _buildNavigationBarItem(Icons.business, 'MethodConf'),
+        item: _buildNavigationBarItem(AppIcons.hashtag, 'MethodConf'),
       ),
       _NavigationItem(
         route: '/partners',
-        item: _buildNavigationBarItem(Icons.school, 'Partners'),
+        item: _buildNavigationBarItem(AppIcons.piggy_bank, 'Partners'),
       ),
       _NavigationItem(
         route: '/more',
