@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:method_conf_app/theme.dart';
+import 'package:method_conf_app/widgets/app_navigator.dart';
+
+var buildBackButtonCalled = 0;
 
 class AppScreen extends StatelessWidget {
   final Widget body;
@@ -31,25 +35,61 @@ class AppScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top,
+              bottom: 40,
+            ),
           ),
           preHeader ?? Container(),
-          _buildBackButton(context),
-          Text(
-            title,
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: AppColors.accent,
-                fontSize: 36,
-                fontWeight: FontWeight.bold),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildBackButton(context),
+                Text(
+                  title,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      color: AppColors.accent,
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ),
           postTitle ?? Container(),
+          Padding(padding: EdgeInsets.only(bottom: 30)),
         ],
       ),
     );
   }
 
   Widget _buildBackButton(BuildContext context) {
-    return Container();
+    var currentRouteName = ModalRoute.of(context).settings.name;
+
+    return Visibility(
+      visible: _isNestedRoute(currentRouteName),
+      maintainSize: true,
+      maintainAnimation: true,
+      maintainState: true,
+      maintainInteractivity: false,
+      child: GestureDetector(
+        child: Row(
+          children: <Widget>[
+            Icon(Icons.chevron_left, color: Colors.white),
+            Text('Back', style: TextStyle(color: Colors.white)),
+          ],
+        ),
+        onTap: () {
+          AppNavigator.pop();
+        },
+      ),
+    );
+  }
+
+  bool _isNestedRoute(String routeName) {
+    var segments = routeName.split('/').where((s) => s != '');
+    return segments.length >= 2;
   }
 }

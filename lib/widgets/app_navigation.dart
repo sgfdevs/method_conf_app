@@ -5,6 +5,7 @@ import 'package:method_conf_app/screens/not_found_screen.dart';
 import 'package:method_conf_app/screens/partners_screen.dart';
 import 'package:method_conf_app/screens/schedule_screen.dart';
 import 'package:method_conf_app/screens/social_feed_screen.dart';
+import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 
 Map<String, WidgetBuilder> routes = {
@@ -12,6 +13,7 @@ Map<String, WidgetBuilder> routes = {
   '/social-feed': (context) => SocialFeedScreen(),
   '/partners': (context) => PartnersScreen(),
   '/more': (context) => MoreScreen(),
+  '/more/nested': (context) => NestedMoreScreen(),
 };
 
 var navigationItems  = [
@@ -63,12 +65,16 @@ class _AppNavigationState extends State<AppNavigation> {
         notFoundBuilder: (context) => NotFoundScreen(),
         onRouteChange: _updateTabIndexOnRouteChange,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: navigationItems.map((i) => i.item).toList(),
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(canvasColor: AppColors.primaryDark),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          items: navigationItems.map((i) => i.item).toList(),
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: AppColors.primaryLight,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
