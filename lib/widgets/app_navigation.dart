@@ -57,13 +57,11 @@ class _AppNavigationState extends State<AppNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: AppNavigator(
-          initialRoute: '/schedule',
-          routes: routes,
-          notFoundBuilder: (context) => NotFoundScreen(),
-          onRouteChange: _updateTabIndexOnRouteChange,
-        ),
+      body: AppNavigator(
+        initialRoute: '/schedule',
+        routes: routes,
+        notFoundBuilder: (context) => NotFoundScreen(),
+        onRouteChange: _updateTabIndexOnRouteChange,
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
