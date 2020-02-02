@@ -12,7 +12,6 @@ Map<String, WidgetBuilder> routes = {
   '/social-feed': (context) => SocialFeedScreen(),
   '/partners': (context) => PartnersScreen(),
   '/more': (context) => MoreScreen(),
-  '/more/nested': (context) => NestedMoreScreen(),
 };
 
 var navigationItems  = [

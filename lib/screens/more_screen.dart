@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:method_conf_app/widgets/app_navigator.dart';
 
 class MoreScreen extends StatelessWidget {
   @override
@@ -7,12 +6,7 @@ class MoreScreen extends StatelessWidget {
     return Column(
       children: <Widget>[
         Container(child: Text('More'),),
-        RaisedButton(
-          child: Text('Navigate to Nested More'),
-          onPressed: () {
-            AppNavigator.pushNamed('/more/nested');
-          },
-        ),
+        Text('Navigate to Nested More'),
       ],
     );
   }
