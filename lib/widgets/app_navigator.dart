@@ -31,11 +31,14 @@ class AppNavigator extends StatelessWidget {
         key: _navigatorKey,
         initialRoute: initialRoute,
         observers: [_AppNavigationObserver(onRouteChange: _onRouteChangeHandler)],
+        onUnknownRoute: (settings) {
+          return MaterialPageRoute(builder: notFoundBuilder, settings: settings);
+        },
         onGenerateRoute: (settings) {
           var builder = routes[settings.name];
 
-          if (builder == null) {
-            builder = notFoundBuilder;
+          if(builder == null) {
+            return null;
           }
 
           return MaterialPageRoute(builder: builder, settings: settings);
@@ -49,6 +52,8 @@ class AppNavigator extends StatelessWidget {
       return;
     }
 
+    // Wait for widget tree to build before running callback
+    // This allows the callback to safely use setState
     SchedulerBinding.instance.addPersistentFrameCallback((_) {
       onRouteChange(newRoute);
     });
