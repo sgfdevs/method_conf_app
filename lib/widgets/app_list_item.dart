@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:method_conf_app/theme.dart';
@@ -10,8 +12,16 @@ class AppListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
+    return InkWell(
+      onTap: () {
+        if(onTap == null) {
+          return;
+        }
+
+        Timer(Duration(milliseconds: 100), () {
+          onTap();
+        });
+      },
       child: Container(
         decoration: BoxDecoration(
           border: Border(
