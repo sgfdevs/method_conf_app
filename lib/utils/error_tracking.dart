@@ -8,7 +8,7 @@ bool get isInDebugMode {
 }
 
 class ErrorTracker {
-  final SentryClient _sentry = new SentryClient(dsn: DotEnv().env['SENTRY_DSN']);
+//  final SentryClient _sentry = new SentryClient(dsn: DotEnv().env['SENTRY_DSN']);
 
   void reportError(dynamic error, dynamic stackTrace) {
     print('Caught error: $error');
@@ -19,10 +19,10 @@ class ErrorTracker {
     }
 
     try {
-      _sentry.captureException(
-        exception: error,
-        stackTrace: stackTrace,
-      );
+//      _sentry.captureException(
+//        exception: error,
+//        stackTrace: stackTrace,
+//      );
     } catch (e) {
       print('Sending report to sentry.io failed: $e');
       print('Original error: $error');
