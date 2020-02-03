@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 
-var buildBackButtonCalled = 0;
-
 class AppScreen extends StatelessWidget {
   final Widget body;
   final String title;
@@ -29,7 +27,7 @@ class AppScreen extends StatelessWidget {
         Expanded(
           child: Container(
             color: Colors.white,
-            child: SizedBox(width: double.infinity ,child: body),
+            child: SizedBox(width: double.infinity, child: body),
           ),
         ),
       ],
@@ -85,8 +83,8 @@ class AppScreen extends StatelessWidget {
       child: GestureDetector(
         child: Row(
           children: <Widget>[
-            Icon(Icons.chevron_left, color: Colors.white),
-            Text('Back', style: TextStyle(color: Colors.white)),
+            Icon(Icons.chevron_left, color: Colors.white, size: 24),
+            Text('Back', style: TextStyle(color: Colors.white, fontSize: 18)),
           ],
         ),
         onTap: () {
