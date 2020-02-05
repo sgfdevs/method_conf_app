@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
+import 'package:method_conf_app/providers/session_provider.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/utils/utils.dart';
 import 'package:method_conf_app/widgets/session_expansion_tile.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
 
-class ScheduleScreen extends StatelessWidget {
+class ScheduleScreen extends StatefulWidget {
+  @override
+  _ScheduleScreenState createState() => _ScheduleScreenState();
+}
+
+class _ScheduleScreenState extends State<ScheduleScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    var sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+
+    sessionProvider.fetchInitialSession();
+  }
+
   @override
   Widget build(BuildContext context) {
     var eventDate = DateTime.parse(DotEnv().env['EVENT_DATE']);
@@ -27,13 +43,21 @@ class ScheduleScreen extends StatelessWidget {
               DateFormat(dateFormString).format(eventDate),
               style: TextStyle(fontSize: 24),
             ),
+            SizedBox(height: 15),
             _buildSimpleCard(time: '7:45AM', title: 'Check-in/Breakfast'),
+            SizedBox(height: 15),
             _buildSimpleCard(time: '8:45AM', title: 'Welcome Announcement'),
+            SizedBox(height: 15),
             SessionExpansionTile(),
+            SizedBox(height: 15),
             SessionExpansionTile(),
+            SizedBox(height: 15),
             SessionExpansionTile(),
+            SizedBox(height: 15),
             SessionExpansionTile(),
+            SizedBox(height: 15),
             _buildSimpleCard(time: '5:30PM', title: 'Closing Remarks'),
+            SizedBox(height: 15),
             _buildSimpleCard(time: '5:45PM', title: 'After-Party'),
           ],
         ),
@@ -51,9 +75,7 @@ class ScheduleScreen extends StatelessWidget {
             time,
             style: TextStyle(fontSize: 16),
           ),
-          Padding(
-            padding: EdgeInsets.only(right: 10),
-          ),
+          SizedBox(width: 10),
           Text(
             title,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
