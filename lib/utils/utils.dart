@@ -13,3 +13,15 @@ Future<void> launchUrl(String url) async {
     gravity: ToastGravity.BOTTOM,
   );
 }
+
+
+String daySuffix(int day) {
+  var suffix = 'th';
+  var digit = day % 10;
+
+  if ((digit > 0 && digit < 4) && (day < 11 || day > 13)) {
+    suffix = ['st', 'nd', 'rd'][digit - 1];
+  }
+
+  return suffix;
+}
