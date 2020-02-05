@@ -85,6 +85,10 @@ class _AppNavigationState extends State<AppNavigation> {
   }
 
   void _onItemTapped(int value) {
+    if(value == _selectedIndex) {
+      return;
+    }
+
     AppNavigator.pushNamed(navigationItems[value].route);
   }
 
