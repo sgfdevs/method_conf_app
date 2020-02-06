@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:configurable_expansion_tile/configurable_expansion_tile.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 import 'package:method_conf_app/models/session.dart';
 import 'package:method_conf_app/theme.dart';
+import 'package:method_conf_app/utils/utils.dart';
 
 class SessionExpansionTile extends StatelessWidget {
   final Session session;
@@ -20,10 +22,17 @@ class SessionExpansionTile extends StatelessWidget {
         headerExpanded: _buildHeader(expanded: true),
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(top: 15, bottom: 15),
-            child: Text(
-              session.description ?? 'Coming Soon',
-              style: TextStyle(fontSize: 14, height: 1.6),
+            padding: EdgeInsets.only(top: 15),
+            child: Html(
+              data: session.description ?? 'Coming Soon',
+              defaultTextStyle: TextStyle(fontSize: 14, height: 1.6),
+              linkStyle: TextStyle(
+                decoration: TextDecoration.underline,
+                color: AppColors.accent,
+              ),
+              onLinkTap: (url) {
+                launchUrl(url);
+              },
             ),
           )
         ],
@@ -73,7 +82,9 @@ class SessionExpansionTile extends StatelessWidget {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(width: 20,),
+              SizedBox(
+                width: 20,
+              ),
               Row(
                 children: <Widget>[
                   Text(
@@ -143,7 +154,5 @@ class SessionExpansionTile extends StatelessWidget {
     );
   }
 
-  void _speakerTapped() {
-
-  }
+  void _speakerTapped() {}
 }
