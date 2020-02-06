@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 import 'package:method_conf_app/models/session.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+const SESSIONS_KEY = 'app-sessions';
 
 class SessionProvider extends ChangeNotifier {
   bool initialFetched = false;
@@ -64,6 +66,13 @@ class SessionProvider extends ChangeNotifier {
       return;
     }
 
+    var prefs = await SharedPreferences.getInstance();
+
+    sessions = prefs
+        .getStringList(SESSIONS_KEY)
+        ?.map((s) => Session.fromJson(json.decode(s)))
+        ?.toList() ?? [];
+
     await fetchSessions();
   }
 
@@ -75,8 +84,9 @@ class SessionProvider extends ChangeNotifier {
         .map((s) => Session.fromJson(s))
         .toList();
 
-    sessions.forEach((session) {
-      print(session.dateTime);
-    });
+    var prefs = await SharedPreferences.getInstance();
+
+    var sessionsJson = sessions.map((s) => json.encode(s.toJson())).toList();
+    await prefs.setStringList(SESSIONS_KEY, sessionsJson);
   }
 }

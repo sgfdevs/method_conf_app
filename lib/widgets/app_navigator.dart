@@ -37,7 +37,6 @@ class AppNavigator extends StatelessWidget {
           return MaterialPageRoute(
             builder: notFoundBuilder,
             settings: settings,
-            maintainState: false,
           );
         },
         onGenerateRoute: (settings) {
@@ -50,7 +49,6 @@ class AppNavigator extends StatelessWidget {
           return MaterialPageRoute(
             builder: builder,
             settings: settings,
-            maintainState: false,
           );
         },
       ),
