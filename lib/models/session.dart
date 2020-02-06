@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:method_conf_app/models/speaker.dart';
@@ -13,6 +15,18 @@ class Session {
   String time;
   String type;
   Speaker speaker;
+
+  DateTime get dateTime {
+    var date = DotEnv().env['EVENT_DATE'];
+    var begin = time.split('–')[0];
+    begin = begin.split('-')[0];
+    begin = begin.replaceAll('PM', ' PM').replaceAll('AM', ' AM');
+
+    var format = DateFormat('yyyy-MM-dd hh:mm a');
+
+
+    return format.parse('$date $begin');
+  }
 
   Session({
     this.title,

@@ -26,6 +26,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var sessionProvider = Provider.of<SessionProvider>(context);
+
     var eventDate = DateTime.parse(DotEnv().env['EVENT_DATE']);
     var dateFormString = 'EEEE, MMMM d\'${daySuffix(eventDate.day)}\', y';
 
@@ -33,7 +35,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       title: 'Schedule',
       body: RefreshIndicator(
         onRefresh: () async {
-          await Future.delayed(Duration(seconds: 1));
+          await sessionProvider.fetchSessions();
         },
         child: ListView(
           padding: EdgeInsets.all(10),
@@ -48,14 +50,12 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             SizedBox(height: 15),
             _buildSimpleCard(time: '8:45AM', title: 'Welcome Announcement'),
             SizedBox(height: 15),
-            SessionExpansionTile(),
-            SizedBox(height: 15),
-            SessionExpansionTile(),
-            SizedBox(height: 15),
-            SessionExpansionTile(),
-            SizedBox(height: 15),
-            SessionExpansionTile(),
-            SizedBox(height: 15),
+            Text('Main Track', style: TextStyle(fontSize: 24)),
+            ..._buildMainSessions(context),
+            Text('Workshop Track', style: TextStyle(fontSize: 24)),
+            ..._buildWorkshopSessions(context),
+            Text('Keynote', style: TextStyle(fontSize: 24)),
+            ..._buildKeynoteSessions(context),
             _buildSimpleCard(time: '5:30PM', title: 'Closing Remarks'),
             SizedBox(height: 15),
             _buildSimpleCard(time: '5:45PM', title: 'After-Party'),
@@ -83,5 +83,44 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         ],
       ),
     );
+  }
+
+  List<Widget> _buildMainSessions(BuildContext context) {
+    var sessionProvider = Provider.of<SessionProvider>(context);
+
+    var widgets = <Widget>[];
+
+    for (var session in sessionProvider.mainSessions) {
+      widgets.add(SessionExpansionTile(session: session));
+      widgets.add(SizedBox(height: 15));
+    }
+
+    return widgets;
+  }
+
+  List<Widget> _buildWorkshopSessions(BuildContext context) {
+    var sessionProvider = Provider.of<SessionProvider>(context);
+
+    var widgets = <Widget>[];
+
+    for (var session in sessionProvider.workshopSessions) {
+      widgets.add(SessionExpansionTile(session: session));
+      widgets.add(SizedBox(height: 15));
+    }
+
+    return widgets;
+  }
+
+  List<Widget> _buildKeynoteSessions(BuildContext context) {
+    var sessionProvider = Provider.of<SessionProvider>(context);
+
+    var widgets = <Widget>[];
+
+    for (var session in sessionProvider.keynoteSessions) {
+      widgets.add(SessionExpansionTile(session: session));
+      widgets.add(SizedBox(height: 15));
+    }
+
+    return widgets;
   }
 }

@@ -3,17 +3,80 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
+import 'package:method_conf_app/models/session.dart';
 
 class SessionProvider extends ChangeNotifier {
-  void fetchInitialSession() async {
-    await _fetchSession();
+  bool initialFetched = false;
+
+  List<Session> _sessions = [];
+
+  List<Session> get sessions {
+    return _sessions;
   }
 
-  Future<void> _fetchSession() async {
+  set sessions(List<Session> newSessions) {
+    _sessions = newSessions;
+    notifyListeners();
+  }
+
+  List<Session> get mainSessions {
+    var _main = sessions.where((s) => s.type == 'Main').toList();
+
+    var lunchSession = sessions.firstWhere(
+      (s) => s.type == 'Lunch',
+      orElse: () => null,
+    );
+
+    if (lunchSession != null) {
+      _main.add(lunchSession);
+    }
+
+    _main.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+
+    return _main;
+  }
+
+  List<Session> get workshopSessions {
+    var _workshop = _sessions.where((s) => s.type == 'Workshop').toList();
+
+    var lunchSession = sessions.lastWhere(
+      (s) => s.type == 'Lunch',
+      orElse: () => null,
+    );
+
+    if (lunchSession != null) {
+      _workshop.add(lunchSession);
+    }
+
+    _workshop.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+
+    return _workshop;
+  }
+
+  List<Session> get keynoteSessions {
+    return _sessions.where((s) => s.type == 'Keynote').toList();
+  }
+
+  Future<void> fetchInitialSession() async {
+    if (initialFetched) {
+      return;
+    }
+
+    await fetchSessions();
+  }
+
+  Future<void> fetchSessions() async {
     var url = '${DotEnv().env['METHOD_BASE_URL']}/sessions.json';
     var res = await http.get(url);
-    var parsed = json.decode(res.body);
 
-    print(parsed);
+    sessions = (json.decode(res.body)['data'] as List<dynamic>)
+        .map((s) => Session.fromJson(s))
+        .toList();
+
+    sessions.forEach((session) {
+      print(session.dateTime);
+    });
   }
 }
