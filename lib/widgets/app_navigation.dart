@@ -5,7 +5,7 @@ import 'package:method_conf_app/utils/app_icons.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 import 'package:method_conf_app/screens/more_screen.dart';
 import 'package:method_conf_app/screens/not_found_screen.dart';
-import 'package:method_conf_app/screens/partners_screen.dart';
+import 'package:method_conf_app/screens/sponsors_screen.dart';
 import 'package:method_conf_app/screens/schedule_screen.dart';
 import 'package:method_conf_app/screens/social_feed_screen.dart';
 import 'package:method_conf_app/screens/speakers_screen.dart';
@@ -19,7 +19,7 @@ class _AppNavigationState extends State<AppNavigation> {
   final Map<String, WidgetBuilder> routes = {
     '/schedule': (context) => ScheduleScreen(),
     '/social-feed': (context) => SocialFeedScreen(),
-    '/partners': (context) => PartnersScreen(),
+    '/partners': (context) => SponsorsScreen(),
     '/more': (context) => MoreScreen(),
     '/more/speakers': (context) => SpeakersScreen(),
   };
