@@ -64,7 +64,7 @@ class SponsorProvider extends ChangeNotifier {
 
     var prefs = await SharedPreferences.getInstance();
 
-    var sessionsJson = sponsors.map((s) => json.encode(s.toJson())).toList();
-    await prefs.setStringList(SPONSOR_KEY, sessionsJson);
+    var sponsorsJson = sponsors.map((s) => json.encode(s.toJson())).toList();
+    await prefs.setStringList(SPONSOR_KEY, sponsorsJson);
   }
 }
