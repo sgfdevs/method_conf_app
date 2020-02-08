@@ -115,6 +115,14 @@ class SessionExpansionTile extends StatelessWidget {
           child: ClipOval(
             child: CachedNetworkImage(
               imageUrl: session.speaker.image,
+              placeholder: (context, url) => Container(
+                height: 50,
+                width: 50,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(Colors.transparent),
+                ),
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
               height: 50,
               width: 50,
               fit: BoxFit.cover,

@@ -84,6 +84,10 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                   maxHeight: sponsor.mobileSponsor ? 85 : 65,
                   child: CachedNetworkImage(
                     imageUrl: sponsor.image,
+                    placeholder: (context, url) => CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(Colors.transparent),
+                    ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                 ),
               ),
