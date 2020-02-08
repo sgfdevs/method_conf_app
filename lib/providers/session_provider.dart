@@ -73,7 +73,12 @@ class SessionProvider extends ChangeNotifier {
         ?.map((s) => Session.fromJson(json.decode(s)))
         ?.toList() ?? [];
 
-    await fetchSessions();
+    if(sessions.length > 0) {
+      // refresh in background if we found some in storage
+      fetchSessions();
+    } else {
+      await fetchSessions();
+    }
 
     _initialFetched = true;
   }

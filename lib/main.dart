@@ -15,12 +15,4 @@ void main() {
       errorTracker.reportError(error, stackTrace);
     },
   );
-
-  FlutterError.onError = (FlutterErrorDetails details, {bool forceReport = false}) {
-    if (!isInDebugMode) {
-      errorTracker.reportError(details.exception, details.stack);
-    }
-
-    FlutterError.dumpErrorToConsole(details, forceReport: forceReport);
-  };
 }

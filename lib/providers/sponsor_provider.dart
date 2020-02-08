@@ -43,7 +43,13 @@ class SponsorProvider extends ChangeNotifier {
         ?.map((s) => Sponsor.fromJson(json.decode(s)))
         ?.toList() ?? [];
 
-    await fetchSponsors();
+    if(sponsors.length > 0) {
+      // refresh in background if we found some in storage
+      fetchSponsors();
+    } else {
+      await fetchSponsors();
+    }
+
 
     _initialFetched = true;
   }
