@@ -7,12 +7,18 @@ import 'package:method_conf_app/models/session.dart';
 import 'package:method_conf_app/models/speaker.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/utils/utils.dart';
+import 'package:method_conf_app/widgets/app_html.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 
 class SessionExpansionTile extends StatelessWidget {
   final Session session;
+  final bool disableSpeakerTap;
 
-  const SessionExpansionTile({Key key, this.session}) : super(key: key);
+  const SessionExpansionTile({
+    Key key,
+    this.session,
+    this.disableSpeakerTap = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +31,7 @@ class SessionExpansionTile extends StatelessWidget {
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(top: 15),
-            child: Html(
-              data: session.description ?? 'Coming Soon',
-              defaultTextStyle: TextStyle(fontSize: 14, height: 1.6),
-              linkStyle: TextStyle(
-                decoration: TextDecoration.underline,
-                color: AppColors.accent,
-              ),
-              onLinkTap: (url) {
-                launchUrl(url);
-              },
-            ),
+            child: AppHtml(markup: session.description ?? 'Coming Soon'),
           )
         ],
       ),
@@ -80,7 +76,6 @@ class SessionExpansionTile extends StatelessWidget {
               Flexible(
                 child: Text(
                   session.title,
-                  overflow: TextOverflow.fade,
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -165,6 +160,10 @@ class SessionExpansionTile extends StatelessWidget {
   }
 
   void _speakerTapped() {
+    if (this.disableSpeakerTap) {
+      return;
+    }
+
     AppNavigator.pushNamed(
       '/more/speakers/detail',
       arguments: session.speaker,

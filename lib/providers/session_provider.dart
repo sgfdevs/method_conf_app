@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:method_conf_app/providers/speaker_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:method_conf_app/models/speaker.dart';
+import 'package:method_conf_app/providers/speaker_provider.dart';
 import 'package:method_conf_app/env.dart';
 import 'package:method_conf_app/models/session.dart';
 
@@ -72,11 +73,12 @@ class SessionProvider extends ChangeNotifier {
     var prefs = await SharedPreferences.getInstance();
 
     sessions = prefs
-        .getStringList(SESSIONS_KEY)
-        ?.map((s) => Session.fromJson(json.decode(s)))
-        ?.toList() ?? [];
+            .getStringList(SESSIONS_KEY)
+            ?.map((s) => Session.fromJson(json.decode(s)))
+            ?.toList() ??
+        [];
 
-    if(sessions.length > 0) {
+    if (sessions.length > 0) {
       // refresh in background if we found some in storage
       fetchSessions();
     } else {
@@ -100,5 +102,12 @@ class SessionProvider extends ChangeNotifier {
 
     var sessionsJson = sessions.map((s) => json.encode(s.toJson())).toList();
     await prefs.setStringList(SESSIONS_KEY, sessionsJson);
+  }
+
+  Session getSessionForSpeaker(Speaker speaker) {
+    return sessions.firstWhere(
+      (session) => session.speaker.name == speaker.name,
+      orElse: () => null,
+    );
   }
 }
