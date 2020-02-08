@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:method_conf_app/env.dart';
 import 'package:method_conf_app/models/session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -77,7 +77,7 @@ class SessionProvider extends ChangeNotifier {
   }
 
   Future<void> fetchSessions() async {
-    var url = '${DotEnv().env['METHOD_BASE_URL']}/sessions.json';
+    var url = '${Env.methodBaseUrl}/sessions.json';
     var res = await http.get(url);
 
     sessions = (json.decode(res.body)['data'] as List<dynamic>)

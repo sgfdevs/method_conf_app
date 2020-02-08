@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'package:method_conf_app/env.dart';
 import 'package:method_conf_app/providers/session_provider.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/utils/utils.dart';
@@ -28,7 +28,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   Widget build(BuildContext context) {
     var sessionProvider = Provider.of<SessionProvider>(context);
 
-    var eventDate = DateTime.parse(DotEnv().env['EVENT_DATE']);
+    var eventDate = DateTime.parse(Env.eventDate);
     var dateFormString = 'EEEE, MMMM d\'${daySuffix(eventDate.day)}\', y';
 
     return AppScreen(

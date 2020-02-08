@@ -1,13 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:method_conf_app/utils/error_tracking.dart';
 import 'package:method_conf_app/app.dart';
 
 void main() {
-  ErrorTracker errorTracker;
+  var errorTracker = ErrorTracker();
 
   FlutterError.onError =
       (FlutterErrorDetails details, {bool forceReport = false}) async {
@@ -19,11 +18,7 @@ void main() {
   };
 
   runZoned(
-    () async {
-      await DotEnv().load('.env');
-      errorTracker = ErrorTracker();
-      runApp(App());
-    },
+    () => runApp(App()),
     onError: (error, stackTrace) {
       errorTracker.reportError(error, stackTrace);
     },

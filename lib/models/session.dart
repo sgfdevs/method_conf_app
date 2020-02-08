@@ -1,7 +1,7 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:method_conf_app/env.dart';
 import 'package:method_conf_app/models/speaker.dart';
 
 part 'session.g.dart';
@@ -17,7 +17,7 @@ class Session {
   Speaker speaker;
 
   DateTime get dateTime {
-    var date = DotEnv().env['EVENT_DATE'];
+    var date = Env.eventDate;
     var begin = time.split('–')[0];
     begin = begin.split('-')[0];
     begin = begin.replaceAll('PM', ' PM').replaceAll('AM', ' AM');

@@ -1,5 +1,6 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sentry/sentry.dart';
+
+import 'package:method_conf_app/env.dart';
 
 bool get isInDebugMode {
   var inDebugMode = false;
@@ -8,9 +9,9 @@ bool get isInDebugMode {
 }
 
 class ErrorTracker {
-//  final SentryClient _sentry = new SentryClient(dsn: DotEnv().env['SENTRY_DSN']);
+//  final SentryClient _sentry = new SentryClient(dsn: Env.sentryDsn);
 
-  void reportError(dynamic error, dynamic stackTrace) {
+  Future reportError(dynamic error, dynamic stackTrace) async {
     print('Caught error: $error');
 
     if (isInDebugMode) {
@@ -19,7 +20,7 @@ class ErrorTracker {
     }
 
     try {
-//      _sentry.captureException(
+//      await _sentry.captureException(
 //        exception: error,
 //        stackTrace: stackTrace,
 //      );
