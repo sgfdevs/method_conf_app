@@ -14,9 +14,15 @@ class MoreScreen extends StatelessWidget {
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 20),
         children: <Widget>[
-          AppListItem(text: 'Location Info'),
-          AppListItem(text: 'Floorplan'),
-          AppListItem(text: 'Code of Conduct'),
+          AppListItem(
+            text: 'Location Info',
+            onTap: () => launchUrl('https://methodconf.com/#location'),
+          ),
+//          AppListItem(text: 'Floorplan'),
+          AppListItem(
+            text: 'Code of Conduct',
+            onTap: () => launchUrl('https://methodconf.com/code-of-conduct'),
+          ),
           AppListItem(
             text: 'Tickets',
             onTap: () => launchUrl(Env.ticketUrl),
@@ -25,7 +31,7 @@ class MoreScreen extends StatelessWidget {
             text: 'Speakers',
             onTap: () => AppNavigator.pushNamed('/more/speakers'),
           ),
-          AppListItem(text: 'Report Issue'),
+//          AppListItem(text: 'Report Issue'),
         ],
       ),
     );

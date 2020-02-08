@@ -17,7 +17,7 @@ class SessionExpansionTile extends StatelessWidget {
   const SessionExpansionTile({
     Key key,
     this.session,
-    this.disableSpeakerTap = true,
+    this.disableSpeakerTap = false,
   }) : super(key: key);
 
   @override

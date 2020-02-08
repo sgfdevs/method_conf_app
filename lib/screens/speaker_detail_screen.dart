@@ -79,7 +79,7 @@ class SpeakerDetailScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 24),
                 ),
                 SizedBox(height: 15),
-                SessionExpansionTile(session: session),
+                SessionExpansionTile(session: session, disableSpeakerTap: true),
               ],
             ),
           )
