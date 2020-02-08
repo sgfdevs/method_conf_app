@@ -10,7 +10,7 @@ import 'package:method_conf_app/models/session.dart';
 const SESSIONS_KEY = 'app-sessions';
 
 class SessionProvider extends ChangeNotifier {
-  bool initialFetched = false;
+  bool _initialFetched = false;
 
   List<Session> _sessions = [];
 
@@ -62,7 +62,7 @@ class SessionProvider extends ChangeNotifier {
   }
 
   Future<void> fetchInitialSession() async {
-    if (initialFetched) {
+    if (_initialFetched) {
       return;
     }
 
@@ -74,6 +74,8 @@ class SessionProvider extends ChangeNotifier {
         ?.toList() ?? [];
 
     await fetchSessions();
+
+    _initialFetched = true;
   }
 
   Future<void> fetchSessions() async {

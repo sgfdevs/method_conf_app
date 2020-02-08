@@ -8,12 +8,14 @@ class Sponsor {
   String url;
   String image;
   bool mobileSponsor;
+  String background;
 
   Sponsor({
     this.title,
     this.url,
     this.image,
     this.mobileSponsor,
+    this.background,
   });
 
   factory Sponsor.fromJson(Map<String, dynamic> json) =>

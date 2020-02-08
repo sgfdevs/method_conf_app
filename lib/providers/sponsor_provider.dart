@@ -10,7 +10,7 @@ import 'package:method_conf_app/models/sponsor.dart';
 const SPONSOR_KEY = 'app-sponsrs';
 
 class SponsorProvider extends ChangeNotifier {
-  bool _initialFetched;
+  bool _initialFetched = false;
 
   List<Sponsor> _sponsors = [];
 
@@ -21,6 +21,14 @@ class SponsorProvider extends ChangeNotifier {
   set sponsors(List<Sponsor> newSponsors) {
     _sponsors = newSponsors;
     notifyListeners();
+  }
+
+  List<Sponsor> get largeSponsors {
+    return sponsors.where((s) => s.mobileSponsor).toList();
+  }
+
+  List<Sponsor> get normalSponsors {
+    return sponsors.where((s) => !s.mobileSponsor).toList();
   }
 
   Future<void> fetchInitialSponsors() async {

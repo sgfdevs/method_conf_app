@@ -38,7 +38,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           await sessionProvider.fetchSessions();
         },
         child: ListView(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(20),
           physics: AlwaysScrollableScrollPhysics(),
           children: <Widget>[
             Text(
