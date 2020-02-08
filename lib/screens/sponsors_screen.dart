@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:method_conf_app/theme.dart';
-import 'package:method_conf_app/utils/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:quiver/iterables.dart' show partition;
 
+import 'package:method_conf_app/theme.dart';
+import 'package:method_conf_app/utils/utils.dart';
+import 'package:method_conf_app/widgets/page_loader.dart';
 import 'package:method_conf_app/models/sponsor.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
 import 'package:method_conf_app/providers/sponsor_provider.dart';
@@ -15,13 +16,15 @@ class SponsorsScreen extends StatefulWidget {
 }
 
 class _SponsorsScreenState extends State<SponsorsScreen> {
+  Future _sponsorsFuture;
+
   @override
   void initState() {
     super.initState();
 
     var sponsorProvider = Provider.of<SponsorProvider>(context, listen: false);
 
-    sponsorProvider.fetchInitialSponsors();
+    _sponsorsFuture = sponsorProvider.fetchInitialSponsors();
   }
 
   @override
@@ -30,28 +33,31 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
 
     return AppScreen(
       title: 'Partners',
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await sponsorProvider.fetchSponsors();
-        },
-        child: ListView(
-          padding: EdgeInsets.all(20),
-          physics: AlwaysScrollableScrollPhysics(),
-          children: <Widget>[
-            Text(
-              'Method Conference Springfield, MO 2020 is proud to be sponsored by:',
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 15),
-            ...sponsorProvider.largeSponsors.map((sponsor) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: 15),
-                child: _buildSponsor(sponsor),
-              );
-            }),
-            ..._buildNormalSponsors(sponsorProvider.normalSponsors),
-          ],
+      body: PageLoader(
+        future: _sponsorsFuture,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await sponsorProvider.fetchSponsors();
+          },
+          child: ListView(
+            padding: EdgeInsets.all(20),
+            physics: AlwaysScrollableScrollPhysics(),
+            children: <Widget>[
+              Text(
+                'Method Conference Springfield, MO 2020 is proud to be sponsored by:',
+                textAlign: TextAlign.left,
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(height: 15),
+              ...sponsorProvider.largeSponsors.map((sponsor) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 15),
+                  child: _buildSponsor(sponsor),
+                );
+              }),
+              ..._buildNormalSponsors(sponsorProvider.normalSponsors),
+            ],
+          ),
         ),
       ),
     );

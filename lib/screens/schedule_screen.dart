@@ -7,6 +7,7 @@ import 'package:method_conf_app/providers/session_provider.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/utils/utils.dart';
 import 'package:method_conf_app/widgets/session_expansion_tile.dart';
+import 'package:method_conf_app/widgets/page_loader.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -15,13 +16,15 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
+  Future _sessionFuture;
+
   @override
   void initState() {
     super.initState();
 
     var sessionProvider = Provider.of<SessionProvider>(context, listen: false);
 
-    sessionProvider.fetchInitialSession();
+    _sessionFuture = sessionProvider.fetchInitialSession();
   }
 
   @override
@@ -33,36 +36,39 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
     return AppScreen(
       title: 'Schedule',
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await sessionProvider.fetchSessions();
-        },
-        child: ListView(
-          padding: EdgeInsets.all(20),
-          physics: AlwaysScrollableScrollPhysics(),
-          children: <Widget>[
-            Text(
-              DateFormat(dateFormString).format(eventDate),
-              style: TextStyle(fontSize: 24),
-            ),
-            SizedBox(height: 15),
-            _buildSimpleCard(time: '7:45AM', title: 'Check-in/Breakfast'),
-            SizedBox(height: 15),
-            _buildSimpleCard(time: '8:45AM', title: 'Welcome Announcement'),
-            SizedBox(height: 15),
-            Text('Main Track', style: TextStyle(fontSize: 24)),
-            SizedBox(height: 15),
-            ..._buildMainSessions(context),
-            Text('Workshop Track', style: TextStyle(fontSize: 24)),
-            SizedBox(height: 15),
-            ..._buildWorkshopSessions(context),
-            Text('Keynote', style: TextStyle(fontSize: 24)),
-            SizedBox(height: 15),
-            ..._buildKeynoteSessions(context),
-            _buildSimpleCard(time: '5:30PM', title: 'Closing Remarks'),
-            SizedBox(height: 15),
-            _buildSimpleCard(time: '5:45PM', title: 'After-Party'),
-          ],
+      body: PageLoader(
+        future: _sessionFuture,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await sessionProvider.fetchSessions();
+          },
+          child: ListView(
+            padding: EdgeInsets.all(20),
+            physics: AlwaysScrollableScrollPhysics(),
+            children: <Widget>[
+              Text(
+                DateFormat(dateFormString).format(eventDate),
+                style: TextStyle(fontSize: 24),
+              ),
+              SizedBox(height: 15),
+              _buildSimpleCard(time: '7:45AM', title: 'Check-in/Breakfast'),
+              SizedBox(height: 15),
+              _buildSimpleCard(time: '8:45AM', title: 'Welcome Announcement'),
+              SizedBox(height: 15),
+              Text('Main Track', style: TextStyle(fontSize: 24)),
+              SizedBox(height: 15),
+              ..._buildMainSessions(context),
+              Text('Workshop Track', style: TextStyle(fontSize: 24)),
+              SizedBox(height: 15),
+              ..._buildWorkshopSessions(context),
+              Text('Keynote', style: TextStyle(fontSize: 24)),
+              SizedBox(height: 15),
+              ..._buildKeynoteSessions(context),
+              _buildSimpleCard(time: '5:30PM', title: 'Closing Remarks'),
+              SizedBox(height: 15),
+              _buildSimpleCard(time: '5:45PM', title: 'After-Party'),
+            ],
+          ),
         ),
       ),
     );

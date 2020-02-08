@@ -44,6 +44,8 @@ class SponsorProvider extends ChangeNotifier {
         ?.toList() ?? [];
 
     await fetchSponsors();
+
+    _initialFetched = true;
   }
 
   Future<void> fetchSponsors() async {
