@@ -4,8 +4,10 @@ import 'package:configurable_expansion_tile/configurable_expansion_tile.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 import 'package:method_conf_app/models/session.dart';
+import 'package:method_conf_app/models/speaker.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/utils/utils.dart';
+import 'package:method_conf_app/widgets/app_navigator.dart';
 
 class SessionExpansionTile extends StatelessWidget {
   final Session session;
@@ -162,5 +164,10 @@ class SessionExpansionTile extends StatelessWidget {
     );
   }
 
-  void _speakerTapped() {}
+  void _speakerTapped() {
+    AppNavigator.pushNamed(
+      '/more/speakers/detail',
+      arguments: session.speaker,
+    );
+  }
 }

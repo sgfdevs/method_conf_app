@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:method_conf_app/screens/speaker_detail_screen.dart';
 
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/utils/app_icons.dart';
@@ -22,6 +23,7 @@ class _AppNavigationState extends State<AppNavigation> {
     '/partners': (context) => SponsorsScreen(),
     '/more': (context) => MoreScreen(),
     '/more/speakers': (context) => SpeakersScreen(),
+    '/more/speakers/detail': (context) => SpeakerDetailScreen(),
   };
 
 

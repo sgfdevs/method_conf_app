@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:method_conf_app/providers/speaker_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:method_conf_app/env.dart';
@@ -10,13 +11,15 @@ import 'package:method_conf_app/models/session.dart';
 const SESSIONS_KEY = 'app-sessions';
 
 class SessionProvider extends ChangeNotifier {
+  final SpeakerProvider speakerProvider;
+
   bool _initialFetched = false;
 
   List<Session> _sessions = [];
 
-  List<Session> get sessions {
-    return _sessions;
-  }
+  SessionProvider({this.speakerProvider});
+
+  List<Session> get sessions => _sessions;
 
   set sessions(List<Session> newSessions) {
     _sessions = newSessions;
@@ -90,6 +93,8 @@ class SessionProvider extends ChangeNotifier {
     sessions = (json.decode(res.body)['data'] as List<dynamic>)
         .map((s) => Session.fromJson(s))
         .toList();
+
+    speakerProvider.setSpeakersFromSessions(sessions);
 
     var prefs = await SharedPreferences.getInstance();
 
