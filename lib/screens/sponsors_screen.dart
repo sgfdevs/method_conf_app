@@ -81,7 +81,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
               flex: 8,
               child: Center(
                 child: OverflowBox(
-                  maxHeight: sponsor.mobileSponsor ? 85 : 65,
+                  maxHeight: sponsor.mobileSponsor ? 75 : 65,
                   child: CachedNetworkImage(
                     imageUrl: sponsor.image,
                     placeholder: (context, url) => CircularProgressIndicator(
