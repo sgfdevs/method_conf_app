@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:tweet_ui/models/api/tweet.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:method_conf_app/env.dart';
+
 class TwitterProvider extends ChangeNotifier {
   bool _initialFetched = false;
 
@@ -27,7 +29,7 @@ class TwitterProvider extends ChangeNotifier {
   }
 
   Future<void> fetchTweets() async {
-    var url = 'http://192.168.0.97:8000/actions/twitter-module/search';
+    var url = '${Env.methodBaseUrl}/actions/twitter-module/search';
     var res = await http.get(url);
 
     tweets = (json.decode(res.body)['statuses'] as List<dynamic>)
