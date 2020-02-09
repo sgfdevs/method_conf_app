@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:method_conf_app/providers/twitter_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:method_conf_app/providers/session_provider.dart';
@@ -18,6 +19,7 @@ class App extends StatelessWidget {
           return SessionProvider(speakerProvider: s);
         }),
         ChangeNotifierProvider(create: (context) => SponsorProvider()),
+        ChangeNotifierProvider(create: (context) => TwitterProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
