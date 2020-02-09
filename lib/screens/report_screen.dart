@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:method_conf_app/env.dart';
 
 import 'package:method_conf_app/theme.dart';
+import 'package:method_conf_app/widgets/app_html.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
 import 'package:method_conf_app/widgets/half_border_box.dart';
@@ -13,10 +18,16 @@ class ReportScreen extends StatefulWidget {
 class _ReportScreenState extends State<ReportScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  bool processing = false;
+
   String message = '';
-  String resolutionSuggestion = '';
+
+  String resolution = '';
+
   String name = '';
+
   String email = '';
+
   String phone = '';
 
   @override
@@ -68,7 +79,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
                 onSaved: (value) {
                   setState(() {
-                    resolutionSuggestion = value;
+                    resolution = value;
                   });
                 },
               ),
@@ -146,6 +157,11 @@ class _ReportScreenState extends State<ReportScreen> {
                     ),
                   ),
                 ),
+                SizedBox(width: 15),
+                Visibility(
+                  visible: processing,
+                  child: CircularProgressIndicator(),
+                ),
               ],
             ),
           ],
@@ -158,22 +174,59 @@ class _ReportScreenState extends State<ReportScreen> {
     _formKey.currentState.save();
 
     if (message == '') {
-      showErrorDialog();
+      showErrorDialog(
+        'Looks like there are some required fields not filled out in the form. Please go back and try again.',
+      );
+      return;
+    }
+
+    setState(() {
+      processing = true;
+    });
+
+    var data = json.encode({
+      'message': message,
+      'resolution': resolution,
+      'name': name,
+      'email;': email,
+      'phone': phone,
+    });
+
+    http.Response response;
+
+    try {
+      response = await http.post(Env.reportEndpoint, body: data, headers: {
+        'Content-Type': 'application/json'
+      });
+    } catch(err) {
+      _requestErrorDialog();
+    } finally {
+      setState(() {
+        processing = false;
+      });
+    }
+
+    if(response.statusCode != 200) {
+      _requestErrorDialog();
       return;
     }
 
     AppNavigator.pushReplacementNamed('/more/report/success');
   }
 
-  Future<void> showErrorDialog() {
+  void _requestErrorDialog() {
+    showErrorDialog(
+      'There was an error submitting your report. Please text Shawna Baron at <a href="tel:4178949926">417-894-9926</a>',
+    );
+  }
+
+  Future<void> showErrorDialog(String message) {
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text('Whoops'),
-          content: Text(
-            'Looks like there are some required fields not filled out in the form. Please go back and try again.',
-          ),
+          content: IntrinsicHeight(child: AppHtml(markup: message)),
           actions: <Widget>[
             FlatButton(
               child: Text(
