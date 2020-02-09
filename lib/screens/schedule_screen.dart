@@ -48,20 +48,20 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             children: <Widget>[
               Text(
                 DateFormat(dateFormString).format(eventDate),
-                style: TextStyle(fontSize: 24),
+                style: TextStyle(fontSize: 20),
               ),
               SizedBox(height: 15),
               _buildSimpleCard(time: '7:45AM', title: 'Check-in/Breakfast'),
               SizedBox(height: 15),
               _buildSimpleCard(time: '8:45AM', title: 'Welcome Announcement'),
               SizedBox(height: 15),
-              Text('Main Track', style: TextStyle(fontSize: 24)),
+              Text('Main Track', style: TextStyle(fontSize: 20)),
               SizedBox(height: 15),
               ..._buildMainSessions(context),
-              Text('Workshop Track', style: TextStyle(fontSize: 24)),
+              Text('Workshop Track', style: TextStyle(fontSize: 20)),
               SizedBox(height: 15),
               ..._buildWorkshopSessions(context),
-              Text('Keynote', style: TextStyle(fontSize: 24)),
+              Text('Keynote', style: TextStyle(fontSize: 20)),
               SizedBox(height: 15),
               ..._buildKeynoteSessions(context),
               _buildSimpleCard(time: '5:30PM', title: 'Closing Remarks'),
@@ -87,7 +87,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           SizedBox(width: 10),
           Text(
             title,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           )
         ],
       ),
