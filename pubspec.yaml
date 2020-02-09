@@ -42,6 +42,14 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^1.7.3
   json_serializable: ^3.2.5
+  flutter_launcher_icons: ^0.7.3
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/MethodConf_iOS_Icon.png"
+  image_path_android: "assets/icon/MethodConf_Android_Icon.png"
+  adaptive_icon_background: "#1C1B1A"
 
 
 # For information on the generic Dart part of this file, see the
