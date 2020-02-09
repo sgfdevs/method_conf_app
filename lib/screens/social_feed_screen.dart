@@ -31,13 +31,6 @@ class _SocialFeedScreenState extends State<SocialFeedScreen> {
   Widget build(BuildContext context) {
     var twitterProvider = Provider.of<TwitterProvider>(context);
 
-//    var listItems = <Widget>[
-//      _buildHeader(),
-//      ...twitterProvider.tweets.map((tweet) {
-//        return _buildTweetCard(tweet);
-//      }).toList(),
-//    ];
-
     return AppScreen(
       title: 'Happening Now',
       body: PageLoader(
@@ -56,7 +49,6 @@ class _SocialFeedScreenState extends State<SocialFeedScreen> {
               }
 
               return _buildTweetCard(twitterProvider.tweets[index - 1]);
-//              return listItems[index];
             },
             itemCount: twitterProvider.tweets.length + 1,
           ),
