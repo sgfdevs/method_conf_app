@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tweet_ui/models/api/tweet.dart';
+import 'package:tweet_ui/tweet_view.dart';
+
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/utils/utils.dart';
-import 'package:tweet_ui/compact_tweet_view.dart';
-import 'package:tweet_ui/models/api/tweet.dart';
 
 class TweetCard extends StatelessWidget {
   final Tweet tweet;
@@ -24,7 +25,7 @@ class TweetCard extends StatelessWidget {
             border: Border.all(color: AppColors.neutralLight, width: 1),
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
-          child: CompactTweetView.fromTweet(
+          child: TweetView.fromTweet(
             tweet,
             quoteBorderColor: AppColors.neutralLight,
             useVideoPlayer: false,
