@@ -3,6 +3,7 @@ import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/utils/app_icons.dart';
 import 'package:method_conf_app/utils/utils.dart';
 import 'package:method_conf_app/widgets/page_loader.dart';
+import 'package:method_conf_app/widgets/tweet_card.dart';
 import 'package:provider/provider.dart';
 
 import 'package:method_conf_app/providers/twitter_provider.dart';
@@ -39,18 +40,31 @@ class _SocialFeedScreenState extends State<SocialFeedScreen> {
           onRefresh: () async {
             await twitterProvider.fetchTweets();
           },
+//          child: SingleChildScrollView(
+//            child: Column(
+//              children: <Widget>[
+//                _buildHeader(),
+//                ...twitterProvider.tweets.map((tweet) {
+//                  return _buildTweetCard(tweet);
+//                }).toList(),
+//              ],
+//            ),
+//          ),
           // Not sure if this is actually faster than normal ListView
-          child: ListView.builder(
-            padding: EdgeInsets.all(0),
+          child: ListView.separated(
+            padding: EdgeInsets.only(top: 0, bottom: 30),
             physics: AlwaysScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              if(index == 0) {
+              if (index == 0) {
                 return _buildHeader();
               }
 
-              return _buildTweetCard(twitterProvider.tweets[index - 1]);
+              return TweetCard(tweet: twitterProvider.tweets[index - 1]);
             },
             itemCount: twitterProvider.tweets.length + 1,
+            separatorBuilder: (context, index) {
+              return SizedBox(height: 30);
+            },
           ),
         ),
       ),
@@ -85,7 +99,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen> {
           FlatButton(
             padding: EdgeInsets.all(15),
             color: AppColors.twitterPrimary,
-            onPressed: _onTweetTap,
+            onPressed: _onTweetButtonTap,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -107,29 +121,11 @@ class _SocialFeedScreenState extends State<SocialFeedScreen> {
     );
   }
 
-  Widget _buildTweetCard(Tweet tweet) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.neutralLight, width: 1),
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
-        child: TweetView.fromTweet(
-          tweet,
-          quoteBorderColor: AppColors.neutralLight,
-          useVideoPlayer: false,
-        ),
-      ),
-    );
-  }
-
-  void _onTweetTap() {
+  void _onTweetButtonTap() {
     var text = Uri.encodeComponent('Invest In Yourself and Hone Your Craft');
     var url = 'https://methodconf.com';
     var hashtags = 'MethodConf';
-    var parameters = '?text=$text&url=$url&hashtags=$hashtags';
+    var parameters = '?text=$text&hashtags=$hashtags&url=$url';
     launchUrl('https://twitter.com/intent/tweet$parameters');
   }
 }

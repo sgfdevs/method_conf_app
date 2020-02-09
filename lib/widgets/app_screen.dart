@@ -43,7 +43,7 @@ class AppScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(
               top: MediaQuery.of(context).padding.top,
-              bottom: 40,
+              bottom: 20,
             ),
           ),
           preHeader ?? Container(),
@@ -65,7 +65,7 @@ class AppScreen extends StatelessWidget {
             ),
           ),
           postTitle ?? Container(),
-          Padding(padding: EdgeInsets.only(bottom: 30)),
+          Padding(padding: EdgeInsets.only(bottom: 20)),
         ],
       ),
     );
