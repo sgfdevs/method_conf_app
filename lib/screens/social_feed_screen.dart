@@ -40,17 +40,6 @@ class _SocialFeedScreenState extends State<SocialFeedScreen> {
           onRefresh: () async {
             await twitterProvider.fetchTweets();
           },
-//          child: SingleChildScrollView(
-//            child: Column(
-//              children: <Widget>[
-//                _buildHeader(),
-//                ...twitterProvider.tweets.map((tweet) {
-//                  return _buildTweetCard(tweet);
-//                }).toList(),
-//              ],
-//            ),
-//          ),
-          // Not sure if this is actually faster than normal ListView
           child: ListView.separated(
             padding: EdgeInsets.only(top: 0, bottom: 30),
             physics: AlwaysScrollableScrollPhysics(),

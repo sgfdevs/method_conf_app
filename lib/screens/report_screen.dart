@@ -188,7 +188,7 @@ class _ReportScreenState extends State<ReportScreen> {
       'message': message,
       'resolution': resolution,
       'name': name,
-      'email;': email,
+      'email': email,
       'phone': phone,
     });
 
@@ -206,7 +206,7 @@ class _ReportScreenState extends State<ReportScreen> {
       });
     }
 
-    if(response.statusCode != 200) {
+    if(response.statusCode < 200 && response.statusCode >= 300) {
       _requestErrorDialog();
       return;
     }
