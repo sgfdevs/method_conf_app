@@ -13,6 +13,12 @@ class ReportScreen extends StatefulWidget {
 class _ReportScreenState extends State<ReportScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  String message = '';
+  String resolutionSuggestion = '';
+  String name = '';
+  String email = '';
+  String phone = '';
+
   @override
   Widget build(BuildContext context) {
     return AppScreen(
@@ -37,6 +43,11 @@ class _ReportScreenState extends State<ReportScreen> {
                   hintText: 'What is the issue?',
                   border: InputBorder.none,
                 ),
+                onSaved: (value) {
+                  setState(() {
+                    message = value;
+                  });
+                },
               ),
             ),
             SizedBox(height: 20),
@@ -55,6 +66,11 @@ class _ReportScreenState extends State<ReportScreen> {
                   hintText: 'How can this be fixed?',
                   border: InputBorder.none,
                 ),
+                onSaved: (value) {
+                  setState(() {
+                    resolutionSuggestion = value;
+                  });
+                },
               ),
             ),
             SizedBox(height: 20),
@@ -72,28 +88,45 @@ class _ReportScreenState extends State<ReportScreen> {
                   hintText: 'Your Name',
                   border: InputBorder.none,
                 ),
+                onSaved: (value) {
+                  setState(() {
+                    name = value;
+                  });
+                },
               ),
             ),
             SizedBox(height: 15),
             HalfBorderBox(
               child: TextFormField(
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: AppColors.neutralExtraLight,
                   hintText: 'Email',
                   border: InputBorder.none,
                 ),
+                onSaved: (value) {
+                  setState(() {
+                    email = value;
+                  });
+                },
               ),
             ),
             SizedBox(height: 15),
             HalfBorderBox(
               child: TextFormField(
+                keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: AppColors.neutralExtraLight,
                   hintText: 'Phone Number',
                   border: InputBorder.none,
                 ),
+                onSaved: (value) {
+                  setState(() {
+                    phone = value;
+                  });
+                },
               ),
             ),
             SizedBox(height: 20),
@@ -121,7 +154,39 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  void _submitReport() {
+  Future<void> _submitReport() async {
+    _formKey.currentState.save();
+
+    if (message == '') {
+      showErrorDialog();
+      return;
+    }
+
     AppNavigator.pushReplacementNamed('/more/report/success');
+  }
+
+  Future<void> showErrorDialog() {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Whoops'),
+          content: Text(
+            'Looks like there are some required fields not filled out in the form. Please go back and try again.',
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Ok',
+                style: TextStyle(color: AppColors.accent),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
