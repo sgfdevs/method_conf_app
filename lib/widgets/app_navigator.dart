@@ -69,13 +69,26 @@ class AppNavigator extends StatelessWidget {
     });
   }
 
-  static Future<T> pushNamed<T extends Object>(routeName, {Object arguments}) {
+  static Future<T> pushNamed<T extends Object>(String routeName,
+      {Object arguments}) {
     return _navigatorKey.currentState
         .pushNamed<T>(routeName, arguments: arguments);
   }
 
   static bool pop<T extends Object>([T result]) {
     return _navigatorKey.currentState.pop<T>(result);
+  }
+
+  static Future<T> pushReplacementNamed<T extends Object, TO extends Object>(
+    String routeName, {
+    TO result,
+    Object arguments,
+  }) {
+    return _navigatorKey.currentState.pushReplacementNamed<T, TO>(
+      routeName,
+      arguments: arguments,
+      result: result,
+    );
   }
 }
 

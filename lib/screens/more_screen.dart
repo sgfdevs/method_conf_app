@@ -31,7 +31,10 @@ class MoreScreen extends StatelessWidget {
             text: 'Speakers',
             onTap: () => AppNavigator.pushNamed('/more/speakers'),
           ),
-//          AppListItem(text: 'Report Issue'),
+          AppListItem(
+            text: 'Report Issue',
+            onTap: () => AppNavigator.pushNamed('/more/report'),
+          ),
         ],
       ),
     );
