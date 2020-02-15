@@ -11,6 +11,7 @@ import 'package:method_conf_app/utils/utils.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
 import 'package:method_conf_app/widgets/half_border_box.dart';
+import 'package:method_conf_app/widgets/rating.dart';
 
 class SessionFeedbackScreen extends StatefulWidget {
   @override
@@ -57,11 +58,15 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
             '1 is meh, 5 is freaking amazing',
             style: TextStyle(fontSize: 12),
           ),
-          _buildRatingWidget(onSelected: (value) {
-            setState(() {
-              _speakerRating = value;
-            });
-          }),
+          Rating(
+            currentValue: _speakerRating,
+            onSelected: (value) {
+              setState(() {
+                _speakerRating = value;
+              });
+            },
+          ),
+          SizedBox(height: 20),
           Text(
             'Rate Content Relevance',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -70,11 +75,16 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
             '1 is meh, 5 is freaking amazing',
             style: TextStyle(fontSize: 12),
           ),
-          _buildRatingWidget(onSelected: (value) {
-            setState(() {
-              _contentRating = value;
-            });
-          }),
+          Rating(
+            currentValue: _contentRating,
+            onSelected: (value) {
+              setState(() {
+                _contentRating = value;
+              });
+            },
+          ),
+          SizedBox(height: 20),
+
           Text(
             'Rate Venue',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -83,11 +93,15 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
             '1 is meh, 5 is freaking amazing',
             style: TextStyle(fontSize: 12),
           ),
-          _buildRatingWidget(onSelected: (value) {
-            setState(() {
-              _venueRating = value;
-            });
-          }),
+          Rating(
+            currentValue: _venueRating,
+            onSelected: (value) {
+              setState(() {
+                _venueRating = value;
+              });
+            },
+          ),
+          SizedBox(height: 20),
           Text(
             'Comments',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -134,12 +148,6 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildRatingWidget({_RatingSelectedCallback onSelected}) {
-    return Row(
-      children: <Widget>[],
     );
   }
 
