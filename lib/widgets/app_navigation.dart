@@ -12,6 +12,8 @@ import 'package:method_conf_app/screens/speakers_screen.dart';
 import 'package:method_conf_app/screens/report_screen.dart';
 import 'package:method_conf_app/screens/report_success_screen.dart';
 import 'package:method_conf_app/screens/speaker_detail_screen.dart';
+import 'package:method_conf_app/screens/session_feedback_screen.dart';
+import 'package:method_conf_app/screens/session_feedback_success_screen.dart';
 
 class AppNavigation extends StatefulWidget {
   @override
@@ -28,6 +30,8 @@ class _AppNavigationState extends State<AppNavigation> {
     '/more/speakers/detail': (context) => SpeakerDetailScreen(),
     '/more/report': (context) => ReportScreen(),
     '/more/report/success': (context) => ReportSuccessScreen(),
+    '/more/feedback': (context) => SessionFeedbackScreen(),
+    '/more/feedback/success': (context) => SessionFeedbackSuccessScreen(),
   };
 
 

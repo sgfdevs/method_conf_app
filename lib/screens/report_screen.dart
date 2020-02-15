@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:method_conf_app/env.dart';
 
+import 'package:method_conf_app/env.dart';
 import 'package:method_conf_app/theme.dart';
-import 'package:method_conf_app/widgets/app_html.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
 import 'package:method_conf_app/widgets/half_border_box.dart';
+import 'package:method_conf_app/utils/utils.dart';
 
 class ReportScreen extends StatefulWidget {
   @override
@@ -17,18 +17,12 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   final _formKey = GlobalKey<FormState>();
-
-  bool processing = false;
-
-  String message = '';
-
-  String resolution = '';
-
-  String name = '';
-
-  String email = '';
-
-  String phone = '';
+  String _message = '';
+  String _resolution = '';
+  String _name = '';
+  String _email = '';
+  String _phone = '';
+  bool _processing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +50,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
                 onSaved: (value) {
                   setState(() {
-                    message = value;
+                    _message = value;
                   });
                 },
               ),
@@ -79,7 +73,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
                 onSaved: (value) {
                   setState(() {
-                    resolution = value;
+                    _resolution = value;
                   });
                 },
               ),
@@ -101,7 +95,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
                 onSaved: (value) {
                   setState(() {
-                    name = value;
+                    _name = value;
                   });
                 },
               ),
@@ -118,7 +112,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
                 onSaved: (value) {
                   setState(() {
-                    email = value;
+                    _email = value;
                   });
                 },
               ),
@@ -135,7 +129,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
                 onSaved: (value) {
                   setState(() {
-                    phone = value;
+                    _phone = value;
                   });
                 },
               ),
@@ -159,7 +153,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
                 SizedBox(width: 15),
                 Visibility(
-                  visible: processing,
+                  visible: _processing,
                   child: CircularProgressIndicator(),
                 ),
               ],
@@ -173,40 +167,44 @@ class _ReportScreenState extends State<ReportScreen> {
   Future<void> _submitReport() async {
     _formKey.currentState.save();
 
-    if (message == '') {
+    if (_message == '') {
       showErrorDialog(
-        'Looks like there are some required fields not filled out in the form. Please go back and try again.',
+        context: context,
+        message:
+            'Looks like there are some required fields not filled out in the form. Please go back and try again.',
       );
       return;
     }
 
     setState(() {
-      processing = true;
+      _processing = true;
     });
 
     var data = json.encode({
-      'message': message,
-      'resolution': resolution,
-      'name': name,
-      'email': email,
-      'phone': phone,
+      'message': _message,
+      'resolution': _resolution,
+      'name': _name,
+      'email': _email,
+      'phone': _phone,
     });
 
     http.Response response;
 
     try {
-      response = await http.post(Env.reportEndpoint, body: data, headers: {
-        'Content-Type': 'application/json'
-      });
-    } catch(err) {
+      response = await http.post(
+        Env.reportEndpoint,
+        body: data,
+        headers: {'Content-Type': 'application/json'},
+      );
+    } catch (err) {
       _requestErrorDialog();
     } finally {
       setState(() {
-        processing = false;
+        _processing = false;
       });
     }
 
-    if(response.statusCode < 200 && response.statusCode >= 300) {
+    if (response.statusCode < 200 && response.statusCode >= 300) {
       _requestErrorDialog();
       return;
     }
@@ -216,30 +214,9 @@ class _ReportScreenState extends State<ReportScreen> {
 
   void _requestErrorDialog() {
     showErrorDialog(
-      'There was an error submitting your report. Please text Shawna Baron at <a href="tel:4178949926">417-894-9926</a>',
-    );
-  }
-
-  Future<void> showErrorDialog(String message) {
-    return showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Whoops'),
-          content: IntrinsicHeight(child: AppHtml(markup: message)),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                'Ok',
-                style: TextStyle(color: AppColors.accent),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+      message:
+          'There was an error submitting your report. Please text Shawna Baron at <a href="tel:4178949926">417-894-9926</a>',
     );
   }
 }

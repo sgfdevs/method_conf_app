@@ -54,7 +54,7 @@ class SessionExpansionTile extends StatelessWidget {
                 ),
               ),
               Visibility(
-                visible: false,
+                visible: true,
                 child: FlatButton(
                   color: AppColors.accent,
                   child: Text(
@@ -65,7 +65,7 @@ class SessionExpansionTile extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: _sessionFeedbackTapped,
                 ),
               ),
             ],
@@ -167,6 +167,13 @@ class SessionExpansionTile extends StatelessWidget {
     AppNavigator.pushNamed(
       '/more/speakers/detail',
       arguments: session.speaker,
+    );
+  }
+
+  void _sessionFeedbackTapped() {
+    AppNavigator.pushNamed(
+      '/more/feedback',
+      arguments: session,
     );
   }
 }

@@ -1,5 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'package:method_conf_app/theme.dart';
+import 'package:method_conf_app/widgets/app_html.dart';
 
 Future<void> launchUrl(String url) async {
   if (await canLaunch(url)) {
@@ -24,4 +28,31 @@ String daySuffix(int day) {
   }
 
   return suffix;
+}
+
+Future<void> showErrorDialog({
+  @required context,
+  @required String message,
+  String title = 'Whoops',
+}) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(title),
+        content: IntrinsicHeight(child: AppHtml(markup: message)),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              'Ok',
+              style: TextStyle(color: AppColors.accent),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
