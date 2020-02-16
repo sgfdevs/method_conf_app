@@ -40,3 +40,4 @@ lib/generated_plugin_registrant.dart
 env.dart
 
 ios/Runner/GoogleService-Info.plist
+android/app/google-services.json

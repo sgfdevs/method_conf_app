@@ -1,4 +1,4 @@
-package com.example.method_conf_app
+package com.sgfdevs.methodConfApp
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
