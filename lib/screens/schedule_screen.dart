@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:method_conf_app/widgets/app_banner.dart';
 import 'package:provider/provider.dart';
 
 import 'package:method_conf_app/env.dart';
@@ -46,6 +47,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             padding: EdgeInsets.all(20),
             physics: AlwaysScrollableScrollPhysics(),
             children: <Widget>[
+              ..._buildBanner(eventDate),
               Text(
                 DateFormat(dateFormString).format(eventDate),
                 style: TextStyle(fontSize: 20),
@@ -131,5 +133,20 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     }
 
     return widgets;
+  }
+
+  List<Widget> _buildBanner(DateTime eventDate) {
+    if(eventDate.isBefore(DateTime.now())) {
+      return [Container()];
+    }
+
+    return [
+      AppBanner(
+        text: 'Invest Your Yourself By Honing Your Craft',
+        buttonText: 'SEATING IS LIMITED - REGISTER NOW!',
+        onButtonPress: () => launchUrl(Env.ticketUrl),
+      ),
+      SizedBox(height: 20),
+    ];
   }
 }

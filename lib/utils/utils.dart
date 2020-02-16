@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -55,4 +57,8 @@ Future<void> showErrorDialog({
       );
     },
   );
+}
+
+double degreesToRads(double deg) {
+  return (deg * pi) / 180.0;
 }

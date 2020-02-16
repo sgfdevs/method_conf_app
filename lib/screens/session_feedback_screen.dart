@@ -129,7 +129,7 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
                   _submitFeedback(session);
                 },
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                color: AppColors.primary,
+                color: Colors.black,
                 child: Text(
                   'SEND FEEDBACK',
                   style: TextStyle(

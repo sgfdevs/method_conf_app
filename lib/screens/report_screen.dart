@@ -141,7 +141,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 FlatButton(
                   onPressed: _submitReport,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  color: AppColors.primary,
+                  color: Colors.black,
                   child: Text(
                     'SEND',
                     style: TextStyle(

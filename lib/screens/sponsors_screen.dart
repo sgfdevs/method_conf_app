@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:method_conf_app/env.dart';
+import 'package:method_conf_app/widgets/app_banner.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:quiver/iterables.dart' show partition;
@@ -56,6 +58,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                 );
               }),
               ..._buildNormalSponsors(sponsorProvider.normalSponsors),
+              ..._buildBanner(),
             ],
           ),
         ),
@@ -122,5 +125,22 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
         ),
       );
     }).toList();
+  }
+
+  List<Widget> _buildBanner() {
+    var eventDate = DateTime.parse(Env.eventDate);
+
+    if(eventDate.isBefore(DateTime.now())) {
+      return [Container()];
+    }
+
+    return [
+      SizedBox(height: 20),
+      AppBanner(
+        text: 'Interested in becoming a sponsor?',
+        buttonText: 'SEE OPPORTUNITIES',
+        onButtonPress: () => launchUrl(Env.sponsorUrl),
+      ),
+    ];
   }
 }
