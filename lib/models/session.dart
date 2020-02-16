@@ -16,16 +16,33 @@ class Session {
   String type;
   Speaker speaker;
 
-  DateTime get dateTime {
-    var date = Env.eventDate;
-    var begin = time.split('–')[0];
-    begin = begin.split('-')[0];
+  DateTime get beginTime {
+    var begin = time.split('–').first;
+    begin = begin.split('-').first;
     begin = begin.replaceAll('PM', ' PM').replaceAll('AM', ' AM');
 
     var format = DateFormat('yyyy-MM-dd hh:mm a');
 
+    return format.parse('${Env.eventDate} $begin');
+  }
 
-    return format.parse('$date $begin');
+  DateTime get endTime {
+    var end = time.split('–').last;
+    end = end.split('-').last;
+    end = end
+        .replaceAll('PM', ' PM')
+        .replaceAll('AM', ' AM')
+        .replaceAll(' (Lunch)', '');
+
+    var format = DateFormat('yyyy-MM-dd hh:mm a');
+
+    var date = format.parse('${Env.eventDate} $end');
+
+    if(date == beginTime) {
+      date = date.add(Duration(hours: 1));
+    }
+
+    return date;
   }
 
   Session({

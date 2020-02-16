@@ -1,16 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:configurable_expansion_tile/configurable_expansion_tile.dart';
-import 'package:flutter_html/flutter_html.dart';
 
 import 'package:method_conf_app/models/session.dart';
-import 'package:method_conf_app/models/speaker.dart';
 import 'package:method_conf_app/theme.dart';
-import 'package:method_conf_app/utils/utils.dart';
 import 'package:method_conf_app/widgets/app_html.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 
-class SessionExpansionTile extends StatelessWidget {
+class SessionExpansionTile extends StatefulWidget {
   final Session session;
   final bool disableSpeakerTap;
 
@@ -19,6 +18,29 @@ class SessionExpansionTile extends StatelessWidget {
     this.session,
     this.disableSpeakerTap = false,
   }) : super(key: key);
+
+  @override
+  _SessionExpansionTileState createState() => _SessionExpansionTileState();
+}
+
+class _SessionExpansionTileState extends State<SessionExpansionTile> {
+  DateTime _currentTime;
+  Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _currentTime = DateTime.now();
+
+    _timer = Timer.periodic(Duration(seconds: 30), _timerHandler);
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +53,7 @@ class SessionExpansionTile extends StatelessWidget {
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(top: 15),
-            child: AppHtml(markup: session.description ?? 'Coming Soon'),
+            child: AppHtml(markup: widget.session.description ?? 'Coming Soon'),
           )
         ],
       ),
@@ -49,12 +71,12 @@ class SessionExpansionTile extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 5),
                 child: Text(
-                  session.time,
+                  widget.session.time,
                   style: TextStyle(fontSize: 16),
                 ),
               ),
               Visibility(
-                visible: true,
+                visible: _sessionVisible(),
                 child: FlatButton(
                   color: AppColors.accent,
                   child: Text(
@@ -75,7 +97,7 @@ class SessionExpansionTile extends StatelessWidget {
             children: <Widget>[
               Flexible(
                 child: Text(
-                  session.title,
+                  widget.session.title,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -111,7 +133,7 @@ class SessionExpansionTile extends StatelessWidget {
           onTap: _speakerTapped,
           child: ClipOval(
             child: CachedNetworkImage(
-              imageUrl: session.speaker.image,
+              imageUrl: widget.session.speaker.image,
               placeholder: (context, url) => Container(
                 height: 50,
                 width: 50,
@@ -134,7 +156,7 @@ class SessionExpansionTile extends StatelessWidget {
               GestureDetector(
                 onTap: _speakerTapped,
                 child: Text(
-                  session.speaker.name,
+                  widget.session.speaker.name,
                   style: TextStyle(
                     color: AppColors.accent,
                     fontSize: 16,
@@ -146,7 +168,7 @@ class SessionExpansionTile extends StatelessWidget {
                 children: <Widget>[
                   Flexible(
                     child: Text(
-                      session.speaker.title,
+                      widget.session.speaker.title,
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -160,20 +182,30 @@ class SessionExpansionTile extends StatelessWidget {
   }
 
   void _speakerTapped() {
-    if (this.disableSpeakerTap) {
+    if (this.widget.disableSpeakerTap) {
       return;
     }
 
     AppNavigator.pushNamed(
       '/more/speakers/detail',
-      arguments: session.speaker,
+      arguments: widget.session.speaker,
     );
   }
 
   void _sessionFeedbackTapped() {
     AppNavigator.pushNamed(
       '/more/feedback',
-      arguments: session,
+      arguments: widget.session,
     );
+  }
+
+  void _timerHandler(Timer timer) {
+    setState(() {
+      _currentTime = DateTime.now();
+    });
+  }
+
+  bool _sessionVisible() {
+    return widget.session.beginTime.isBefore(_currentTime);
   }
 }

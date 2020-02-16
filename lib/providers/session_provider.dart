@@ -39,7 +39,7 @@ class SessionProvider extends ChangeNotifier {
       _main.add(lunchSession);
     }
 
-    _main.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    _main.sort((a, b) => a.beginTime.compareTo(b.beginTime));
 
     return _main;
   }
@@ -56,7 +56,7 @@ class SessionProvider extends ChangeNotifier {
       _workshop.add(lunchSession);
     }
 
-    _workshop.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    _workshop.sort((a, b) => a.beginTime.compareTo(b.beginTime));
 
     return _workshop;
   }

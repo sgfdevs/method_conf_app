@@ -178,7 +178,7 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
       'sessionTitle': session.title,
       'speakerRating': _speakerRating,
       'contentRating': _contentRating,
-      'vanueRating': _venueRating,
+      'venueRating': _venueRating,
       'comments': _commentController.text,
     });
 
@@ -213,5 +213,3 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
     );
   }
 }
-
-typedef _RatingSelectedCallback = void Function(int value);
