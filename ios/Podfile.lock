@@ -1,4 +1,6 @@
 PODS:
+  - device_info (0.0.1):
+    - Flutter
   - Firebase/Analytics (6.11.0):
     - Firebase/Core
   - Firebase/Core (6.11.0):
@@ -36,6 +38,9 @@ PODS:
     - GoogleUtilities/Environment (~> 6.0)
     - GoogleUtilities/UserDefaults (~> 6.0)
   - Flutter (1.0.0)
+  - flutter_sentry (0.0.1):
+    - Flutter
+    - Sentry (~> 4.4)
   - fluttertoast (0.0.2):
     - Flutter
   - FMDB (2.7.5):
@@ -78,6 +83,9 @@ PODS:
     - Flutter
   - screen (0.0.1):
     - Flutter
+  - Sentry (4.4.3):
+    - Sentry/Core (= 4.4.3)
+  - Sentry/Core (4.4.3)
   - shared_preferences (0.0.1):
     - Flutter
   - shared_preferences_macos (0.0.1):
@@ -99,8 +107,10 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - device_info (from `.symlinks/plugins/device_info/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - Flutter (from `Flutter`)
+  - flutter_sentry (from `.symlinks/plugins/flutter_sentry/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - screen (from `.symlinks/plugins/screen/ios`)
@@ -128,12 +138,17 @@ SPEC REPOS:
     - GoogleDataTransportCCTSupport
     - GoogleUtilities
     - nanopb
+    - Sentry
 
 EXTERNAL SOURCES:
+  device_info:
+    :path: ".symlinks/plugins/device_info/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   Flutter:
     :path: Flutter
+  flutter_sentry:
+    :path: ".symlinks/plugins/flutter_sentry/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   path_provider:
@@ -160,6 +175,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_player_web/ios"
 
 SPEC CHECKSUMS:
+  device_info: cbf09d2ec12aa7110e0b09fabe54b5bd6c8efe74
   Firebase: bc9cfc7a96c73268656d5aaab453ff1b4b530e0e
   firebase_analytics: dacdcfc524d722fff13dcff942f0dfa47e6be567
   FirebaseAnalytics: 0e3ecff2c5d86070f7d4325e21f1edabfbd558dc
@@ -168,6 +184,7 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnosticsInterop: 6829da2b8d1fc795ff1bd99df751d3788035d2cb
   FirebaseInstanceID: d0eafcd8bdbd3447cd694594734078c3e3e77d8b
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_sentry: 064fe77ba689da97c21429fc3c3a2c51ed5153b1
   fluttertoast: b644586ef3b16f67fae9a1f8754cef6b2d6b634b
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleAppMeasurement: 434cc7be25e71dc04b8d0e3079125127b330e84a
@@ -177,6 +194,7 @@ SPEC CHECKSUMS:
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   screen: abd91ca7bf3426e1cc3646d27e9b2358d6bf07b0
+  Sentry: 14bdd673870e8cf64932b149fad5bbbf39a9b390
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
