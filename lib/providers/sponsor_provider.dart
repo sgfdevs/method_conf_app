@@ -24,11 +24,11 @@ class SponsorProvider extends ChangeNotifier {
   }
 
   List<Sponsor> get largeSponsors {
-    return sponsors.where((s) => s.mobileSponsor).toList();
+    return sponsors.where((s) => s.mobileSponsor!).toList();
   }
 
   List<Sponsor> get normalSponsors {
-    return sponsors.where((s) => !s.mobileSponsor).toList();
+    return sponsors.where((s) => !s.mobileSponsor!).toList();
   }
 
   Future<void> fetchInitialSponsors() async {
@@ -41,7 +41,7 @@ class SponsorProvider extends ChangeNotifier {
     sponsors = prefs
         .getStringList(SPONSOR_KEY)
         ?.map((s) => Sponsor.fromJson(json.decode(s)))
-        ?.toList() ?? [];
+        .toList() ?? [];
 
     if(sponsors.length > 0) {
       // refresh in background if we found some in storage

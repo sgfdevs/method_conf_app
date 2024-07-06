@@ -17,11 +17,11 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _message = '';
-  String _resolution = '';
-  String _name = '';
-  String _email = '';
-  String _phone = '';
+  String? _message = '';
+  String? _resolution = '';
+  String? _name = '';
+  String? _email = '';
+  String? _phone = '';
   bool _processing = false;
 
   @override
@@ -167,7 +167,7 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   Future<void> _submitReport() async {
-    _formKey.currentState.save();
+    _formKey.currentState!.save();
 
     if (_message == '') {
       showErrorDialog(
@@ -190,7 +190,7 @@ class _ReportScreenState extends State<ReportScreen> {
       'phone': _phone,
     });
 
-    http.Response response;
+    late http.Response response;
 
     try {
       response = await http.post(

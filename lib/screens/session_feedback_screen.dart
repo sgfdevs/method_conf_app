@@ -19,10 +19,10 @@ class SessionFeedbackScreen extends StatefulWidget {
 }
 
 class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
-  TextEditingController _commentController;
-  int _speakerRating;
-  int _contentRating;
-  int _venueRating;
+  late TextEditingController _commentController;
+  int? _speakerRating;
+  int? _contentRating;
+  int? _venueRating;
   bool _processing = false;
 
   @override
@@ -39,7 +39,7 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var session = ModalRoute.of(context).settings.arguments as Session;
+    var session = ModalRoute.of(context)!.settings.arguments as Session?;
 
     if (session == null) {
       return NotFoundScreen();
@@ -184,7 +184,7 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
       'comments': _commentController.text,
     });
 
-    http.Response response;
+    late http.Response response;
 
     try {
       response = await http.post(

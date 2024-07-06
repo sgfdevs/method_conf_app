@@ -18,7 +18,7 @@ class SponsorsScreen extends StatefulWidget {
 }
 
 class _SponsorsScreenState extends State<SponsorsScreen> {
-  Future _sponsorsFuture;
+  Future? _sponsorsFuture;
 
   @override
   void initState() {
@@ -68,14 +68,14 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
 
   Widget _buildSponsor(Sponsor sponsor) {
     return Container(
-      height: sponsor.mobileSponsor ? 130 : 100,
+      height: sponsor.mobileSponsor! ? 130 : 100,
       color: sponsor.background == 'dark'
           ? AppColors.primaryLight
           : AppColors.neutralExtraLight,
       child: TextButton(
         style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
         onPressed: () {
-          launchUrl(sponsor.url);
+          launchUrl(sponsor.url!);
         },
         child: Row(
           children: <Widget>[
@@ -84,9 +84,9 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
               flex: 8,
               child: Center(
                 child: OverflowBox(
-                  maxHeight: sponsor.mobileSponsor ? 75 : 65,
+                  maxHeight: sponsor.mobileSponsor! ? 75 : 65,
                   child: CachedNetworkImage(
-                    imageUrl: sponsor.image,
+                    imageUrl: sponsor.image!,
                     placeholder: (context, url) => CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation(Colors.transparent),
                     ),

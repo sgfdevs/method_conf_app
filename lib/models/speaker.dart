@@ -5,18 +5,18 @@ part 'speaker.g.dart';
 @JsonSerializable()
 class Speaker {
   String name;
-  String title;
-  String image;
-  String bio;
-  String professionalTitle;
-  String websiteURL;
-  String twitterUrl;
-  String twitter2Url;
-  String githubUrl;
-  String linkedinUrl;
+  String? title;
+  String? image;
+  String? bio;
+  String? professionalTitle;
+  String? websiteURL;
+  String? twitterUrl;
+  String? twitter2Url;
+  String? githubUrl;
+  String? linkedinUrl;
 
   Speaker({
-    this.name,
+    required this.name,
     this.title,
     this.image,
     this.bio,

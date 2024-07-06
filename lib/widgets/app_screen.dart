@@ -6,13 +6,13 @@ import 'package:method_conf_app/widgets/app_navigator.dart';
 class AppScreen extends StatelessWidget {
   final Widget body;
   final String title;
-  final Widget preHeader;
-  final Widget postTitle;
+  final Widget? preHeader;
+  final Widget? postTitle;
 
   const AppScreen({
-    Key key,
-    @required this.body,
-    @required this.title,
+    Key? key,
+    required this.body,
+    required this.title,
     this.preHeader,
     this.postTitle,
   }) : super(key: key);
@@ -72,7 +72,7 @@ class AppScreen extends StatelessWidget {
   }
 
   Widget _buildBackButton(BuildContext context) {
-    var currentRouteName = ModalRoute.of(context).settings.name;
+    var currentRouteName = ModalRoute.of(context)!.settings.name!;
 
     return Visibility(
       visible: _isNestedRoute(currentRouteName),

@@ -5,7 +5,7 @@ import 'package:method_conf_app/theme.dart';
 class HalfBorderBox extends StatelessWidget {
   final Widget child;
 
-  const HalfBorderBox({Key key, @required this.child}) : super(key: key);
+  const HalfBorderBox({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

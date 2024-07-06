@@ -15,7 +15,7 @@ import 'package:method_conf_app/widgets/app_screen.dart';
 class SpeakerDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var speaker = ModalRoute.of(context).settings.arguments as Speaker;
+    var speaker = ModalRoute.of(context)!.settings.arguments as Speaker?;
     var session =
         Provider.of<SessionProvider>(context).getSessionForSpeaker(speaker);
 
@@ -45,7 +45,7 @@ class SpeakerDetailScreen extends StatelessWidget {
                   children: <Widget>[
                     Flexible(
                       child: CachedNetworkImage(
-                        imageUrl: speaker.image,
+                        imageUrl: speaker.image!,
                         placeholder: (context, url) {
                           return Container(
                             child: CircularProgressIndicator(
@@ -79,7 +79,7 @@ class SpeakerDetailScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 24),
                 ),
                 SizedBox(height: 15),
-                SessionExpansionTile(session: session, disableSpeakerTap: true),
+                SessionExpansionTile(session: session!, disableSpeakerTap: true),
               ],
             ),
           )
@@ -94,35 +94,35 @@ class SpeakerDetailScreen extends StatelessWidget {
     if (speaker.twitterUrl != null) {
       icons.add(InkWell(
 //        padding: EdgeInsets.all(0),
-        onTap: () => launchUrl(speaker.twitterUrl),
+        onTap: () => launchUrl(speaker.twitterUrl!),
         child: Icon(AppIcons.twitter_logo, color: AppColors.accent, size: 35),
       ));
     }
 
     if (speaker.twitter2Url != null) {
       icons.add(InkWell(
-        onTap: () => launchUrl(speaker.twitter2Url),
+        onTap: () => launchUrl(speaker.twitter2Url!),
         child: Icon(AppIcons.twitter_logo, color: AppColors.accent, size: 35),
       ));
     }
 
     if (speaker.linkedinUrl != null) {
       icons.add(InkWell(
-        onTap: () => launchUrl(speaker.linkedinUrl),
+        onTap: () => launchUrl(speaker.linkedinUrl!),
         child: Icon(AppIcons.linkedin_logo, color: AppColors.accent, size: 35),
       ));
     }
 
     if (speaker.githubUrl != null) {
       icons.add(InkWell(
-        onTap: () => launchUrl(speaker.githubUrl),
+        onTap: () => launchUrl(speaker.githubUrl!),
         child: Icon(AppIcons.github_logo, color: AppColors.accent, size: 35),
       ));
     }
 
     if (speaker.websiteURL != null) {
       icons.add(InkWell(
-        onTap: () => launchUrl(speaker.websiteURL),
+        onTap: () => launchUrl(speaker.websiteURL!),
         child: Icon(AppIcons.website_logo, color: AppColors.accent, size: 35),
       ));
     }

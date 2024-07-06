@@ -3,12 +3,12 @@ import 'package:method_conf_app/theme.dart';
 
 class Rating extends StatelessWidget {
   final _RatingSelectedCallback onSelected;
-  final int currentValue;
+  final int? currentValue;
 
   const Rating({
-    Key key,
-    @required this.onSelected,
-    @required this.currentValue,
+    Key? key,
+    required this.onSelected,
+    required this.currentValue,
   }) : super(key: key);
 
   @override

@@ -95,14 +95,14 @@ class _AppNavigationState extends State<AppNavigation> {
     AppNavigator.pushNamed(navigationItems[value].route);
   }
 
-  void _updateTabIndexOnRouteChange(Route newRoute) {
+  void _updateTabIndexOnRouteChange(Route? newRoute) {
     var routes = navigationItems.map((i) => i.route).toList();
     var newIndex = 0;
 
     for (var index in Iterable<int>.generate(routes.length)) {
       var route = routes[index];
 
-      if (newRoute.settings.name.startsWith(route)) {
+      if (newRoute?.settings.name?.startsWith(route) ?? false) {
         newIndex = index;
         break;
       }
@@ -118,5 +118,5 @@ class _NavigationItem {
   final String route;
   final BottomNavigationBarItem item;
 
-  _NavigationItem({this.route, this.item});
+  _NavigationItem({required this.route, required this.item});
 }

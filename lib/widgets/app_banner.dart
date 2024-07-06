@@ -8,10 +8,10 @@ class AppBanner extends StatelessWidget {
   final GestureTapCallback onButtonPress;
 
   const AppBanner({
-    Key key,
-    @required this.text,
-    @required this.buttonText,
-    @required this.onButtonPress,
+    Key? key,
+    required this.text,
+    required this.buttonText,
+    required this.onButtonPress,
   }) : super(key: key);
 
   @override

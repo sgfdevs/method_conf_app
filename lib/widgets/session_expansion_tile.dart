@@ -14,8 +14,8 @@ class SessionExpansionTile extends StatefulWidget {
   final bool disableSpeakerTap;
 
   const SessionExpansionTile({
-    Key key,
-    this.session,
+    Key? key,
+    required this.session,
     this.disableSpeakerTap = false,
   }) : super(key: key);
 
@@ -24,8 +24,8 @@ class SessionExpansionTile extends StatefulWidget {
 }
 
 class _SessionExpansionTileState extends State<SessionExpansionTile> {
-  DateTime _currentTime;
-  Timer _timer;
+  late DateTime _currentTime;
+  late Timer _timer;
 
   @override
   void initState() {
@@ -60,7 +60,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
     );
   }
 
-  Widget _buildHeader({bool expanded}) {
+  Widget _buildHeader({required bool expanded}) {
     return Expanded(
       child: Column(
         children: <Widget>[
@@ -71,7 +71,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 5),
                 child: Text(
-                  widget.session.time,
+                  widget.session.time!,
                   style: TextStyle(fontSize: 16),
                 ),
               ),
@@ -133,7 +133,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
           onTap: _speakerTapped,
           child: ClipOval(
             child: CachedNetworkImage(
-              imageUrl: widget.session.speaker.image,
+              imageUrl: widget.session.speaker.image!,
               placeholder: (context, url) => Container(
                 height: 50,
                 width: 50,
@@ -168,7 +168,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
                 children: <Widget>[
                   Flexible(
                     child: Text(
-                      widget.session.speaker.title,
+                      widget.session.speaker.title!,
                       style: TextStyle(fontSize: 16),
                     ),
                   ),

@@ -33,8 +33,8 @@ String daySuffix(int day) {
 }
 
 Future<void> showErrorDialog({
-  @required context,
-  @required String message,
+  required context,
+  required String message,
   String title = 'Whoops',
 }) {
   return showDialog(

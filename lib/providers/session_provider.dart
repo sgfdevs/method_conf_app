@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,7 +13,7 @@ import 'package:method_conf_app/models/session.dart';
 const SESSIONS_KEY = 'app-sessions';
 
 class SessionProvider extends ChangeNotifier {
-  final SpeakerProvider speakerProvider;
+  final SpeakerProvider? speakerProvider;
 
   bool _initialFetched = false;
 
@@ -30,9 +31,8 @@ class SessionProvider extends ChangeNotifier {
   List<Session> get mainSessions {
     var _main = sessions.where((s) => s.type == 'Main').toList();
 
-    var lunchSession = sessions.firstWhere(
+    var lunchSession = sessions.firstWhereOrNull(
       (s) => s.type == 'Lunch',
-      orElse: () => null,
     );
 
     if (lunchSession != null) {
@@ -47,9 +47,8 @@ class SessionProvider extends ChangeNotifier {
   List<Session> get workshopSessions {
     var _workshop = _sessions.where((s) => s.type == 'Workshop').toList();
 
-    var lunchSession = sessions.lastWhere(
+    var lunchSession = sessions.lastWhereOrNull(
       (s) => s.type == 'Lunch',
-      orElse: () => null,
     );
 
     if (lunchSession != null) {
@@ -75,7 +74,7 @@ class SessionProvider extends ChangeNotifier {
     sessions = prefs
             .getStringList(SESSIONS_KEY)
             ?.map((s) => Session.fromJson(json.decode(s)))
-            ?.toList() ??
+            .toList() ??
         [];
 
     if (sessions.length > 0) {
@@ -96,7 +95,7 @@ class SessionProvider extends ChangeNotifier {
         .map((s) => Session.fromJson(s))
         .toList();
 
-    speakerProvider.setSpeakersFromSessions(sessions);
+    speakerProvider!.setSpeakersFromSessions(sessions);
 
     var prefs = await SharedPreferences.getInstance();
 
@@ -104,10 +103,9 @@ class SessionProvider extends ChangeNotifier {
     await prefs.setStringList(SESSIONS_KEY, sessionsJson);
   }
 
-  Session getSessionForSpeaker(Speaker speaker) {
-    return sessions.firstWhere(
-      (session) => session.speaker.name == speaker.name,
-      orElse: () => null,
+  Session? getSessionForSpeaker(Speaker? speaker) {
+    return sessions.firstWhereOrNull(
+      (session) => session.speaker.name == speaker!.name,
     );
   }
 }

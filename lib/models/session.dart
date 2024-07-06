@@ -9,15 +9,15 @@ part 'session.g.dart';
 @JsonSerializable()
 class Session {
   String title;
-  String url;
-  String status;
-  String description;
-  String time;
-  String type;
+  String? url;
+  String? status;
+  String? description;
+  String? time;
+  String? type;
   Speaker speaker;
 
   DateTime get beginTime {
-    var begin = time.split('–').first;
+    var begin = time!.split('–').first;
     begin = begin.split('-').first;
     begin = begin.replaceAll('PM', ' PM').replaceAll('AM', ' AM');
 
@@ -27,7 +27,7 @@ class Session {
   }
 
   DateTime get endTime {
-    var end = time.split('–').last;
+    var end = time!.split('–').last;
     end = end.split('-').last;
     end = end
         .replaceAll('PM', ' PM')
@@ -46,13 +46,13 @@ class Session {
   }
 
   Session({
-    this.title,
+    required this.title,
     this.url,
     this.status,
     this.description,
     this.time,
     this.type,
-    this.speaker,
+    required this.speaker,
   });
 
   factory Session.fromJson(Map<String, dynamic> json) =>

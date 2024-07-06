@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:method_conf_app/theme.dart';
 
 class AppListItem extends StatelessWidget {
-  final GestureTapCallback onTap;
+  final GestureTapCallback? onTap;
   final String text;
 
-  const AppListItem({Key key, this.onTap, this.text}) : super(key: key);
+  const AppListItem({Key? key, this.onTap, required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class AppListItem extends StatelessWidget {
         }
 
         Timer(Duration(milliseconds: 100), () {
-          onTap();
+          onTap!();
         });
       },
       child: Container(

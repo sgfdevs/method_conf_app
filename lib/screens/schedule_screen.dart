@@ -17,7 +17,7 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  Future _sessionFuture;
+  Future? _sessionFuture;
 
   @override
   void initState() {
@@ -76,7 +76,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     );
   }
 
-  Widget _buildSimpleCard({String time, String title}) {
+  Widget _buildSimpleCard({required String time, required String title}) {
     return Container(
       color: AppColors.neutralExtraLight,
       padding: EdgeInsets.all(10),

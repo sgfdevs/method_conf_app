@@ -10,16 +10,16 @@ class AppNavigator extends StatelessWidget {
   );
   static final _navigatorKey = GlobalKey<NavigatorState>();
 
-  final _RouteChangeCallBack onRouteChange;
+  final _RouteChangeCallBack? onRouteChange;
   final Map<String, WidgetBuilder> routes;
   final String initialRoute;
   final WidgetBuilder notFoundBuilder;
 
   AppNavigator({
-    Key key,
-    @required this.routes,
-    @required this.initialRoute,
-    @required this.notFoundBuilder,
+    Key? key,
+    required this.routes,
+    required this.initialRoute,
+    required this.notFoundBuilder,
     this.onRouteChange,
   }) : super(key: key);
 
@@ -27,8 +27,8 @@ class AppNavigator extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (_navigatorKey.currentState.canPop()) {
-          _navigatorKey.currentState.pop();
+        if (_navigatorKey.currentState!.canPop()) {
+          _navigatorKey.currentState!.pop();
           return false;
         }
 
@@ -65,7 +65,7 @@ class AppNavigator extends StatelessWidget {
     );
   }
 
-  void _onRouteChangeHandler(Route newRoute) {
+  void _onRouteChangeHandler(Route? newRoute) {
     if (onRouteChange == null) {
       return;
     }
@@ -73,26 +73,26 @@ class AppNavigator extends StatelessWidget {
     // Wait for widget tree to build before running callback
     // This allows the callback to safely use setState
     SchedulerBinding.instance.addPersistentFrameCallback((_) {
-      onRouteChange(newRoute);
+      onRouteChange!(newRoute);
     });
   }
 
-  static Future<T> pushNamed<T extends Object>(String routeName,
-      {Object arguments}) {
-    return _navigatorKey.currentState
+  static Future<T?> pushNamed<T extends Object>(String routeName,
+      {Object? arguments}) {
+    return _navigatorKey.currentState!
         .pushNamed<T>(routeName, arguments: arguments);
   }
 
-  static void pop<T extends Object>([T result]) {
-    return _navigatorKey.currentState.pop<T>(result);
+  static void pop<T extends Object>([T? result]) {
+    return _navigatorKey.currentState!.pop<T>(result);
   }
 
-  static Future<T> pushReplacementNamed<T extends Object, TO extends Object>(
+  static Future<T?> pushReplacementNamed<T extends Object, TO extends Object>(
     String routeName, {
-    TO result,
-    Object arguments,
+    TO? result,
+    Object? arguments,
   }) {
-    return _navigatorKey.currentState.pushReplacementNamed<T, TO>(
+    return _navigatorKey.currentState!.pushReplacementNamed<T, TO>(
       routeName,
       arguments: arguments,
       result: result,
@@ -100,25 +100,25 @@ class AppNavigator extends StatelessWidget {
   }
 }
 
-typedef _RouteChangeCallBack = void Function(Route newRoute);
+typedef _RouteChangeCallBack = void Function(Route? newRoute);
 
 class _AppNavigationObserver extends NavigatorObserver {
   final _RouteChangeCallBack onRouteChange;
 
-  _AppNavigationObserver({@required this.onRouteChange});
+  _AppNavigationObserver({required this.onRouteChange});
 
   @override
-  void didPush(Route route, Route previousRoute) {
+  void didPush(Route route, Route? previousRoute) {
     onRouteChange(route);
   }
 
   @override
-  void didPop(Route route, Route previousRoute) {
+  void didPop(Route route, Route? previousRoute) {
     onRouteChange(previousRoute);
   }
 
   @override
-  void didReplace({Route newRoute, Route oldRoute}) {
+  void didReplace({Route? newRoute, Route? oldRoute}) {
     onRouteChange(newRoute);
   }
 }
