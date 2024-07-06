@@ -4,8 +4,7 @@ class PageLoader extends StatelessWidget {
   final Widget child;
   final Future? future;
 
-  const PageLoader({Key? key, required this.child, this.future})
-      : super(key: key);
+  const PageLoader({super.key, required this.child, this.future});
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +16,12 @@ class PageLoader extends StatelessWidget {
         }
 
         if (snapshot.hasError) {
-          return Center(
+          return const Center(
             child: Text('Something went wrong.'),
           );
         }
 
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       },

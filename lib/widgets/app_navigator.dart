@@ -14,13 +14,13 @@ class AppNavigator extends StatelessWidget {
   final String initialRoute;
   final WidgetBuilder notFoundBuilder;
 
-  AppNavigator({
-    Key? key,
+  const AppNavigator({
+    super.key,
     required this.routes,
     required this.initialRoute,
     required this.notFoundBuilder,
     this.onRouteChange,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

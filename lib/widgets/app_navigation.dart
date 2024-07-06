@@ -15,21 +15,23 @@ import 'package:method_conf_app/screens/session_feedback_screen.dart';
 import 'package:method_conf_app/screens/session_feedback_success_screen.dart';
 
 class AppNavigation extends StatefulWidget {
+  const AppNavigation({super.key});
+
   @override
   _AppNavigationState createState() => _AppNavigationState();
 }
 
 class _AppNavigationState extends State<AppNavigation> {
   final Map<String, WidgetBuilder> routes = {
-    '/schedule': (context) => ScheduleScreen(),
-    '/partners': (context) => SponsorsScreen(),
-    '/more': (context) => MoreScreen(),
-    '/more/speakers': (context) => SpeakersScreen(),
-    '/more/speakers/detail': (context) => SpeakerDetailScreen(),
-    '/more/report': (context) => ReportScreen(),
-    '/more/report/success': (context) => ReportSuccessScreen(),
-    '/more/feedback': (context) => SessionFeedbackScreen(),
-    '/more/feedback/success': (context) => SessionFeedbackSuccessScreen(),
+    '/schedule': (context) => const ScheduleScreen(),
+    '/partners': (context) => const SponsorsScreen(),
+    '/more': (context) => const MoreScreen(),
+    '/more/speakers': (context) => const SpeakersScreen(),
+    '/more/speakers/detail': (context) => const SpeakerDetailScreen(),
+    '/more/report': (context) => const ReportScreen(),
+    '/more/report/success': (context) => const ReportSuccessScreen(),
+    '/more/feedback': (context) => const SessionFeedbackScreen(),
+    '/more/feedback/success': (context) => const SessionFeedbackSuccessScreen(),
   };
 
   List<_NavigationItem> get navigationItems {
@@ -57,7 +59,7 @@ class _AppNavigationState extends State<AppNavigation> {
       body: AppNavigator(
         initialRoute: '/schedule',
         routes: routes,
-        notFoundBuilder: (context) => NotFoundScreen(),
+        notFoundBuilder: (context) => const NotFoundScreen(),
         onRouteChange: _updateTabIndexOnRouteChange,
       ),
       bottomNavigationBar: Container(
@@ -69,8 +71,8 @@ class _AppNavigationState extends State<AppNavigation> {
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.white,
           unselectedItemColor: AppColors.primaryLight,
-          selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
-          unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
+          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
           selectedFontSize: 12,
           unselectedFontSize: 12,
           onTap: _onItemTapped,

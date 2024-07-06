@@ -16,7 +16,7 @@ class SpeakerProvider extends ChangeNotifier {
   Speaker getSpeakerByName(String name) {
     return speakers.firstWhere(
       (s) => s.name == name,
-      orElse: null,
+      orElse: () => null,
     );
   }
 

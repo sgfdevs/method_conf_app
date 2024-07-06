@@ -7,12 +7,12 @@ import 'package:method_conf_app/utils/utils.dart';
 class AppHtml extends StatelessWidget {
   final String? markup;
 
-  const AppHtml({Key? key, this.markup}) : super(key: key);
+  const AppHtml({super.key, this.markup});
 
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
-      style: TextStyle(fontSize: 14, height: 1.6),
+      style: const TextStyle(fontSize: 14, height: 1.6),
       child: Html(
         data: markup,
         style: {

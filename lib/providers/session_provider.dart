@@ -29,35 +29,35 @@ class SessionProvider extends ChangeNotifier {
   }
 
   List<Session> get mainSessions {
-    var _main = sessions.where((s) => s.type == 'Main').toList();
+    var main = sessions.where((s) => s.type == 'Main').toList();
 
     var lunchSession = sessions.firstWhereOrNull(
       (s) => s.type == 'Lunch',
     );
 
     if (lunchSession != null) {
-      _main.add(lunchSession);
+      main.add(lunchSession);
     }
 
-    _main.sort((a, b) => a.beginTime.compareTo(b.beginTime));
+    main.sort((a, b) => a.beginTime.compareTo(b.beginTime));
 
-    return _main;
+    return main;
   }
 
   List<Session> get workshopSessions {
-    var _workshop = _sessions.where((s) => s.type == 'Workshop').toList();
+    var workshop = _sessions.where((s) => s.type == 'Workshop').toList();
 
     var lunchSession = sessions.lastWhereOrNull(
       (s) => s.type == 'Lunch',
     );
 
     if (lunchSession != null) {
-      _workshop.add(lunchSession);
+      workshop.add(lunchSession);
     }
 
-    _workshop.sort((a, b) => a.beginTime.compareTo(b.beginTime));
+    workshop.sort((a, b) => a.beginTime.compareTo(b.beginTime));
 
-    return _workshop;
+    return workshop;
   }
 
   List<Session> get keynoteSessions {
@@ -77,7 +77,7 @@ class SessionProvider extends ChangeNotifier {
             .toList() ??
         [];
 
-    if (sessions.length > 0) {
+    if (sessions.isNotEmpty) {
       // refresh in background if we found some in storage
       fetchSessions();
     } else {

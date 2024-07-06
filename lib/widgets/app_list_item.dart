@@ -8,8 +8,7 @@ class AppListItem extends StatelessWidget {
   final GestureTapCallback? onTap;
   final String text;
 
-  const AppListItem({Key? key, this.onTap, required this.text})
-      : super(key: key);
+  const AppListItem({super.key, this.onTap, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -19,26 +18,26 @@ class AppListItem extends StatelessWidget {
           return;
         }
 
-        Timer(Duration(milliseconds: 100), () {
+        Timer(const Duration(milliseconds: 100), () {
           onTap!();
         });
       },
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           border: Border(
             bottom: BorderSide(width: 1, color: AppColors.neutralLight),
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 15),
+          padding: const EdgeInsets.symmetric(vertical: 15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
                 text,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              Icon(Icons.chevron_right, size: 24),
+              const Icon(Icons.chevron_right, size: 24),
             ],
           ),
         ),

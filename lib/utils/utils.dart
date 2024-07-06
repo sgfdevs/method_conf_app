@@ -44,7 +44,7 @@ Future<void> showErrorDialog({
         content: IntrinsicHeight(child: AppHtml(markup: message)),
         actions: <Widget>[
           TextButton(
-            child: Text(
+            child: const Text(
               'Ok',
               style: TextStyle(color: AppColors.accent),
             ),

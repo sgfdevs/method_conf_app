@@ -44,7 +44,7 @@ class SponsorProvider extends ChangeNotifier {
             .toList() ??
         [];
 
-    if (sponsors.length > 0) {
+    if (sponsors.isNotEmpty) {
       // refresh in background if we found some in storage
       fetchSponsors();
     } else {

@@ -8,6 +8,8 @@ import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/widgets/app_navigation.dart';
 
 class App extends StatelessWidget {
+  const App({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -22,7 +24,7 @@ class App extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: appTheme(context),
-        home: AppNavigation(),
+        home: const AppNavigation(),
       ),
     );
   }

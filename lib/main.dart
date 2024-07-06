@@ -25,5 +25,5 @@ Future start() async {
 
   analytics.enabled = Env.enableAnalytics;
 
-  runApp(App());
+  runApp(const App());
 }

@@ -11,6 +11,8 @@ import 'package:method_conf_app/widgets/half_border_box.dart';
 import 'package:method_conf_app/utils/utils.dart';
 
 class ReportScreen extends StatefulWidget {
+  const ReportScreen({super.key});
+
   @override
   _ReportScreenState createState() => _ReportScreenState();
 }
@@ -31,18 +33,18 @@ class _ReportScreenState extends State<ReportScreen> {
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           children: <Widget>[
-            Text(
+            const Text(
               'Message',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            Text('Required', style: TextStyle(fontSize: 12)),
-            SizedBox(height: 10),
+            const Text('Required', style: TextStyle(fontSize: 12)),
+            const SizedBox(height: 10),
             HalfBorderBox(
               child: TextFormField(
                 maxLines: 4,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   filled: true,
                   fillColor: AppColors.neutralExtraLight,
                   hintText: 'What is the issue?',
@@ -55,17 +57,17 @@ class _ReportScreenState extends State<ReportScreen> {
                 },
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Resolution Suggestion',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            Text('optional', style: TextStyle(fontSize: 12)),
-            SizedBox(height: 10),
+            const Text('optional', style: TextStyle(fontSize: 12)),
+            const SizedBox(height: 10),
             HalfBorderBox(
               child: TextFormField(
                 maxLines: 4,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   filled: true,
                   fillColor: AppColors.neutralExtraLight,
                   hintText: 'How can this be fixed?',
@@ -78,16 +80,16 @@ class _ReportScreenState extends State<ReportScreen> {
                 },
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Your Info',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            Text('optional', style: TextStyle(fontSize: 12)),
-            SizedBox(height: 10),
+            const Text('optional', style: TextStyle(fontSize: 12)),
+            const SizedBox(height: 10),
             HalfBorderBox(
               child: TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   filled: true,
                   fillColor: AppColors.neutralExtraLight,
                   hintText: 'Your Name',
@@ -100,11 +102,11 @@ class _ReportScreenState extends State<ReportScreen> {
                 },
               ),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             HalfBorderBox(
               child: TextFormField(
                 keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   filled: true,
                   fillColor: AppColors.neutralExtraLight,
                   hintText: 'Email',
@@ -117,11 +119,11 @@ class _ReportScreenState extends State<ReportScreen> {
                 },
               ),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             HalfBorderBox(
               child: TextFormField(
                 keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   filled: true,
                   fillColor: AppColors.neutralExtraLight,
                   hintText: 'Phone Number',
@@ -134,17 +136,17 @@ class _ReportScreenState extends State<ReportScreen> {
                 },
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 TextButton(
                   style: TextButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     backgroundColor: Colors.black,
                   ),
                   onPressed: _submitReport,
-                  child: Text(
+                  child: const Text(
                     'SEND',
                     style: TextStyle(
                       color: Colors.white,
@@ -153,10 +155,10 @@ class _ReportScreenState extends State<ReportScreen> {
                     ),
                   ),
                 ),
-                SizedBox(width: 15),
+                const SizedBox(width: 15),
                 Visibility(
                   visible: _processing,
-                  child: CircularProgressIndicator(),
+                  child: const CircularProgressIndicator(),
                 ),
               ],
             ),

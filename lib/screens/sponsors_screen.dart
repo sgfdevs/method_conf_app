@@ -13,6 +13,8 @@ import 'package:method_conf_app/widgets/app_screen.dart';
 import 'package:method_conf_app/providers/sponsor_provider.dart';
 
 class SponsorsScreen extends StatefulWidget {
+  const SponsorsScreen({super.key});
+
   @override
   _SponsorsScreenState createState() => _SponsorsScreenState();
 }
@@ -42,18 +44,18 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
             await sponsorProvider.fetchSponsors();
           },
           child: ListView(
-            padding: EdgeInsets.all(20),
-            physics: AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(20),
+            physics: const AlwaysScrollableScrollPhysics(),
             children: <Widget>[
-              Text(
+              const Text(
                 'Method Conference Springfield, MO 2020 is proud to be sponsored by:',
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 18),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               ...sponsorProvider.largeSponsors.map((sponsor) {
                 return Padding(
-                  padding: EdgeInsets.only(bottom: 15),
+                  padding: const EdgeInsets.only(bottom: 15),
                   child: _buildSponsor(sponsor),
                 );
               }),
@@ -73,7 +75,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
           ? AppColors.primaryLight
           : AppColors.neutralExtraLight,
       child: TextButton(
-        style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
+        style: TextButton.styleFrom(padding: const EdgeInsets.all(0)),
         onPressed: () {
           launchUrl(sponsor.url!);
         },
@@ -87,10 +89,10 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                   maxHeight: sponsor.mobileSponsor! ? 75 : 65,
                   child: CachedNetworkImage(
                     imageUrl: sponsor.image!,
-                    placeholder: (context, url) => CircularProgressIndicator(
+                    placeholder: (context, url) => const CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation(Colors.transparent),
                     ),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
                   ),
                 ),
               ),
@@ -106,16 +108,16 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
     var chunked = partition(sponsors, 2);
     return chunked.map((sponsorPair) {
       return Padding(
-        padding: EdgeInsets.only(bottom: 15),
+        padding: const EdgeInsets.only(bottom: 15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Flexible(
-              child: sponsorPair.length >= 1
+              child: sponsorPair.isNotEmpty
                   ? _buildSponsor(sponsorPair[0])
                   : Container(),
             ),
-            SizedBox(width: 15),
+            const SizedBox(width: 15),
             Flexible(
               child: sponsorPair.length >= 2
                   ? _buildSponsor(sponsorPair[1])
@@ -135,7 +137,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
     }
 
     return [
-      SizedBox(height: 20),
+      const SizedBox(height: 20),
       AppBanner(
         text: 'Interested in becoming a sponsor?',
         buttonText: 'SEE OPPORTUNITIES',

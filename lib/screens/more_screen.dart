@@ -7,12 +7,14 @@ import 'package:method_conf_app/widgets/app_navigator.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
 
 class MoreScreen extends StatelessWidget {
+  const MoreScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AppScreen(
       title: 'More ...',
       body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         children: <Widget>[
           AppListItem(
             text: 'Location Info',
