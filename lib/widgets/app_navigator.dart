@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
+import 'package:method_conf_app/utils/analytics.dart';
+import 'package:plausible_analytics/navigator_observer.dart';
 
 class AppNavigator extends StatelessWidget {
-  static var analytics = FirebaseAnalytics.instance;
-  static var analyticsObserver = FirebaseAnalyticsObserver(
-    analytics: analytics,
+  static var analyticsObserver = PlausibleNavigatorObserver(
+    analytics,
   );
   static final _navigatorKey = GlobalKey<NavigatorState>();
 
