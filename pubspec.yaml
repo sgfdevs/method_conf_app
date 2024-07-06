@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
   sentry_flutter: ^8.3.0
   provider: ^6.1.2
-  google_fonts: ^4.0.4
+  google_fonts: ^6.2.1
   url_launcher: ^6.1.11
   fluttertoast: ^8.2.5
   # Using custom version of this library that makes the ConfigurableExpansionTileState class public

@@ -24,7 +24,7 @@ ThemeData appTheme(BuildContext context) {
     brightness: Brightness.light,
     primaryColor: AppColors.primary,
     colorScheme: theme.colorScheme.copyWith(secondary: AppColors.accent),
-    textTheme: GoogleFonts.sourceSansProTextTheme(),
+    textTheme: GoogleFonts.sourceSans3TextTheme(),
     pageTransitionsTheme: PageTransitionsTheme(builders: {
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),
       TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
