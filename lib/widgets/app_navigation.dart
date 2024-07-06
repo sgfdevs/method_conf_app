@@ -32,7 +32,6 @@ class _AppNavigationState extends State<AppNavigation> {
     '/more/feedback/success': (context) => SessionFeedbackSuccessScreen(),
   };
 
-
   List<_NavigationItem> get navigationItems {
     return [
       _NavigationItem(
@@ -88,7 +87,7 @@ class _AppNavigationState extends State<AppNavigation> {
   }
 
   void _onItemTapped(int value) {
-    if(value == _selectedIndex) {
+    if (value == _selectedIndex) {
       return;
     }
 

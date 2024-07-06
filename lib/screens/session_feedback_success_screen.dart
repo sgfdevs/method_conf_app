@@ -16,8 +16,7 @@ class SessionFeedbackSuccessScreen extends StatelessWidget {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           AppHtml(
-            markup:
-            "Thanks for taking a moment and providing your feedback.",
+            markup: "Thanks for taking a moment and providing your feedback.",
           ),
         ],
       ),

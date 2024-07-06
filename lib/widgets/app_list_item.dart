@@ -8,13 +8,14 @@ class AppListItem extends StatelessWidget {
   final GestureTapCallback? onTap;
   final String text;
 
-  const AppListItem({Key? key, this.onTap, required this.text}) : super(key: key);
+  const AppListItem({Key? key, this.onTap, required this.text})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if(onTap == null) {
+        if (onTap == null) {
           return;
         }
 

@@ -15,8 +15,6 @@ class AppColors {
   static const twitterPrimary = Color(0xff1da1F2);
 }
 
-
-
 ThemeData appTheme(BuildContext context) {
   final theme = Theme.of(context);
 

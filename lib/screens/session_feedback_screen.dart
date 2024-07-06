@@ -84,7 +84,6 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
             },
           ),
           SizedBox(height: 20),
-
           Text(
             'Rate Venue',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -129,9 +128,8 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
                   _submitFeedback(session);
                 },
                 style: TextButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  backgroundColor: Colors.black
-                ),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    backgroundColor: Colors.black),
                 child: Text(
                   'SEND FEEDBACK',
                   style: TextStyle(

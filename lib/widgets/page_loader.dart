@@ -4,7 +4,8 @@ class PageLoader extends StatelessWidget {
   final Widget child;
   final Future? future;
 
-  const PageLoader({Key? key, required this.child, this.future}) : super(key: key);
+  const PageLoader({Key? key, required this.child, this.future})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

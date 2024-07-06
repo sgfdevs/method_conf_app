@@ -39,17 +39,17 @@ class SponsorProvider extends ChangeNotifier {
     var prefs = await SharedPreferences.getInstance();
 
     sponsors = prefs
-        .getStringList(SPONSOR_KEY)
-        ?.map((s) => Sponsor.fromJson(json.decode(s)))
-        .toList() ?? [];
+            .getStringList(SPONSOR_KEY)
+            ?.map((s) => Sponsor.fromJson(json.decode(s)))
+            .toList() ??
+        [];
 
-    if(sponsors.length > 0) {
+    if (sponsors.length > 0) {
       // refresh in background if we found some in storage
       fetchSponsors();
     } else {
       await fetchSponsors();
     }
-
 
     _initialFetched = true;
   }

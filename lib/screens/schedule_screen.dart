@@ -136,7 +136,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   List<Widget> _buildBanner(DateTime eventDate) {
-    if(eventDate.isBefore(DateTime.now())) {
+    if (eventDate.isBefore(DateTime.now())) {
       return [Container()];
     }
 

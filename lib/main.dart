@@ -7,14 +7,13 @@ import 'package:method_conf_app/app.dart';
 import 'package:method_conf_app/utils/analytics.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-
 Future main() async {
   if (!Env.enableErrorTracking) {
     return start();
   }
 
   return SentryFlutter.init(
-        (options) {
+    (options) {
       options.dsn = Env.sentryDsn;
     },
     appRunner: start,

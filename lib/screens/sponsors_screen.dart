@@ -130,7 +130,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
   List<Widget> _buildBanner() {
     var eventDate = DateTime.parse(Env.eventDate);
 
-    if(eventDate.isBefore(DateTime.now())) {
+    if (eventDate.isBefore(DateTime.now())) {
       return [Container()];
     }
 

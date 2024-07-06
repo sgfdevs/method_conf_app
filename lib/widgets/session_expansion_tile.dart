@@ -78,7 +78,8 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
               Visibility(
                 visible: _sessionVisible(),
                 child: TextButton(
-                  style: TextButton.styleFrom(backgroundColor: AppColors.accent),
+                  style:
+                      TextButton.styleFrom(backgroundColor: AppColors.accent),
                   child: Text(
                     'Session Feedback',
                     style: TextStyle(

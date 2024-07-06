@@ -20,7 +20,6 @@ Future<void> launchUrl(String url) async {
   );
 }
 
-
 String daySuffix(int day) {
   var suffix = 'th';
   var digit = day % 10;

@@ -38,7 +38,7 @@ class Session {
 
     var date = format.parse('${Env.eventDate} $end');
 
-    if(date == beginTime) {
+    if (date == beginTime) {
       date = date.add(Duration(hours: 1));
     }
 
