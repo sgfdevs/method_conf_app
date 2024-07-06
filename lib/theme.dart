@@ -18,10 +18,12 @@ class AppColors {
 
 
 ThemeData appTheme(BuildContext context) {
-  return Theme.of(context).copyWith(
+  final theme = Theme.of(context);
+
+  return theme.copyWith(
     brightness: Brightness.light,
     primaryColor: AppColors.primary,
-    accentColor: AppColors.accent,
+    colorScheme: theme.colorScheme.copyWith(secondary: AppColors.accent),
     textTheme: GoogleFonts.sourceSansProTextTheme(),
     pageTransitionsTheme: PageTransitionsTheme(builders: {
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),
