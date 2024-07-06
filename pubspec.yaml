@@ -19,30 +19,35 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_sentry: ^0.2.1
-  provider: ^4.0.2
-  google_fonts: ^0.3.6
-  url_launcher: ^5.4.1
-  fluttertoast: ^3.1.3
-  configurable_expansion_tile: ^1.0.0
-  intl: ^0.16.1
-  json_annotation: ^3.0.1
-  cached_network_image: ^2.0.0
-  flutter_html: ^0.11.1
-  shared_preferences: ^0.5.6+1
-  quiver: ^2.0.5
-  firebase_analytics: ^5.0.11
+  sentry_flutter: ^8.3.0
+  provider: ^6.1.2
+  google_fonts: ^4.0.4
+  url_launcher: ^6.1.11
+  fluttertoast: ^8.2.5
+  # Using custom version of this library that makes the ConfigurableExpansionTileState class public
+  # as well as it's handleTap method. This allows outside widgets programmatic control
+  configurable_expansion_tile:
+    git:
+      url: https://github.com/glitchedmob/configurable_expansion_tile.git
+      ref: 20f9e0480caac035fc5d8a2b9b2d6d1bdf115617
+  intl: ^0.18.1
+  json_annotation: ^4.8.1
+  cached_network_image: ^3.2.3
+  flutter_html: ^3.0.0-beta.2
+  shared_preferences: ^2.2.2
+  quiver: ^3.2.1
+  firebase_analytics: ^10.8.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
+  cupertino_icons: ^1.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^1.7.3
-  json_serializable: ^3.2.5
-  flutter_launcher_icons: ^0.7.3
+  build_runner: ^2.3.3
+  json_serializable: ^6.6.2
+  flutter_launcher_icons: ^0.13.1
 
 flutter_icons:
   android: "launcher_icon"

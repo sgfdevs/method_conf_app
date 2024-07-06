@@ -72,8 +72,8 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
       color: sponsor.background == 'dark'
           ? AppColors.primaryLight
           : AppColors.neutralExtraLight,
-      child: FlatButton(
-        padding: EdgeInsets.all(0),
+      child: TextButton(
+        style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
         onPressed: () {
           launchUrl(sponsor.url);
         },

@@ -89,7 +89,7 @@ class SessionProvider extends ChangeNotifier {
   }
 
   Future<void> fetchSessions() async {
-    var url = '${Env.methodBaseUrl}/sessions.json';
+    var url = Uri.parse('${Env.methodBaseUrl}/sessions.json');
     var res = await http.get(url);
 
     sessions = (json.decode(res.body)['data'] as List<dynamic>)

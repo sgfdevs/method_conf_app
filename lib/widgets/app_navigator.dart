@@ -4,7 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 
 class AppNavigator extends StatelessWidget {
-  static var analytics = FirebaseAnalytics();
+  static var analytics = FirebaseAnalytics.instance;
   static var analyticsObserver = FirebaseAnalyticsObserver(
     analytics: analytics,
   );
@@ -83,7 +83,7 @@ class AppNavigator extends StatelessWidget {
         .pushNamed<T>(routeName, arguments: arguments);
   }
 
-  static bool pop<T extends Object>([T result]) {
+  static void pop<T extends Object>([T result]) {
     return _navigatorKey.currentState.pop<T>(result);
   }
 

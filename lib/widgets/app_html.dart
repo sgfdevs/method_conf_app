@@ -11,16 +11,20 @@ class AppHtml extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Html(
-      data: markup,
-      defaultTextStyle: TextStyle(fontSize: 14, height: 1.6),
-      linkStyle: TextStyle(
-        decoration: TextDecoration.underline,
-        color: AppColors.accent,
+    return DefaultTextStyle(
+      style: TextStyle(fontSize: 14, height: 1.6),
+      child: Html(
+        data: markup,
+        style: {
+          'a': Style(
+            textDecoration: TextDecoration.underline,
+            color: AppColors.accent,
+          )
+        },
+        onLinkTap: (url, _, __) {
+          launchUrl(url);
+        },
       ),
-      onLinkTap: (url) {
-        launchUrl(url);
-      },
     );
   }
 }

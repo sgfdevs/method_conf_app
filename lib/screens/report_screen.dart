@@ -138,10 +138,12 @@ class _ReportScreenState extends State<ReportScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                FlatButton(
+                TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    backgroundColor: Colors.black,
+                  ),
                   onPressed: _submitReport,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  color: Colors.black,
                   child: Text(
                     'SEND',
                     style: TextStyle(
@@ -192,7 +194,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
     try {
       response = await http.post(
-        Env.reportEndpoint,
+        Uri.parse(Env.reportEndpoint),
         body: data,
         headers: {'Content-Type': 'application/json'},
       );

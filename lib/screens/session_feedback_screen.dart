@@ -124,12 +124,14 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   _submitFeedback(session);
                 },
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                color: Colors.black,
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  backgroundColor: Colors.black
+                ),
                 child: Text(
                   'SEND FEEDBACK',
                   style: TextStyle(
@@ -186,7 +188,7 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
 
     try {
       response = await http.post(
-        Env.feedbackEndpoint,
+        Uri.parse(Env.feedbackEndpoint),
         body: data,
         headers: {'Content-Type': 'application/json'},
       );

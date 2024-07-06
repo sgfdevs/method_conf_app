@@ -59,10 +59,12 @@ class AppBanner extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20),
-                  FlatButton(
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      backgroundColor: Colors.black
+                    ),
                     onPressed: onButtonPress,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                    color: Colors.black,
                     child: Text(
                       buttonText,
                       style: TextStyle(

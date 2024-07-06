@@ -55,7 +55,7 @@ class SponsorProvider extends ChangeNotifier {
   }
 
   Future<void> fetchSponsors() async {
-    var url = '${Env.methodBaseUrl}/sponsors.json';
+    var url = Uri.parse('${Env.methodBaseUrl}/sponsors.json');
     var res = await http.get(url);
 
     sponsors = (json.decode(res.body)['data'] as List<dynamic>)

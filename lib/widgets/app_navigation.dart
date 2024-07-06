@@ -70,6 +70,8 @@ class _AppNavigationState extends State<AppNavigation> {
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.white,
           unselectedItemColor: AppColors.primaryLight,
+          selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
+          unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
           selectedFontSize: 12,
           unselectedFontSize: 12,
           onTap: _onItemTapped,
@@ -81,10 +83,7 @@ class _AppNavigationState extends State<AppNavigation> {
   BottomNavigationBarItem _buildNavigationBarItem(IconData icon, String text) {
     return BottomNavigationBarItem(
       icon: Icon(icon, size: 25),
-      title: Text(
-        text,
-        style: TextStyle(fontWeight: FontWeight.w600),
-      ),
+      label: text,
     );
   }
 
