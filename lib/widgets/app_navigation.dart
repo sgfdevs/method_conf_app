@@ -7,7 +7,6 @@ import 'package:method_conf_app/screens/more_screen.dart';
 import 'package:method_conf_app/screens/not_found_screen.dart';
 import 'package:method_conf_app/screens/sponsors_screen.dart';
 import 'package:method_conf_app/screens/schedule_screen.dart';
-import 'package:method_conf_app/screens/social_feed_screen.dart';
 import 'package:method_conf_app/screens/speakers_screen.dart';
 import 'package:method_conf_app/screens/report_screen.dart';
 import 'package:method_conf_app/screens/report_success_screen.dart';
@@ -23,7 +22,6 @@ class AppNavigation extends StatefulWidget {
 class _AppNavigationState extends State<AppNavigation> {
   final Map<String, WidgetBuilder> routes = {
     '/schedule': (context) => ScheduleScreen(),
-    '/social-feed': (context) => SocialFeedScreen(),
     '/partners': (context) => SponsorsScreen(),
     '/more': (context) => MoreScreen(),
     '/more/speakers': (context) => SpeakersScreen(),
@@ -40,10 +38,6 @@ class _AppNavigationState extends State<AppNavigation> {
       _NavigationItem(
         route: '/schedule',
         item: _buildNavigationBarItem(AppIcons.schedule, 'Schedule'),
-      ),
-      _NavigationItem(
-        route: '/social-feed',
-        item: _buildNavigationBarItem(AppIcons.hashtag, 'MethodConf'),
       ),
       _NavigationItem(
         route: '/partners',
