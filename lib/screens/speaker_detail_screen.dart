@@ -13,23 +13,25 @@ import 'package:method_conf_app/widgets/app_html.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
 
 class SpeakerDetailScreen extends StatelessWidget {
+  const SpeakerDetailScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    var speaker = ModalRoute.of(context).settings.arguments as Speaker;
+    var speaker = ModalRoute.of(context)!.settings.arguments as Speaker?;
     var session =
         Provider.of<SessionProvider>(context).getSessionForSpeaker(speaker);
 
     if (speaker == null) {
-      return NotFoundScreen();
+      return const NotFoundScreen();
     }
 
     return AppScreen(
       title: 'Speaker',
       body: ListView(
-        padding: EdgeInsets.all(0),
+        padding: const EdgeInsets.all(0),
         children: <Widget>[
           Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             color: AppColors.neutralExtraLight,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,27 +39,27 @@ class SpeakerDetailScreen extends StatelessWidget {
                 Text(
                   speaker.name,
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Flexible(
                       child: CachedNetworkImage(
-                        imageUrl: speaker.image,
+                        imageUrl: speaker.image!,
                         placeholder: (context, url) {
                           return Container(
-                            child: CircularProgressIndicator(
+                            child: const CircularProgressIndicator(
                               valueColor:
                                   AlwaysStoppedAnimation(Colors.transparent),
                             ),
                           );
                         },
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Flexible(
                       child: _buildSocialIcons(speaker),
                     ),
@@ -70,16 +72,17 @@ class SpeakerDetailScreen extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
+                const Text(
                   'Speaking Sessions & Workshops',
                   style: TextStyle(fontSize: 24),
                 ),
-                SizedBox(height: 15),
-                SessionExpansionTile(session: session, disableSpeakerTap: true),
+                const SizedBox(height: 15),
+                SessionExpansionTile(
+                    session: session!, disableSpeakerTap: true),
               ],
             ),
           )
@@ -94,43 +97,43 @@ class SpeakerDetailScreen extends StatelessWidget {
     if (speaker.twitterUrl != null) {
       icons.add(InkWell(
 //        padding: EdgeInsets.all(0),
-        onTap: () => launchUrl(speaker.twitterUrl),
-        child: Icon(AppIcons.twitter_logo, color: AppColors.accent, size: 35),
+        onTap: () => launchUrl(speaker.twitterUrl!),
+        child: const Icon(AppIcons.twitter_logo, color: AppColors.accent, size: 35),
       ));
     }
 
     if (speaker.twitter2Url != null) {
       icons.add(InkWell(
-        onTap: () => launchUrl(speaker.twitter2Url),
-        child: Icon(AppIcons.twitter_logo, color: AppColors.accent, size: 35),
+        onTap: () => launchUrl(speaker.twitter2Url!),
+        child: const Icon(AppIcons.twitter_logo, color: AppColors.accent, size: 35),
       ));
     }
 
     if (speaker.linkedinUrl != null) {
       icons.add(InkWell(
-        onTap: () => launchUrl(speaker.linkedinUrl),
-        child: Icon(AppIcons.linkedin_logo, color: AppColors.accent, size: 35),
+        onTap: () => launchUrl(speaker.linkedinUrl!),
+        child: const Icon(AppIcons.linkedin_logo, color: AppColors.accent, size: 35),
       ));
     }
 
     if (speaker.githubUrl != null) {
       icons.add(InkWell(
-        onTap: () => launchUrl(speaker.githubUrl),
-        child: Icon(AppIcons.github_logo, color: AppColors.accent, size: 35),
+        onTap: () => launchUrl(speaker.githubUrl!),
+        child: const Icon(AppIcons.github_logo, color: AppColors.accent, size: 35),
       ));
     }
 
     if (speaker.websiteURL != null) {
       icons.add(InkWell(
-        onTap: () => launchUrl(speaker.websiteURL),
-        child: Icon(AppIcons.website_logo, color: AppColors.accent, size: 35),
+        onTap: () => launchUrl(speaker.websiteURL!),
+        child: const Icon(AppIcons.website_logo, color: AppColors.accent, size: 35),
       ));
     }
 
     return Wrap(
-      children: icons,
       spacing: 30,
       runSpacing: 30,
+      children: icons,
     );
   }
 }

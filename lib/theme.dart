@@ -15,15 +15,15 @@ class AppColors {
   static const twitterPrimary = Color(0xff1da1F2);
 }
 
-
-
 ThemeData appTheme(BuildContext context) {
-  return Theme.of(context).copyWith(
+  final theme = Theme.of(context);
+
+  return theme.copyWith(
     brightness: Brightness.light,
     primaryColor: AppColors.primary,
-    accentColor: AppColors.accent,
-    textTheme: GoogleFonts.sourceSansProTextTheme(),
-    pageTransitionsTheme: PageTransitionsTheme(builders: {
+    colorScheme: theme.colorScheme.copyWith(secondary: AppColors.accent),
+    textTheme: GoogleFonts.sourceSans3TextTheme(),
+    pageTransitionsTheme: const PageTransitionsTheme(builders: {
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),
       TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
     }),

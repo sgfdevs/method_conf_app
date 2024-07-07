@@ -24,11 +24,11 @@ class SponsorProvider extends ChangeNotifier {
   }
 
   List<Sponsor> get largeSponsors {
-    return sponsors.where((s) => s.mobileSponsor).toList();
+    return sponsors.where((s) => s.mobileSponsor!).toList();
   }
 
   List<Sponsor> get normalSponsors {
-    return sponsors.where((s) => !s.mobileSponsor).toList();
+    return sponsors.where((s) => !s.mobileSponsor!).toList();
   }
 
   Future<void> fetchInitialSponsors() async {
@@ -39,23 +39,23 @@ class SponsorProvider extends ChangeNotifier {
     var prefs = await SharedPreferences.getInstance();
 
     sponsors = prefs
-        .getStringList(SPONSOR_KEY)
-        ?.map((s) => Sponsor.fromJson(json.decode(s)))
-        ?.toList() ?? [];
+            .getStringList(SPONSOR_KEY)
+            ?.map((s) => Sponsor.fromJson(json.decode(s)))
+            .toList() ??
+        [];
 
-    if(sponsors.length > 0) {
+    if (sponsors.isNotEmpty) {
       // refresh in background if we found some in storage
       fetchSponsors();
     } else {
       await fetchSponsors();
     }
 
-
     _initialFetched = true;
   }
 
   Future<void> fetchSponsors() async {
-    var url = '${Env.methodBaseUrl}/sponsors.json';
+    var url = Uri.parse('${Env.methodBaseUrl}/sponsors.json');
     var res = await http.get(url);
 
     sponsors = (json.decode(res.body)['data'] as List<dynamic>)

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:method_conf_app/models/session.dart';
 
@@ -13,10 +14,9 @@ class SpeakerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Speaker getSpeakerByName(String name) {
-    return speakers.firstWhere(
+  Speaker? getSpeakerByName(String name) {
+    return speakers.firstWhereOrNull(
       (s) => s.name == name,
-      orElse: null,
     );
   }
 

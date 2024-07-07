@@ -5,22 +5,26 @@ import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/utils/utils.dart';
 
 class AppHtml extends StatelessWidget {
-  final String markup;
+  final String? markup;
 
-  const AppHtml({Key key, this.markup}) : super(key: key);
+  const AppHtml({super.key, this.markup});
 
   @override
   Widget build(BuildContext context) {
-    return Html(
-      data: markup,
-      defaultTextStyle: TextStyle(fontSize: 14, height: 1.6),
-      linkStyle: TextStyle(
-        decoration: TextDecoration.underline,
-        color: AppColors.accent,
+    return DefaultTextStyle(
+      style: const TextStyle(fontSize: 14, height: 1.6),
+      child: Html(
+        data: markup,
+        style: {
+          'a': Style(
+            textDecoration: TextDecoration.underline,
+            color: AppColors.accent,
+          )
+        },
+        onLinkTap: (url, _, __) {
+          launchUrl(url!);
+        },
       ),
-      onLinkTap: (url) {
-        launchUrl(url);
-      },
     );
   }
 }

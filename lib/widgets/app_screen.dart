@@ -6,16 +6,16 @@ import 'package:method_conf_app/widgets/app_navigator.dart';
 class AppScreen extends StatelessWidget {
   final Widget body;
   final String title;
-  final Widget preHeader;
-  final Widget postTitle;
+  final Widget? preHeader;
+  final Widget? postTitle;
 
   const AppScreen({
-    Key key,
-    @required this.body,
-    @required this.title,
+    super.key,
+    required this.body,
+    required this.title,
     this.preHeader,
     this.postTitle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class AppScreen extends StatelessWidget {
           ),
           preHeader ?? Container(),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -56,7 +56,7 @@ class AppScreen extends StatelessWidget {
                 Text(
                   title,
                   textAlign: TextAlign.left,
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: AppColors.accent,
                       fontSize: 36,
                       fontWeight: FontWeight.bold),
@@ -65,14 +65,14 @@ class AppScreen extends StatelessWidget {
             ),
           ),
           postTitle ?? Container(),
-          Padding(padding: EdgeInsets.only(bottom: 20)),
+          const Padding(padding: EdgeInsets.only(bottom: 20)),
         ],
       ),
     );
   }
 
   Widget _buildBackButton(BuildContext context) {
-    var currentRouteName = ModalRoute.of(context).settings.name;
+    var currentRouteName = ModalRoute.of(context)!.settings.name!;
 
     return Visibility(
       visible: _isNestedRoute(currentRouteName),
@@ -81,7 +81,7 @@ class AppScreen extends StatelessWidget {
       maintainState: true,
       maintainInteractivity: false,
       child: GestureDetector(
-        child: Row(
+        child: const Row(
           children: <Widget>[
             Icon(Icons.chevron_left, color: Colors.white, size: 24),
             Text('Back', style: TextStyle(color: Colors.white, fontSize: 18)),

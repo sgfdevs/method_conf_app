@@ -4,11 +4,11 @@ part 'sponsor.g.dart';
 
 @JsonSerializable()
 class Sponsor {
-  String title;
-  String url;
-  String image;
-  bool mobileSponsor;
-  String background;
+  String? title;
+  String? url;
+  String? image;
+  bool? mobileSponsor;
+  String? background;
 
   Sponsor({
     this.title,

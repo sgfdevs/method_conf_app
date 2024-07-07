@@ -3,13 +3,13 @@ import 'package:method_conf_app/theme.dart';
 
 class Rating extends StatelessWidget {
   final _RatingSelectedCallback onSelected;
-  final int currentValue;
+  final int? currentValue;
 
   const Rating({
-    Key key,
-    @required this.onSelected,
-    @required this.currentValue,
-  }) : super(key: key);
+    super.key,
+    required this.onSelected,
+    required this.currentValue,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +29,10 @@ class Rating extends StatelessWidget {
     var selected = currentValue == value;
 
     return RawMaterialButton(
-      constraints: BoxConstraints(minWidth: 0, minHeight: 0),
-      padding: EdgeInsets.all(20),
+      constraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+      padding: const EdgeInsets.all(20),
       elevation: 0,
-      shape: CircleBorder(),
+      shape: const CircleBorder(),
       fillColor: selected ? AppColors.primaryDark : AppColors.neutralExtraLight,
       child: Text(
         value.toString(),
