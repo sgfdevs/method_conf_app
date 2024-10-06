@@ -14,15 +14,17 @@ import 'package:method_conf_app/widgets/half_border_box.dart';
 import 'package:method_conf_app/widgets/rating.dart';
 
 class SessionFeedbackScreen extends StatefulWidget {
+  const SessionFeedbackScreen({super.key});
+
   @override
   _SessionFeedbackScreenState createState() => _SessionFeedbackScreenState();
 }
 
 class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
-  TextEditingController _commentController;
-  int _speakerRating;
-  int _contentRating;
-  int _venueRating;
+  late TextEditingController _commentController;
+  int? _speakerRating;
+  int? _contentRating;
+  int? _venueRating;
   bool _processing = false;
 
   @override
@@ -39,22 +41,22 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var session = ModalRoute.of(context).settings.arguments as Session;
+    var session = ModalRoute.of(context)!.settings.arguments as Session?;
 
     if (session == null) {
-      return NotFoundScreen();
+      return const NotFoundScreen();
     }
 
     return AppScreen(
       title: 'Session Feedback',
       body: ListView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         children: <Widget>[
-          Text(
+          const Text(
             'Rate Speaker',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          Text(
+          const Text(
             '1 is meh, 5 is freaking amazing',
             style: TextStyle(fontSize: 12),
           ),
@@ -66,12 +68,12 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
               });
             },
           ),
-          SizedBox(height: 20),
-          Text(
+          const SizedBox(height: 20),
+          const Text(
             'Rate Content Relevance',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          Text(
+          const Text(
             '1 is meh, 5 is freaking amazing',
             style: TextStyle(fontSize: 12),
           ),
@@ -83,13 +85,12 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
               });
             },
           ),
-          SizedBox(height: 20),
-
-          Text(
+          const SizedBox(height: 20),
+          const Text(
             'Rate Venue',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          Text(
+          const Text(
             '1 is meh, 5 is freaking amazing',
             style: TextStyle(fontSize: 12),
           ),
@@ -101,18 +102,18 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
               });
             },
           ),
-          SizedBox(height: 20),
-          Text(
+          const SizedBox(height: 20),
+          const Text(
             'Comments',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          Text('Optional', style: TextStyle(fontSize: 12)),
-          SizedBox(height: 10),
+          const Text('Optional', style: TextStyle(fontSize: 12)),
+          const SizedBox(height: 10),
           HalfBorderBox(
             child: TextFormField(
               controller: _commentController,
               maxLines: 4,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 filled: true,
                 fillColor: AppColors.neutralExtraLight,
                 hintText: 'Your thoughts',
@@ -120,17 +121,18 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
               ),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   _submitFeedback(session);
                 },
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                color: Colors.black,
-                child: Text(
+                style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    backgroundColor: Colors.black),
+                child: const Text(
                   'SEND FEEDBACK',
                   style: TextStyle(
                     color: Colors.white,
@@ -139,10 +141,10 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
                   ),
                 ),
               ),
-              SizedBox(width: 15),
+              const SizedBox(width: 15),
               Visibility(
                 visible: _processing,
-                child: CircularProgressIndicator(),
+                child: const CircularProgressIndicator(),
               ),
             ],
           ),
@@ -182,11 +184,11 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
       'comments': _commentController.text,
     });
 
-    http.Response response;
+    late http.Response response;
 
     try {
       response = await http.post(
-        Env.feedbackEndpoint,
+        Uri.parse(Env.feedbackEndpoint),
         body: data,
         headers: {'Content-Type': 'application/json'},
       );

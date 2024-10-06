@@ -15,23 +15,24 @@ import 'package:method_conf_app/screens/session_feedback_screen.dart';
 import 'package:method_conf_app/screens/session_feedback_success_screen.dart';
 
 class AppNavigation extends StatefulWidget {
+  const AppNavigation({super.key});
+
   @override
   _AppNavigationState createState() => _AppNavigationState();
 }
 
 class _AppNavigationState extends State<AppNavigation> {
   final Map<String, WidgetBuilder> routes = {
-    '/schedule': (context) => ScheduleScreen(),
-    '/partners': (context) => SponsorsScreen(),
-    '/more': (context) => MoreScreen(),
-    '/more/speakers': (context) => SpeakersScreen(),
-    '/more/speakers/detail': (context) => SpeakerDetailScreen(),
-    '/more/report': (context) => ReportScreen(),
-    '/more/report/success': (context) => ReportSuccessScreen(),
-    '/more/feedback': (context) => SessionFeedbackScreen(),
-    '/more/feedback/success': (context) => SessionFeedbackSuccessScreen(),
+    '/schedule': (context) => const ScheduleScreen(),
+    '/partners': (context) => const SponsorsScreen(),
+    '/more': (context) => const MoreScreen(),
+    '/more/speakers': (context) => const SpeakersScreen(),
+    '/more/speakers/detail': (context) => const SpeakerDetailScreen(),
+    '/more/report': (context) => const ReportScreen(),
+    '/more/report/success': (context) => const ReportSuccessScreen(),
+    '/more/feedback': (context) => const SessionFeedbackScreen(),
+    '/more/feedback/success': (context) => const SessionFeedbackSuccessScreen(),
   };
-
 
   List<_NavigationItem> get navigationItems {
     return [
@@ -58,7 +59,7 @@ class _AppNavigationState extends State<AppNavigation> {
       body: AppNavigator(
         initialRoute: '/schedule',
         routes: routes,
-        notFoundBuilder: (context) => NotFoundScreen(),
+        notFoundBuilder: (context) => const NotFoundScreen(),
         onRouteChange: _updateTabIndexOnRouteChange,
       ),
       bottomNavigationBar: Container(
@@ -70,6 +71,8 @@ class _AppNavigationState extends State<AppNavigation> {
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.white,
           unselectedItemColor: AppColors.primaryLight,
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
+          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
           selectedFontSize: 12,
           unselectedFontSize: 12,
           onTap: _onItemTapped,
@@ -81,29 +84,26 @@ class _AppNavigationState extends State<AppNavigation> {
   BottomNavigationBarItem _buildNavigationBarItem(IconData icon, String text) {
     return BottomNavigationBarItem(
       icon: Icon(icon, size: 25),
-      title: Text(
-        text,
-        style: TextStyle(fontWeight: FontWeight.w600),
-      ),
+      label: text,
     );
   }
 
   void _onItemTapped(int value) {
-    if(value == _selectedIndex) {
+    if (value == _selectedIndex) {
       return;
     }
 
     AppNavigator.pushNamed(navigationItems[value].route);
   }
 
-  void _updateTabIndexOnRouteChange(Route newRoute) {
+  void _updateTabIndexOnRouteChange(Route? newRoute) {
     var routes = navigationItems.map((i) => i.route).toList();
     var newIndex = 0;
 
     for (var index in Iterable<int>.generate(routes.length)) {
       var route = routes[index];
 
-      if (newRoute.settings.name.startsWith(route)) {
+      if (newRoute?.settings.name?.startsWith(route) ?? false) {
         newIndex = index;
         break;
       }
@@ -119,5 +119,5 @@ class _NavigationItem {
   final String route;
   final BottomNavigationBarItem item;
 
-  _NavigationItem({this.route, this.item});
+  _NavigationItem({required this.route, required this.item});
 }

@@ -8,11 +8,11 @@ class AppBanner extends StatelessWidget {
   final GestureTapCallback onButtonPress;
 
   const AppBanner({
-    Key key,
-    @required this.text,
-    @required this.buttonText,
-    @required this.onButtonPress,
-  }) : super(key: key);
+    super.key,
+    required this.text,
+    required this.buttonText,
+    required this.onButtonPress,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class AppBanner extends StatelessWidget {
                 heightFactor: 2,
                 widthFactor: 2,
                 child: FractionalTranslation(
-                  translation: Offset(-0.31, -0.31),
+                  translation: const Offset(-0.31, -0.31),
                   child: Transform.rotate(
                     angle: degreesToRads(-40),
                     child: Container(
@@ -44,28 +44,30 @@ class AppBanner extends StatelessWidget {
           ),
           Center(
             child: Padding(
-              padding: EdgeInsets.only(top: 35, bottom: 45),
+              padding: const EdgeInsets.only(top: 35, bottom: 45),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Image.asset('assets/method_logo.png', height: 40),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Text(
                     text,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  FlatButton(
+                  const SizedBox(height: 20),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                        backgroundColor: Colors.black),
                     onPressed: onButtonPress,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                    color: Colors.black,
                     child: Text(
                       buttonText,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,

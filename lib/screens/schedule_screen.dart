@@ -12,12 +12,14 @@ import 'package:method_conf_app/widgets/page_loader.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
 
 class ScheduleScreen extends StatefulWidget {
+  const ScheduleScreen({super.key});
+
   @override
   _ScheduleScreenState createState() => _ScheduleScreenState();
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  Future _sessionFuture;
+  Future? _sessionFuture;
 
   @override
   void initState() {
@@ -44,30 +46,30 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             await sessionProvider.fetchSessions();
           },
           child: ListView(
-            padding: EdgeInsets.all(20),
-            physics: AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(20),
+            physics: const AlwaysScrollableScrollPhysics(),
             children: <Widget>[
               ..._buildBanner(eventDate),
               Text(
                 DateFormat(dateFormString).format(eventDate),
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               _buildSimpleCard(time: '7:45AM', title: 'Check-in/Breakfast'),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               _buildSimpleCard(time: '8:45AM', title: 'Welcome Announcement'),
-              SizedBox(height: 15),
-              Text('Main Track', style: TextStyle(fontSize: 20)),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
+              const Text('Main Track', style: TextStyle(fontSize: 20)),
+              const SizedBox(height: 15),
               ..._buildMainSessions(context),
-              Text('Workshop Track', style: TextStyle(fontSize: 20)),
-              SizedBox(height: 15),
+              const Text('Workshop Track', style: TextStyle(fontSize: 20)),
+              const SizedBox(height: 15),
               ..._buildWorkshopSessions(context),
-              Text('Keynote', style: TextStyle(fontSize: 20)),
-              SizedBox(height: 15),
+              const Text('Keynote', style: TextStyle(fontSize: 20)),
+              const SizedBox(height: 15),
               ..._buildKeynoteSessions(context),
               _buildSimpleCard(time: '5:30PM', title: 'Closing Remarks'),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               _buildSimpleCard(time: '5:45PM', title: 'After-Party'),
             ],
           ),
@@ -76,20 +78,20 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     );
   }
 
-  Widget _buildSimpleCard({String time, String title}) {
+  Widget _buildSimpleCard({required String time, required String title}) {
     return Container(
       color: AppColors.neutralExtraLight,
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Row(
         children: <Widget>[
           Text(
             time,
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Text(
             title,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           )
         ],
       ),
@@ -103,7 +105,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
     for (var session in sessionProvider.mainSessions) {
       widgets.add(SessionExpansionTile(session: session));
-      widgets.add(SizedBox(height: 15));
+      widgets.add(const SizedBox(height: 15));
     }
 
     return widgets;
@@ -116,7 +118,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
     for (var session in sessionProvider.workshopSessions) {
       widgets.add(SessionExpansionTile(session: session));
-      widgets.add(SizedBox(height: 15));
+      widgets.add(const SizedBox(height: 15));
     }
 
     return widgets;
@@ -129,14 +131,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
     for (var session in sessionProvider.keynoteSessions) {
       widgets.add(SessionExpansionTile(session: session));
-      widgets.add(SizedBox(height: 15));
+      widgets.add(const SizedBox(height: 15));
     }
 
     return widgets;
   }
 
   List<Widget> _buildBanner(DateTime eventDate) {
-    if(eventDate.isBefore(DateTime.now())) {
+    if (eventDate.isBefore(DateTime.now())) {
       return [Container()];
     }
 
@@ -146,7 +148,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         buttonText: 'SEATING IS LIMITED - REGISTER NOW!',
         onButtonPress: () => launchUrl(Env.ticketUrl),
       ),
-      SizedBox(height: 20),
+      const SizedBox(height: 20),
     ];
   }
 }

@@ -14,18 +14,18 @@ class SessionExpansionTile extends StatefulWidget {
   final bool disableSpeakerTap;
 
   const SessionExpansionTile({
-    Key key,
-    this.session,
+    super.key,
+    required this.session,
     this.disableSpeakerTap = false,
-  }) : super(key: key);
+  });
 
   @override
   _SessionExpansionTileState createState() => _SessionExpansionTileState();
 }
 
 class _SessionExpansionTileState extends State<SessionExpansionTile> {
-  DateTime _currentTime;
-  Timer _timer;
+  late DateTime _currentTime;
+  late Timer _timer;
 
   @override
   void initState() {
@@ -33,7 +33,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
 
     _currentTime = DateTime.now();
 
-    _timer = Timer.periodic(Duration(seconds: 30), _timerHandler);
+    _timer = Timer.periodic(const Duration(seconds: 30), _timerHandler);
   }
 
   @override
@@ -46,13 +46,13 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.neutralExtraLight,
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: ConfigurableExpansionTile(
         header: _buildHeader(expanded: false),
         headerExpanded: _buildHeader(expanded: true),
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(top: 15),
+            padding: const EdgeInsets.only(top: 15),
             child: AppHtml(markup: widget.session.description ?? 'Coming Soon'),
           )
         ],
@@ -60,7 +60,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
     );
   }
 
-  Widget _buildHeader({bool expanded}) {
+  Widget _buildHeader({required bool expanded}) {
     return Expanded(
       child: Column(
         children: <Widget>[
@@ -69,17 +69,19 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Text(
-                  widget.session.time,
-                  style: TextStyle(fontSize: 16),
+                  widget.session.time!,
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
               Visibility(
                 visible: _sessionVisible(),
-                child: FlatButton(
-                  color: AppColors.accent,
-                  child: Text(
+                child: TextButton(
+                  style:
+                      TextButton.styleFrom(backgroundColor: AppColors.accent),
+                  onPressed: _sessionFeedbackTapped,
+                  child: const Text(
                     'Session Feedback',
                     style: TextStyle(
                       color: Colors.white,
@@ -87,7 +89,6 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  onPressed: _sessionFeedbackTapped,
                 ),
               ),
             ],
@@ -98,17 +99,17 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
               Flexible(
                 child: Text(
                   widget.session.title,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Row(
                 children: <Widget>[
                   Text(
                     expanded ? 'Less' : 'More',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.accent,
                       fontSize: 16,
                       decoration: TextDecoration.underline,
@@ -119,7 +120,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
               )
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           _buildSpeaker(),
         ],
       ),
@@ -133,22 +134,22 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
           onTap: _speakerTapped,
           child: ClipOval(
             child: CachedNetworkImage(
-              imageUrl: widget.session.speaker.image,
-              placeholder: (context, url) => Container(
+              imageUrl: widget.session.speaker.image!,
+              placeholder: (context, url) => const SizedBox(
                 height: 50,
                 width: 50,
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation(Colors.transparent),
                 ),
               ),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
               height: 50,
               width: 50,
               fit: BoxFit.cover,
             ),
           ),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Flexible(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +158,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
                 onTap: _speakerTapped,
                 child: Text(
                   widget.session.speaker.name,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.accent,
                     fontSize: 16,
                     decoration: TextDecoration.underline,
@@ -168,8 +169,8 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
                 children: <Widget>[
                   Flexible(
                     child: Text(
-                      widget.session.speaker.title,
-                      style: TextStyle(fontSize: 16),
+                      widget.session.speaker.title!,
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ),
                 ],
@@ -182,7 +183,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
   }
 
   void _speakerTapped() {
-    if (this.widget.disableSpeakerTap) {
+    if (widget.disableSpeakerTap) {
       return;
     }
 

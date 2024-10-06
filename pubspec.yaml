@@ -1,5 +1,8 @@
 name: method_conf_app
 description: A new Flutter project.
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -8,48 +11,57 @@ description: A new Flutter project.
 # build by specifying --build-name and --build-number, respectively.
 # In Android, build-name is used as versionName while build-number used as versionCode.
 # Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.3.0<3.0.0"
+  sdk: '>=3.4.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_sentry: ^0.2.1
-  provider: ^4.0.2
-  google_fonts: ^0.3.6
-  url_launcher: ^5.4.1
-  fluttertoast: ^3.1.3
-  configurable_expansion_tile: ^1.0.0
-  intl: ^0.16.1
-  json_annotation: ^3.0.1
-  cached_network_image: ^2.0.0
-  flutter_html: ^0.11.1
-  shared_preferences: ^0.5.6+1
-  quiver: ^2.0.5
-  firebase_analytics: ^5.0.11
+  sentry_flutter: ^8.3.0
+  provider: ^6.1.2
+  google_fonts: ^6.2.1
+  url_launcher: ^6.3.0
+  fluttertoast: ^8.2.6
+  # Using custom version of this library that makes the ConfigurableExpansionTileState class public
+  # as well as it's handleTap method. This allows outside widgets programmatic control
+  configurable_expansion_tile:
+    git:
+      url: https://github.com/glitchedmob/configurable_expansion_tile.git
+      ref: 14e81924987e0c9dd7be832b35d8493184112935
+  intl: ^0.19.0
+  json_annotation: ^4.9.0
+  cached_network_image: ^3.3.1
+  flutter_html: ^3.0.0-beta.2
+  shared_preferences: ^2.2.3
+  quiver: ^3.2.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
+  cupertino_icons: ^1.0.8
+  collection: ^1.18.0
+  plausible_analytics: ^0.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^1.7.3
-  json_serializable: ^3.2.5
-  flutter_launcher_icons: ^0.7.3
+  build_runner: ^2.4.11
+  json_serializable: ^6.8.0
+  flutter_launcher_icons: ^0.13.1
+  flutter_lints: ^4.0.0
 
-flutter_icons:
+flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icon/MethodConf_iOS_Icon.png"
-  image_path_android: "assets/icon/MethodConf_Android_Icon.png"
+  image_path: "assets/icon/launcher-icon-solid.png"
   adaptive_icon_background: "#1C1B1A"
+  adaptive_icon_foreground: "assets/icon/launcher-icon-transparent.png"
 
 
 # For information on the generic Dart part of this file, see the
@@ -80,9 +92,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-   - family: AppIcons
-     fonts:
-       - asset: assets/AppIcons.ttf
+    - family: AppIcons
+      fonts:
+        - asset: assets/AppIcons.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

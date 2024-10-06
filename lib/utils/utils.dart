@@ -20,7 +20,6 @@ Future<void> launchUrl(String url) async {
   );
 }
 
-
 String daySuffix(int day) {
   var suffix = 'th';
   var digit = day % 10;
@@ -33,8 +32,8 @@ String daySuffix(int day) {
 }
 
 Future<void> showErrorDialog({
-  @required context,
-  @required String message,
+  required context,
+  required String message,
   String title = 'Whoops',
 }) {
   return showDialog(
@@ -44,8 +43,8 @@ Future<void> showErrorDialog({
         title: Text(title),
         content: IntrinsicHeight(child: AppHtml(markup: message)),
         actions: <Widget>[
-          FlatButton(
-            child: Text(
+          TextButton(
+            child: const Text(
               'Ok',
               style: TextStyle(color: AppColors.accent),
             ),
