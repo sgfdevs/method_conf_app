@@ -1,0 +1,18 @@
+name: Lint & Analyze
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  lint-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: flutter-actions/setup-flutter@v3
+        with:
+          channel: stable
+          version: latest
+          cache-sdk: true
+      - run: flutter pub get
+      - run: flutter format --set-exit-if-changed .
+      - run: flutter analyze
