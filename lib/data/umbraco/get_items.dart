@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:method_conf_app/data/umbraco/models/paged_api_content_response_model.dart';
 
 import 'package:method_conf_app/env.dart';
 
-Future<List<dynamic>> getItems(
+Future<PagedApiContentResponseModel> getItems(
     {List<String> filter = const [], String? fetch, int? take}) async {
   var url = Uri.parse('${Env.umbracoBaseUrl}/umbraco/delivery/api/v2/content');
 
@@ -23,5 +24,5 @@ Future<List<dynamic>> getItems(
 
   var res = await http.get(url);
 
-  return json.decode(res.body) as List<dynamic>;
+  return PagedApiContentResponseModel.fromJson(json.decode(res.body));
 }

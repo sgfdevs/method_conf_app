@@ -13,4 +13,9 @@ class PagedApiContentResponseModel {
     required this.total,
     required this.items,
   });
+
+  factory PagedApiContentResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$PagedApiContentResponseModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PagedApiContentResponseModelToJson(this);
 }

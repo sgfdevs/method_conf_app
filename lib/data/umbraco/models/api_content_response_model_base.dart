@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:method_conf_app/data/umbraco/models/conference.dart';
+import 'package:method_conf_app/data/umbraco/models/sponsors.dart';
 
 part 'api_content_response_model_base.g.dart';
 
@@ -13,28 +14,29 @@ class ApiContentResponseModelBase {
   String id;
   Map<String, ApiContentRouteModel> cultures;
   @JsonKey(includeFromJson: false, includeToJson: false)
-  Map<String, dynamic> unParsedProperties;
+  Map<String, dynamic>? unParsedProperties;
 
-  ApiContentResponseModelBase({
-    required this.contentType,
-    required this.name,
-    required this.createDate,
-    required this.updateDate,
-    required this.route,
-    required this.id,
-    required this.cultures,
-    this.unParsedProperties = const {}
-  });
+  ApiContentResponseModelBase(
+      {required this.contentType,
+      required this.name,
+      required this.createDate,
+      required this.updateDate,
+      required this.route,
+      required this.id,
+      required this.cultures,
+      this.unParsedProperties});
 
-  factory ApiContentResponseModelBase.fromJson(Map<String, dynamic> json) {
-    switch (json['contentType'] as String) {
-      case 'conference':
-        return Conference.fromJson(json);
-      default:
-        var obj = _$ApiContentResponseModelBaseFromJson(json);
-        obj.unParsedProperties = json['properties'] as Map<String, dynamic>;
-        return obj;
-    }
+  factory ApiContentResponseModelBase.fromJson(Map<String, dynamic> json) =>
+      switch (json['contentType'] as String) {
+        'conference' => Conference.fromJson(json),
+        'sponsors' => Sponsors.fromJson(json),
+        _ => _fromJson(json),
+      };
+
+  static ApiContentResponseModelBase _fromJson(Map<String, dynamic> json) {
+    var obj = _$ApiContentResponseModelBaseFromJson(json);
+    obj.unParsedProperties = json['properties'] as Map<String, dynamic>?;
+    return obj;
   }
 
   Map<String, dynamic> toJson() => _$ApiContentResponseModelBaseToJson(this);
