@@ -49,11 +49,9 @@ class SpeakerDetailScreen extends StatelessWidget {
                       child: CachedNetworkImage(
                         imageUrl: speaker.image!,
                         placeholder: (context, url) {
-                          return Container(
-                            child: const CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation(Colors.transparent),
-                            ),
+                          return const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation(Colors.transparent),
                           );
                         },
                         errorWidget: (context, url, error) => const Icon(Icons.error),
@@ -98,35 +96,35 @@ class SpeakerDetailScreen extends StatelessWidget {
       icons.add(InkWell(
 //        padding: EdgeInsets.all(0),
         onTap: () => launchUrl(speaker.twitterUrl!),
-        child: const Icon(AppIcons.twitter_logo, color: AppColors.accent, size: 35),
+        child: const Icon(AppIcons.twitterLogo, color: AppColors.accent, size: 35),
       ));
     }
 
     if (speaker.twitter2Url != null) {
       icons.add(InkWell(
         onTap: () => launchUrl(speaker.twitter2Url!),
-        child: const Icon(AppIcons.twitter_logo, color: AppColors.accent, size: 35),
+        child: const Icon(AppIcons.twitterLogo, color: AppColors.accent, size: 35),
       ));
     }
 
     if (speaker.linkedinUrl != null) {
       icons.add(InkWell(
         onTap: () => launchUrl(speaker.linkedinUrl!),
-        child: const Icon(AppIcons.linkedin_logo, color: AppColors.accent, size: 35),
+        child: const Icon(AppIcons.linkedInLogo, color: AppColors.accent, size: 35),
       ));
     }
 
     if (speaker.githubUrl != null) {
       icons.add(InkWell(
         onTap: () => launchUrl(speaker.githubUrl!),
-        child: const Icon(AppIcons.github_logo, color: AppColors.accent, size: 35),
+        child: const Icon(AppIcons.githubLogo, color: AppColors.accent, size: 35),
       ));
     }
 
     if (speaker.websiteURL != null) {
       icons.add(InkWell(
         onTap: () => launchUrl(speaker.websiteURL!),
-        child: const Icon(AppIcons.website_logo, color: AppColors.accent, size: 35),
+        child: const Icon(AppIcons.websiteLogo, color: AppColors.accent, size: 35),
       ));
     }
 

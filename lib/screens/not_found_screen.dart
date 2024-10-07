@@ -9,9 +9,7 @@ class NotFoundScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppScreen(
       title: 'Not Found',
-      body: Container(
-        child: const Text('Not Found'),
-      ),
+      body: const Text('Not Found'),
     );
   }
 }

@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:method_conf_app/env.dart';
 import 'package:method_conf_app/models/sponsor.dart';
 
-const SPONSOR_KEY = 'app-sponsrs';
+const sponsorKey = 'app-sponsrs';
 
 class SponsorProvider extends ChangeNotifier {
   bool _initialFetched = false;
@@ -39,7 +39,7 @@ class SponsorProvider extends ChangeNotifier {
     var prefs = await SharedPreferences.getInstance();
 
     sponsors = prefs
-            .getStringList(SPONSOR_KEY)
+            .getStringList(sponsorKey)
             ?.map((s) => Sponsor.fromJson(json.decode(s)))
             .toList() ??
         [];
@@ -65,6 +65,6 @@ class SponsorProvider extends ChangeNotifier {
     var prefs = await SharedPreferences.getInstance();
 
     var sponsorsJson = sponsors.map((s) => json.encode(s.toJson())).toList();
-    await prefs.setStringList(SPONSOR_KEY, sponsorsJson);
+    await prefs.setStringList(sponsorKey, sponsorsJson);
   }
 }

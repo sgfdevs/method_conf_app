@@ -18,7 +18,7 @@ class AppNavigation extends StatefulWidget {
   const AppNavigation({super.key});
 
   @override
-  _AppNavigationState createState() => _AppNavigationState();
+  State<AppNavigation> createState() => _AppNavigationState();
 }
 
 class _AppNavigationState extends State<AppNavigation> {
@@ -42,7 +42,7 @@ class _AppNavigationState extends State<AppNavigation> {
       ),
       _NavigationItem(
         route: '/partners',
-        item: _buildNavigationBarItem(AppIcons.piggy_bank, 'Partners'),
+        item: _buildNavigationBarItem(AppIcons.piggyBank, 'Partners'),
       ),
       _NavigationItem(
         route: '/more',

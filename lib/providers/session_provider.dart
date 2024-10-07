@@ -10,7 +10,7 @@ import 'package:method_conf_app/providers/speaker_provider.dart';
 import 'package:method_conf_app/env.dart';
 import 'package:method_conf_app/models/session.dart';
 
-const SESSIONS_KEY = 'app-sessions';
+const sessionsKey = 'app-sessions';
 
 class SessionProvider extends ChangeNotifier {
   final SpeakerProvider? speakerProvider;
@@ -72,7 +72,7 @@ class SessionProvider extends ChangeNotifier {
     var prefs = await SharedPreferences.getInstance();
 
     sessions = prefs
-            .getStringList(SESSIONS_KEY)
+            .getStringList(sessionsKey)
             ?.map((s) => Session.fromJson(json.decode(s)))
             .toList() ??
         [];
@@ -100,7 +100,7 @@ class SessionProvider extends ChangeNotifier {
     var prefs = await SharedPreferences.getInstance();
 
     var sessionsJson = sessions.map((s) => json.encode(s.toJson())).toList();
-    await prefs.setStringList(SESSIONS_KEY, sessionsJson);
+    await prefs.setStringList(sessionsKey, sessionsJson);
   }
 
   Session? getSessionForSpeaker(Speaker? speaker) {

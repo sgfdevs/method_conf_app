@@ -17,7 +17,7 @@ class SessionFeedbackScreen extends StatefulWidget {
   const SessionFeedbackScreen({super.key});
 
   @override
-  _SessionFeedbackScreenState createState() => _SessionFeedbackScreenState();
+  State<SessionFeedbackScreen> createState() => _SessionFeedbackScreenState();
 }
 
 class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {

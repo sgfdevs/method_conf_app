@@ -20,7 +20,7 @@ class SessionExpansionTile extends StatefulWidget {
   });
 
   @override
-  _SessionExpansionTileState createState() => _SessionExpansionTileState();
+  State<SessionExpansionTile> createState() => _SessionExpansionTileState();
 }
 
 class _SessionExpansionTileState extends State<SessionExpansionTile> {

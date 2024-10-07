@@ -9,7 +9,7 @@ class AppNavigator extends StatelessWidget {
   );
   static final _navigatorKey = GlobalKey<NavigatorState>();
 
-  final _RouteChangeCallBack? onRouteChange;
+  final RouteChangeCallBack? onRouteChange;
   final Map<String, WidgetBuilder> routes;
   final String initialRoute;
   final WidgetBuilder notFoundBuilder;
@@ -24,14 +24,12 @@ class AppNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvokedWithResult: (_, __) {
         if (_navigatorKey.currentState!.canPop()) {
           _navigatorKey.currentState!.pop();
-          return false;
+          return;
         }
-
-        return true;
       },
       child: Navigator(
         key: _navigatorKey,
@@ -99,10 +97,10 @@ class AppNavigator extends StatelessWidget {
   }
 }
 
-typedef _RouteChangeCallBack = void Function(Route? newRoute);
+typedef RouteChangeCallBack = void Function(Route? newRoute);
 
 class _AppNavigationObserver extends NavigatorObserver {
-  final _RouteChangeCallBack onRouteChange;
+  final RouteChangeCallBack onRouteChange;
 
   _AppNavigationObserver({required this.onRouteChange});
 
