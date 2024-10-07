@@ -15,4 +15,5 @@ jobs:
           cache-sdk: true
       - run: flutter pub get
       - run: dart format --set-exit-if-changed .
+      - run: cp ./lib/env.dart.example ./lib/env.dart
       - run: flutter analyze
