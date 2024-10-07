@@ -14,5 +14,5 @@ jobs:
           version: 3.24.3
           cache-sdk: true
       - run: flutter pub get
-      - run: flutter format --set-exit-if-changed .
+      - run: dart format --set-exit-if-changed .
       - run: flutter analyze
