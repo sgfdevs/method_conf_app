@@ -35,7 +35,8 @@ class AppListItem extends StatelessWidget {
             children: <Widget>[
               Text(
                 text,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const Icon(Icons.chevron_right, size: 24),
             ],

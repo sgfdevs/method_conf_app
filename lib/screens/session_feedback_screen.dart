@@ -130,7 +130,8 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
                   _submitFeedback(session);
                 },
                 style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15),
                     backgroundColor: Colors.black),
                 child: const Text(
                   'SEND FEEDBACK',

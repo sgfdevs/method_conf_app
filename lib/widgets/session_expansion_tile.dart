@@ -99,7 +99,8 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
               Flexible(
                 child: Text(
                   widget.session.title,
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(
