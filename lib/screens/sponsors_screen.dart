@@ -16,7 +16,7 @@ class SponsorsScreen extends StatefulWidget {
   const SponsorsScreen({super.key});
 
   @override
-  _SponsorsScreenState createState() => _SponsorsScreenState();
+  State<SponsorsScreen> createState() => _SponsorsScreenState();
 }
 
 class _SponsorsScreenState extends State<SponsorsScreen> {
@@ -89,10 +89,12 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                   maxHeight: sponsor.mobileSponsor! ? 75 : 65,
                   child: CachedNetworkImage(
                     imageUrl: sponsor.image!,
-                    placeholder: (context, url) => const CircularProgressIndicator(
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation(Colors.transparent),
                     ),
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                 ),
               ),

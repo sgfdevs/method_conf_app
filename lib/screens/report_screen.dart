@@ -14,7 +14,7 @@ class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
 
   @override
-  _ReportScreenState createState() => _ReportScreenState();
+  State<ReportScreen> createState() => _ReportScreenState();
 }
 
 class _ReportScreenState extends State<ReportScreen> {
@@ -142,7 +142,8 @@ class _ReportScreenState extends State<ReportScreen> {
               children: <Widget>[
                 TextButton(
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15),
                     backgroundColor: Colors.black,
                   ),
                   onPressed: _submitReport,

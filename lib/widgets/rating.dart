@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:method_conf_app/theme.dart';
 
 class Rating extends StatelessWidget {
-  final _RatingSelectedCallback onSelected;
+  final RatingSelectedCallback onSelected;
   final int? currentValue;
 
   const Rating({
@@ -48,4 +48,4 @@ class Rating extends StatelessWidget {
   }
 }
 
-typedef _RatingSelectedCallback = void Function(int value);
+typedef RatingSelectedCallback = void Function(int value);

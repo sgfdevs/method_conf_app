@@ -1,0 +1,20 @@
+name: Lint & Analyze
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  lint-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: flutter-actions/setup-flutter@v3
+        with:
+          channel: stable
+          version: 3.24.3
+          cache-sdk: true
+      - run: flutter pub get
+      - run: dart format --set-exit-if-changed .
+      - run: cp ./lib/env.dart.example ./lib/env.dart
+      - run: flutter pub run build_runner build --delete-conflicting-outputs
+      - run: flutter analyze

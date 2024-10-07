@@ -2,15 +2,20 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/widgets/app_html.dart';
 
 Future<void> launchUrl(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url, forceWebView: false, forceSafariVC: false);
-    return;
+  try {
+    final parsed = Uri.parse(url);
+    if (await url_launcher.canLaunchUrl(parsed)) {
+      await url_launcher.launchUrl(parsed);
+      return;
+    }
+  } catch (e) {
+    // ignore errors
   }
 
   Fluttertoast.showToast(
