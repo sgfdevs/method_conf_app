@@ -9,8 +9,7 @@ import 'package:method_conf_app/providers/conference_provider.dart';
 import 'package:method_conf_app/data/umbraco/image_url.dart';
 import 'package:method_conf_app/data/umbraco/models/sponsor.dart';
 import 'package:method_conf_app/data/umbraco/models/sponsor_tier.dart';
-import 'package:method_conf_app/env.dart';
-import 'package:method_conf_app/providers/sponsor_provider_v2.dart';
+import 'package:method_conf_app/providers/sponsor_provider.dart';
 import 'package:method_conf_app/widgets/app_banner.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/utils/utils.dart';
@@ -30,15 +29,14 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
   @override
   void initState() {
     super.initState();
-    var sponsorProvider =
-        Provider.of<SponsorProviderV2>(context, listen: false);
+    var sponsorProvider = Provider.of<SponsorProvider>(context, listen: false);
 
     _sponsorsFuture = sponsorProvider.init();
   }
 
   @override
   Widget build(BuildContext context) {
-    var sponsorProvider = Provider.of<SponsorProviderV2>(context);
+    var sponsorProvider = Provider.of<SponsorProvider>(context);
     var conferenceProvider = Provider.of<ConferenceProvider>(context);
 
     return AppScreen(

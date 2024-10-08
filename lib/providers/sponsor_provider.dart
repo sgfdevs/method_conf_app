@@ -2,69 +2,89 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+import 'package:method_conf_app/data/umbraco/get_child_nodes_of_type.dart';
+import 'package:method_conf_app/data/umbraco/models/sponsor_tier.dart';
+import 'package:method_conf_app/data/umbraco/models/sponsors.dart';
+import 'package:method_conf_app/providers/conference_provider.dart';
 
-import 'package:method_conf_app/env.dart';
-import 'package:method_conf_app/models/sponsor.dart';
-
-const sponsorKey = 'app-sponsrs';
+const _sponsorsStorageKey = 'app-sponsors-v2';
 
 class SponsorProvider extends ChangeNotifier {
-  bool _initialFetched = false;
+  ConferenceProvider conferenceProvider;
 
-  List<Sponsor> _sponsors = [];
+  Sponsors? _sponsors;
 
-  List<Sponsor> get sponsors {
-    return _sponsors;
-  }
+  Sponsors? get sponsors => _sponsors;
 
-  set sponsors(List<Sponsor> newSponsors) {
-    _sponsors = newSponsors;
+  set sponsors(Sponsors? value) {
+    _sponsors = value;
     notifyListeners();
   }
 
-  List<Sponsor> get largeSponsors {
-    return sponsors.where((s) => s.mobileSponsor!).toList();
+  List<SponsorTier> get sponsorTiers =>
+      sponsors?.properties?.tiers
+          .where(
+              (tier) => tier.properties?.mobileAppSponsors.isNotEmpty ?? false)
+          .toList() ??
+      [];
+
+  SponsorProvider({required this.conferenceProvider});
+
+  Future<void> init() async {
+    await conferenceProvider.init(enableBackgroundRefresh: false);
+
+    sponsors ??= await load();
+
+    if (sponsors == null) {
+      await refresh();
+    } else {
+      refresh();
+    }
   }
 
-  List<Sponsor> get normalSponsors {
-    return sponsors.where((s) => !s.mobileSponsor!).toList();
+  Future<Sponsors?> load() async {
+    var prefs = await SharedPreferences.getInstance();
+
+    final jsonString = prefs.getString(_sponsorsStorageKey);
+    return jsonString != null
+        ? Sponsors.fromJson(json.decode(jsonString))
+        : null;
   }
 
-  Future<void> fetchInitialSponsors() async {
-    if (_initialFetched) {
+  Future<void> store(Sponsors? newSponsors) async {
+    var prefs = await SharedPreferences.getInstance();
+
+    if (newSponsors == null) {
+      await prefs.remove(_sponsorsStorageKey);
       return;
     }
 
-    var prefs = await SharedPreferences.getInstance();
-
-    sponsors = prefs
-            .getStringList(sponsorKey)
-            ?.map((s) => Sponsor.fromJson(json.decode(s)))
-            .toList() ??
-        [];
-
-    if (sponsors.isNotEmpty) {
-      // refresh in background if we found some in storage
-      fetchSponsors();
-    } else {
-      await fetchSponsors();
-    }
-
-    _initialFetched = true;
+    await prefs.setString(
+        _sponsorsStorageKey, json.encode(newSponsors.toJson()));
   }
 
-  Future<void> fetchSponsors() async {
-    var url = Uri.parse('${Env.methodBaseUrl}/sponsors.json');
-    var res = await http.get(url);
+  Future<Sponsors?> fetch() async {
+    var conference = conferenceProvider.conference;
 
-    sponsors = (json.decode(res.body)['data'] as List<dynamic>)
-        .map((s) => Sponsor.fromJson(s))
-        .toList();
+    if (conference == null) {
+      return null;
+    }
 
-    var prefs = await SharedPreferences.getInstance();
+    var item =
+        await getFirstChildNodeOfType(nodeId: conference.id, type: 'sponsors');
 
-    var sponsorsJson = sponsors.map((s) => json.encode(s.toJson())).toList();
-    await prefs.setStringList(sponsorKey, sponsorsJson);
+    if (item is! Sponsors) {
+      return null;
+    }
+
+    return item;
+  }
+
+  Future<void> refresh() async {
+    final newSponsors = await fetch();
+
+    sponsors = newSponsors;
+
+    await store(newSponsors);
   }
 }
