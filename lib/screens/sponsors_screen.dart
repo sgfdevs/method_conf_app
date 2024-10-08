@@ -26,7 +26,8 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
   @override
   void initState() {
     super.initState();
-    var sponsorProvider = Provider.of<SponsorProviderV2>(context, listen: false);
+    var sponsorProvider =
+        Provider.of<SponsorProviderV2>(context, listen: false);
 
     _sponsorsFuture = sponsorProvider.init();
   }
@@ -58,8 +59,9 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                 return [
                   Text(tier.properties?.title ?? 'Test'),
                   ...tier.properties?.mobileAppSponsors.map((sponsor) {
-                    return Text(sponsor.properties?.title ?? 'Test');
-                  }) ?? [],
+                        return Text(sponsor.properties?.title ?? 'Test');
+                      }) ??
+                      [],
                 ];
               }),
               ...sponsorProvider.largeSponsors.map((sponsor) {

@@ -22,7 +22,7 @@ class ConferenceProvider extends ChangeNotifier {
 
     if (conference == null) {
       await refresh();
-    } else if (enableBackgroundRefresh){
+    } else if (enableBackgroundRefresh) {
       refresh();
     }
   }
