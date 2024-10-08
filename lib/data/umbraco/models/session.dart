@@ -10,6 +10,11 @@ part 'session.g.dart';
 class Session extends ApiContentModelBase {
   SessionProperties? properties;
 
+  String get gridId {
+    final parts = route.path.split('/').where((part) => part != '');
+    return parts.lastOrNull ?? route.path;
+  }
+
   Session({
     required super.contentType,
     required super.name,

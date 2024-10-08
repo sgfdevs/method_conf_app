@@ -44,7 +44,11 @@ class ApiContentModelBase {
     return obj;
   }
 
-  Map<String, dynamic> toJson() => _$ApiContentModelBaseToJson(this);
+  Map<String, dynamic> toJson() {
+    final json = _$ApiContentModelBaseToJson(this);
+    json['properties'] = unParsedProperties;
+    return json;
+  }
 }
 
 @JsonSerializable()

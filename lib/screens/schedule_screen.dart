@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:method_conf_app/providers/conference_provider.dart';
+import 'package:method_conf_app/providers/schedule_provider.dart';
+import 'package:method_conf_app/providers/schedule_state_provider.dart';
 import 'package:method_conf_app/widgets/app_banner.dart';
 import 'package:provider/provider.dart';
 
@@ -19,41 +22,52 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  Future? _sessionFuture;
+  Future? _scheduleFuture;
 
   @override
   void initState() {
     super.initState();
 
-    var sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+    final scheduleProvider =
+        Provider.of<ScheduleProvider>(context, listen: false);
+    final scheduleStateProvider =
+        Provider.of<ScheduleStateProvider>(context, listen: false);
 
-    _sessionFuture = sessionProvider.fetchInitialSession();
+    _scheduleFuture = Future.wait([
+      scheduleProvider.init(),
+      scheduleStateProvider.init(),
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
-    var sessionProvider = Provider.of<SessionProvider>(context);
+    final scheduleProvider = Provider.of<ScheduleProvider>(context);
+    final conferenceProvider = Provider.of<ConferenceProvider>(context);
+    final scheduleStateProvider = Provider.of<ScheduleStateProvider>(context);
 
-    var eventDate = DateTime.parse(Env.eventDate);
-    var dateFormString = 'EEEE, MMMM d\'${daySuffix(eventDate.day)}\', y';
+    final eventDate = conferenceProvider.conference?.properties?.date;
+    final currentTrack = scheduleStateProvider.currentTrack;
 
     return AppScreen(
       title: 'Schedule',
       body: PageLoader(
-        future: _sessionFuture,
+        future: _scheduleFuture,
         child: RefreshIndicator(
           onRefresh: () async {
-            await sessionProvider.fetchSessions();
+            await scheduleProvider.refresh();
           },
           child: ListView(
             padding: const EdgeInsets.all(20),
             physics: const AlwaysScrollableScrollPhysics(),
             children: <Widget>[
-              ..._buildBanner(eventDate),
-              Text(
-                DateFormat(dateFormString).format(eventDate),
-                style: const TextStyle(fontSize: 20),
-              ),
+              if (eventDate != null) ..._buildBanner(eventDate),
+              if (eventDate != null)
+                Text(
+                  DateFormat('EEEE, MMMM d\'${daySuffix(eventDate.day)}\', y')
+                      .format(eventDate),
+                  style: const TextStyle(fontSize: 20),
+                ),
+              if (currentTrack != null) Text(currentTrack.name ?? ''),
               const SizedBox(height: 15),
               _buildSimpleCard(time: '7:45AM', title: 'Check-in/Breakfast'),
               const SizedBox(height: 15),

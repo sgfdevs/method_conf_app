@@ -15,11 +15,11 @@ Future<List<ApiContentModelBase>> getChildNodesOfType({
   return res.items;
 }
 
-Future<ApiContentModelBase> getFirstChildNodeOfType({
+Future<ApiContentModelBase?> getFirstChildNodeOfType({
   required String nodeId,
   required String type,
 }) async {
   var items = await getChildNodesOfType(nodeId: nodeId, type: type);
 
-  return items.first;
+  return items.firstOrNull;
 }
