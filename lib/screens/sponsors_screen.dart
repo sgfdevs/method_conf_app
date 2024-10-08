@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:method_conf_app/env.dart';
+import 'package:method_conf_app/providers/sponsor_provider_v2.dart';
 import 'package:method_conf_app/widgets/app_banner.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -25,34 +26,42 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
   @override
   void initState() {
     super.initState();
+    var sponsorProvider = Provider.of<SponsorProviderV2>(context, listen: false);
 
-    var sponsorProvider = Provider.of<SponsorProvider>(context, listen: false);
-
-    _sponsorsFuture = sponsorProvider.fetchInitialSponsors();
+    _sponsorsFuture = sponsorProvider.init();
   }
 
   @override
   Widget build(BuildContext context) {
     var sponsorProvider = Provider.of<SponsorProvider>(context);
+    var sponsorProviderV2 = Provider.of<SponsorProviderV2>(context);
 
     return AppScreen(
-      title: 'Partners',
+      title: 'Sponsors',
       body: PageLoader(
         future: _sponsorsFuture,
         child: RefreshIndicator(
           onRefresh: () async {
-            await sponsorProvider.fetchSponsors();
+            await sponsorProviderV2.refresh();
           },
           child: ListView(
             padding: const EdgeInsets.all(20),
             physics: const AlwaysScrollableScrollPhysics(),
             children: <Widget>[
               const Text(
-                'Method Conference Springfield, MO 2020 is proud to be sponsored by:',
-                textAlign: TextAlign.left,
+                'Method Conference 2024 is proud to be sponsored by',
+                textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18),
               ),
               const SizedBox(height: 15),
+              ...sponsorProviderV2.sponsorTiers.expand((tier) {
+                return [
+                  Text(tier.properties?.title ?? 'Test'),
+                  ...tier.properties?.mobileAppSponsors.map((sponsor) {
+                    return Text(sponsor.properties?.title ?? 'Test');
+                  }) ?? [],
+                ];
+              }),
               ...sponsorProvider.largeSponsors.map((sponsor) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 15),

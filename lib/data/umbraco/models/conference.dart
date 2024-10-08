@@ -7,7 +7,7 @@ part 'conference.g.dart';
 
 @JsonSerializable()
 class Conference extends ApiContentResponseModelBase {
-  ConferenceProperties properties;
+  ConferenceProperties? properties;
 
   Conference({
     required super.contentType,

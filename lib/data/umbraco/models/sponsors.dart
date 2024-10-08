@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:method_conf_app/data/umbraco/models/api_block_list_model.dart';
 import 'package:method_conf_app/data/umbraco/models/api_content_response_model_base.dart';
+import 'package:method_conf_app/data/umbraco/models/sponsor_tier.dart';
 
 part 'sponsors.g.dart';
 
@@ -28,9 +29,18 @@ class Sponsors extends ApiContentResponseModelBase {
 
 @JsonSerializable()
 class SponsorsProperties {
-  ApiBlockListModel? tiers;
+  @JsonKey(name: 'tiers')
+  ApiBlockListModel? tiersBlockList;
 
-  SponsorsProperties({this.tiers});
+  @JsonKey(includeToJson: false)
+  List<SponsorTier> get tiers =>
+      tiersBlockList?.items
+          .map((item) => item.content)
+          .whereType<SponsorTier>()
+          .toList() ??
+      [];
+
+  SponsorsProperties({this.tiersBlockList});
 
   factory SponsorsProperties.fromJson(Map<String, dynamic> json) =>
       _$SponsorsPropertiesFromJson(json);

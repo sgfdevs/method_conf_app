@@ -25,15 +25,15 @@ class Sponsor extends ApiElementModel {
 class SponsorProperties {
   String? title;
   List<ApiMediaModel>? logo;
-  bool? darkBackground;
-  bool? mobileAppSponsor;
+  bool darkBackground;
+  bool mobileAppSponsor;
   String? url;
 
   SponsorProperties({
     this.title,
     this.logo,
-    this.darkBackground,
-    this.mobileAppSponsor,
+    this.darkBackground = false,
+    this.mobileAppSponsor = false,
     this.url,
   });
 
