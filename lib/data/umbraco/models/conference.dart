@@ -1,12 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:method_conf_app/utils/cst_utils.dart';
 
-import 'package:method_conf_app/data/umbraco/models/api_content_response_model_base.dart';
+import 'package:method_conf_app/data/umbraco/models/api_content_model_base.dart';
 
 part 'conference.g.dart';
 
 @JsonSerializable()
-class Conference extends ApiContentResponseModelBase {
+class Conference extends ApiContentModelBase {
   ConferenceProperties? properties;
 
   Conference({
@@ -16,7 +16,6 @@ class Conference extends ApiContentResponseModelBase {
     required super.updateDate,
     required super.route,
     required super.id,
-    required super.cultures,
     required this.properties,
   });
 

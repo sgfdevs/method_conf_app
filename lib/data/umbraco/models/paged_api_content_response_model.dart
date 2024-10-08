@@ -1,13 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'api_content_response_model_base.dart';
+import 'api_content_model_base.dart';
 
 part 'paged_api_content_response_model.g.dart';
 
 @JsonSerializable()
 class PagedApiContentResponseModel {
   int total;
-  List<ApiContentResponseModelBase> items;
+  List<ApiContentModelBase> items;
 
   PagedApiContentResponseModel({
     required this.total,
