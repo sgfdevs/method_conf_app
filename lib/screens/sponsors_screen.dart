@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:method_conf_app/data/umbraco/models/sponsors.dart';
 import 'package:provider/provider.dart';
 import 'package:quiver/iterables.dart' show partition;
 import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:method_conf_app/data/umbraco/models/conference.dart';
+import 'package:method_conf_app/providers/conference_provider.dart';
 import 'package:method_conf_app/data/umbraco/image_url.dart';
 import 'package:method_conf_app/data/umbraco/models/sponsor.dart';
 import 'package:method_conf_app/data/umbraco/models/sponsor_tier.dart';
@@ -35,7 +38,8 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var sponsorProviderV2 = Provider.of<SponsorProviderV2>(context);
+    var sponsorProvider = Provider.of<SponsorProviderV2>(context);
+    var conferenceProvider = Provider.of<ConferenceProvider>(context);
 
     return AppScreen(
       title: 'Sponsors',
@@ -43,7 +47,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
         future: _sponsorsFuture,
         child: RefreshIndicator(
           onRefresh: () async {
-            await sponsorProviderV2.refresh();
+            await sponsorProvider.refresh();
           },
           child: ListView(
             padding: const EdgeInsets.all(20),
@@ -55,7 +59,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                 style: TextStyle(fontSize: 18),
               ),
               const SizedBox(height: 15),
-              ...sponsorProviderV2.sponsorTiers.expand((tier) {
+              ...sponsorProvider.sponsorTiers.expand((tier) {
                 final title = tier.properties?.title;
                 final sponsors = tier.properties?.mobileAppSponsors ?? [];
                 final logoSizes =
@@ -77,7 +81,10 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                     ..._buildMediumSponsors(sponsors),
                 ];
               }),
-              ..._buildBanner(),
+              ..._buildBanner(
+                conferenceProvider.conference,
+                sponsorProvider.sponsors,
+              ),
             ],
           ),
         ),
@@ -107,7 +114,6 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
               flex: 8,
               child: Center(
                 child: OverflowBox(
-                  // maxHeight: sponsor.mobileSponsor! ? 75 : 65,
                   maxHeight: 75,
                   child: logoUrl != null
                       ? CachedNetworkImage(
@@ -165,10 +171,12 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
     }).toList();
   }
 
-  List<Widget> _buildBanner() {
-    var eventDate = DateTime.parse(Env.eventDate);
+  List<Widget> _buildBanner(Conference? conference, Sponsors? sponsors) {
+    final eventDate = conference?.properties?.date;
+    final opportunitiesUrl = sponsors?.properties?.opportunitiesUrl?.fullUrl;
 
-    if (eventDate.isBefore(DateTime.now())) {
+    if (opportunitiesUrl == null ||
+        (eventDate?.isBefore(DateTime.now()) ?? true)) {
       return [Container()];
     }
 
@@ -177,7 +185,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
       AppBanner(
         text: 'Interested in becoming a sponsor?',
         buttonText: 'SEE OPPORTUNITIES',
-        onButtonPress: () => launchUrl(Env.sponsorUrl),
+        onButtonPress: () => launchUrl(opportunitiesUrl),
       ),
     ];
   }
