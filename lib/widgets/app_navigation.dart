@@ -42,7 +42,7 @@ class _AppNavigationState extends State<AppNavigation> {
       ),
       _NavigationItem(
         route: '/partners',
-        item: _buildNavigationBarItem(AppIcons.piggyBank, 'Partners'),
+        item: _buildNavigationBarItem(AppIcons.piggyBank, 'Sponsors'),
       ),
       _NavigationItem(
         route: '/more',
