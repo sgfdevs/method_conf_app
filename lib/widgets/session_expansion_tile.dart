@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:configurable_expansion_tile/configurable_expansion_tile.dart';
+import 'package:intl/intl.dart';
+import 'package:method_conf_app/data/umbraco/image_url.dart';
+import 'package:method_conf_app/data/umbraco/models/session.dart';
+import 'package:method_conf_app/data/umbraco/models/speaker.dart';
 
-import 'package:method_conf_app/models/session.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/widgets/app_html.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
@@ -27,6 +30,10 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
   late DateTime _currentTime;
   late Timer _timer;
 
+  Speaker? get speaker => widget.session.properties?.speakers.firstOrNull;
+  String get description =>
+      widget.session.properties?.description?.markup.trim() ?? '';
+
   @override
   void initState() {
     super.initState();
@@ -47,20 +54,29 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
     return Container(
       color: AppColors.neutralExtraLight,
       padding: const EdgeInsets.all(10),
-      child: ConfigurableExpansionTile(
-        header: _buildHeader(expanded: false),
-        headerExpanded: _buildHeader(expanded: true),
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.only(top: 15),
-            child: AppHtml(markup: widget.session.description ?? 'Coming Soon'),
-          )
-        ],
-      ),
+      child: description == ''
+          ? Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [_buildHeader(expanded: false)],
+            )
+          : ConfigurableExpansionTile(
+              header: _buildHeader(expanded: false),
+              headerExpanded: _buildHeader(expanded: true),
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: AppHtml(markup: description),
+                ),
+              ],
+            ),
     );
   }
 
   Widget _buildHeader({required bool expanded}) {
+    final start = widget.session.properties?.start;
+    final name = widget.session.name;
+
     return Expanded(
       child: Column(
         children: <Widget>[
@@ -70,13 +86,15 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
-                child: Text(
-                  widget.session.time!,
-                  style: const TextStyle(fontSize: 16),
-                ),
+                child: start != null
+                    ? Text(
+                        DateFormat('h:mm a').format(start),
+                        style: const TextStyle(fontSize: 16),
+                      )
+                    : null,
               ),
               Visibility(
-                visible: _sessionVisible(),
+                visible: _sessionFeedbackVisible(),
                 child: TextButton(
                   style:
                       TextButton.styleFrom(backgroundColor: AppColors.accent),
@@ -98,7 +116,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
             children: <Widget>[
               Flexible(
                 child: Text(
-                  widget.session.title,
+                  name ?? '',
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
@@ -106,48 +124,54 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
               const SizedBox(
                 width: 20,
               ),
-              Row(
-                children: <Widget>[
-                  Text(
-                    expanded ? 'Less' : 'More',
-                    style: const TextStyle(
-                      color: AppColors.accent,
-                      fontSize: 16,
-                      decoration: TextDecoration.underline,
+              if (description != '')
+                Row(
+                  children: <Widget>[
+                    Text(
+                      expanded ? 'Less' : 'More',
+                      style: const TextStyle(
+                        color: AppColors.accent,
+                        fontSize: 16,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
-                  ),
-                  Icon(expanded ? Icons.expand_less : Icons.expand_more),
-                ],
-              )
+                    Icon(expanded ? Icons.expand_less : Icons.expand_more),
+                  ],
+                )
             ],
           ),
           const SizedBox(height: 8),
-          _buildSpeaker(),
+          if (speaker != null) _buildSpeaker(),
         ],
       ),
     );
   }
 
   Widget _buildSpeaker() {
+    final profileImageUrl = speaker?.properties?.profileImage?.url;
+
     return Row(
       children: <Widget>[
         GestureDetector(
           onTap: _speakerTapped,
           child: ClipOval(
-            child: CachedNetworkImage(
-              imageUrl: widget.session.speaker.image!,
-              placeholder: (context, url) => const SizedBox(
-                height: 50,
-                width: 50,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(Colors.transparent),
-                ),
-              ),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
-              height: 50,
-              width: 50,
-              fit: BoxFit.cover,
-            ),
+            child: profileImageUrl != null
+                ? CachedNetworkImage(
+                    imageUrl: imageUrl(profileImageUrl, width: 50, height: 50),
+                    placeholder: (context, url) => const SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Colors.transparent),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.cover,
+                  )
+                : null,
           ),
         ),
         const SizedBox(width: 10),
@@ -158,7 +182,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
               GestureDetector(
                 onTap: _speakerTapped,
                 child: Text(
-                  widget.session.speaker.name,
+                  speaker?.name ?? '',
                   style: const TextStyle(
                     color: AppColors.accent,
                     fontSize: 16,
@@ -170,7 +194,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
                 children: <Widget>[
                   Flexible(
                     child: Text(
-                      widget.session.speaker.title!,
+                      speaker?.properties?.jobTitle ?? '',
                       style: const TextStyle(fontSize: 16),
                     ),
                   ),
@@ -184,13 +208,14 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
   }
 
   void _speakerTapped() {
-    if (widget.disableSpeakerTap) {
+    final currentSpeaker = speaker;
+    if (widget.disableSpeakerTap || currentSpeaker == null) {
       return;
     }
 
     AppNavigator.pushNamed(
       '/more/speakers/detail',
-      arguments: widget.session.speaker,
+      arguments: currentSpeaker,
     );
   }
 
@@ -207,7 +232,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
     });
   }
 
-  bool _sessionVisible() {
-    return widget.session.beginTime.isBefore(_currentTime);
+  bool _sessionFeedbackVisible() {
+    return widget.session.properties?.start?.isBefore(_currentTime) ?? false;
   }
 }

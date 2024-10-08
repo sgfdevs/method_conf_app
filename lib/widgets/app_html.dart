@@ -19,7 +19,8 @@ class AppHtml extends StatelessWidget {
           'a': Style(
             textDecoration: TextDecoration.underline,
             color: AppColors.accent,
-          )
+          ),
+          'p': Style(color: Colors.black)
         },
         onLinkTap: (url, _, __) {
           launchUrl(url!);

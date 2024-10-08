@@ -21,9 +21,7 @@ DateTime? utcStringToCst(String? dateString) {
     parsedDate.microsecond,
   );
 
-  final utcDateTime = tzDateTime.toUtc();
-
-  return utcDateTime;
+  return tzDateTime;
 }
 
 String? cstToUtcString(DateTime? date) {

@@ -57,8 +57,11 @@ class ScheduleProvider extends ChangeNotifier {
         ?.map((item) => ApiContentModelBase.fromJson(json.decode(item)))
         .toList();
 
-    final grid =
-        gridJson?.map((item) => json.decode(item) as List<String?>).toList();
+    final grid = gridJson
+        ?.map((row) => (json.decode(row) as List<dynamic>)
+            .map((item) => item as String?)
+            .toList())
+        .toList();
 
     if (items == null || grid == null) {
       return null;

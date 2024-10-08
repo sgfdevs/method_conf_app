@@ -49,6 +49,7 @@ dependencies:
   plausible_analytics: ^0.3.0
   http: ^1.2.2
   timezone: ^0.9.4
+  sticky_headers: ^0.3.0+2
 
 dev_dependencies:
   flutter_test:

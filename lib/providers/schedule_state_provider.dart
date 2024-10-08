@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:method_conf_app/data/umbraco/models/session.dart';
@@ -19,29 +20,28 @@ class ScheduleStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int _startColumnIndex = 0;
+  int startColumnIndex = 0;
 
-  int get startColumnIndex => _startColumnIndex;
-
-  set startColumnIndex(int value) {
-    _startColumnIndex = value;
-    notifyListeners();
-    store(_startColumnIndex);
-  }
+  Key get currentKey => ValueKey(startColumnIndex);
 
   Track? get currentTrack =>
       scheduleProvider.tracks.elementAtOrNull(startColumnIndex);
 
-  List<Session> get currentSessions =>
-      scheduleProvider.grid
-          .elementAtOrNull(startColumnIndex)
-          ?.toSet()
-          .whereType<String>()
-          .map((gridId) => scheduleProvider.sessions
-              .firstWhereOrNull((session) => session.gridId == gridId))
-          .whereType<Session>()
-          .toList() ??
-      [];
+  List<Session> get currentSessions => scheduleProvider.grid
+      .map((row) => row.elementAtOrNull(startColumnIndex))
+      .toSet()
+      .whereType<String>()
+      .map((gridId) => scheduleProvider.sessions
+          .firstWhereOrNull((session) => session.gridId == gridId))
+      .whereType<Session>()
+      .toList();
+
+  int get _totalColumns =>
+      scheduleProvider.grid.elementAtOrNull(0)?.length ?? 0;
+  int get _maxStartIndex => max(_totalColumns - visibleColumns, 0);
+
+  bool get isNextEnabled => startColumnIndex < _maxStartIndex;
+  bool get isPrevEnabled => startColumnIndex != 0;
 
   ScheduleStateProvider({required this.scheduleProvider});
 
@@ -50,6 +50,7 @@ class ScheduleStateProvider extends ChangeNotifier {
 
     if (storedStartColumnIndex != null) {
       startColumnIndex = storedStartColumnIndex;
+      notifyListeners();
     }
   }
 
@@ -69,4 +70,23 @@ class ScheduleStateProvider extends ChangeNotifier {
 
     await prefs.setInt(_startColumnIndexStorageKey, newStartColumnIndex);
   }
+
+  Future handleControl(ControlDirection direction) async {
+    final prevIndex = startColumnIndex;
+    if (direction == ControlDirection.next) {
+      startColumnIndex = min(prevIndex + 1, _maxStartIndex);
+    } else {
+      startColumnIndex = max(prevIndex - 1, 0);
+    }
+
+    await store(startColumnIndex).catchError((err) {
+      print(err);
+    });
+    notifyListeners();
+  }
+}
+
+enum ControlDirection {
+  prev,
+  next,
 }
