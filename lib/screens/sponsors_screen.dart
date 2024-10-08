@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:method_conf_app/env.dart';
-import 'package:method_conf_app/widgets/app_banner.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:quiver/iterables.dart' show partition;
+import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:method_conf_app/data/umbraco/image_url.dart';
+import 'package:method_conf_app/data/umbraco/models/sponsor.dart';
+import 'package:method_conf_app/data/umbraco/models/sponsor_tier.dart';
+import 'package:method_conf_app/env.dart';
+import 'package:method_conf_app/providers/sponsor_provider_v2.dart';
+import 'package:method_conf_app/widgets/app_banner.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/utils/utils.dart';
 import 'package:method_conf_app/widgets/page_loader.dart';
-import 'package:method_conf_app/models/sponsor.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
-import 'package:method_conf_app/providers/sponsor_provider.dart';
 
 class SponsorsScreen extends StatefulWidget {
   const SponsorsScreen({super.key});
@@ -25,41 +27,56 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
   @override
   void initState() {
     super.initState();
+    var sponsorProvider =
+        Provider.of<SponsorProviderV2>(context, listen: false);
 
-    var sponsorProvider = Provider.of<SponsorProvider>(context, listen: false);
-
-    _sponsorsFuture = sponsorProvider.fetchInitialSponsors();
+    _sponsorsFuture = sponsorProvider.init();
   }
 
   @override
   Widget build(BuildContext context) {
-    var sponsorProvider = Provider.of<SponsorProvider>(context);
+    var sponsorProviderV2 = Provider.of<SponsorProviderV2>(context);
 
     return AppScreen(
-      title: 'Partners',
+      title: 'Sponsors',
       body: PageLoader(
         future: _sponsorsFuture,
         child: RefreshIndicator(
           onRefresh: () async {
-            await sponsorProvider.fetchSponsors();
+            await sponsorProviderV2.refresh();
           },
           child: ListView(
             padding: const EdgeInsets.all(20),
             physics: const AlwaysScrollableScrollPhysics(),
             children: <Widget>[
               const Text(
-                'Method Conference Springfield, MO 2020 is proud to be sponsored by:',
-                textAlign: TextAlign.left,
+                'Method Conference 2024 is proud to be sponsored by',
+                textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18),
               ),
               const SizedBox(height: 15),
-              ...sponsorProvider.largeSponsors.map((sponsor) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 15),
-                  child: _buildSponsor(sponsor),
-                );
+              ...sponsorProviderV2.sponsorTiers.expand((tier) {
+                final title = tier.properties?.title;
+                final sponsors = tier.properties?.mobileAppSponsors ?? [];
+                final logoSizes =
+                    tier.properties?.logoSizes ?? SponsorTierLogoSize.medium;
+                return [
+                  if (title != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  if (logoSizes == SponsorTierLogoSize.large)
+                    ..._buildLargeSponsors(sponsors)
+                  else
+                    ..._buildMediumSponsors(sponsors),
+                ];
               }),
-              ..._buildNormalSponsors(sponsorProvider.normalSponsors),
               ..._buildBanner(),
             ],
           ),
@@ -69,15 +86,19 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
   }
 
   Widget _buildSponsor(Sponsor sponsor) {
+    final url = sponsor.properties?.url;
+    final logoUrl = sponsor.properties?.logo?.firstOrNull?.url;
     return Container(
-      height: sponsor.mobileSponsor! ? 130 : 100,
-      color: sponsor.background == 'dark'
+      height: 130,
+      color: sponsor.properties?.darkBackground == true
           ? AppColors.primaryLight
           : AppColors.neutralExtraLight,
       child: TextButton(
         style: TextButton.styleFrom(padding: const EdgeInsets.all(0)),
         onPressed: () {
-          launchUrl(sponsor.url!);
+          if (url != null) {
+            launchUrl(url);
+          }
         },
         child: Row(
           children: <Widget>[
@@ -86,16 +107,20 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
               flex: 8,
               child: Center(
                 child: OverflowBox(
-                  maxHeight: sponsor.mobileSponsor! ? 75 : 65,
-                  child: CachedNetworkImage(
-                    imageUrl: sponsor.image!,
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(Colors.transparent),
-                    ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  ),
+                  // maxHeight: sponsor.mobileSponsor! ? 75 : 65,
+                  maxHeight: 75,
+                  child: logoUrl != null
+                      ? CachedNetworkImage(
+                          imageUrl: imageUrl(logoUrl, height: 75),
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation(Colors.transparent),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        )
+                      : null,
                 ),
               ),
             ),
@@ -106,7 +131,16 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
     );
   }
 
-  List<Widget> _buildNormalSponsors(List<Sponsor> sponsors) {
+  List<Widget> _buildLargeSponsors(List<Sponsor> sponsors) {
+    return sponsors
+        .map((sponsor) => Padding(
+              padding: const EdgeInsets.only(bottom: 15),
+              child: _buildSponsor(sponsor),
+            ))
+        .toList();
+  }
+
+  List<Widget> _buildMediumSponsors(List<Sponsor> sponsors) {
     var chunked = partition(sponsors, 2);
     return chunked.map((sponsorPair) {
       return Padding(
