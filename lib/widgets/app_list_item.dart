@@ -8,7 +8,11 @@ class AppListItem extends StatelessWidget {
   final GestureTapCallback? onTap;
   final String text;
 
-  const AppListItem({super.key, this.onTap, required this.text});
+  const AppListItem({
+    super.key,
+    this.onTap,
+    required this.text,
+  });
 
   @override
   Widget build(BuildContext context) {

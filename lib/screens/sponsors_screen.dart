@@ -29,15 +29,16 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
   @override
   void initState() {
     super.initState();
-    var sponsorProvider = Provider.of<SponsorProvider>(context, listen: false);
+    final sponsorProvider =
+        Provider.of<SponsorProvider>(context, listen: false);
 
     _sponsorsFuture = sponsorProvider.init();
   }
 
   @override
   Widget build(BuildContext context) {
-    var sponsorProvider = Provider.of<SponsorProvider>(context);
-    var conferenceProvider = Provider.of<ConferenceProvider>(context);
+    final sponsorProvider = Provider.of<SponsorProvider>(context);
+    final conferenceProvider = Provider.of<ConferenceProvider>(context);
 
     return AppScreen(
       title: 'Sponsors',
