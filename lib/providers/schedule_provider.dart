@@ -1,12 +1,16 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:method_conf_app/data/get_schedule_grid.dart';
 import 'package:method_conf_app/data/get_schedule_items.dart';
 import 'package:method_conf_app/data/umbraco/models/api_content_model_base.dart';
 import 'package:method_conf_app/data/umbraco/models/session.dart';
+import 'package:method_conf_app/data/umbraco/models/speaker.dart';
 import 'package:method_conf_app/data/umbraco/models/track.dart';
 import 'package:method_conf_app/providers/conference_provider.dart';
+import 'package:method_conf_app/providers/schedule_state_provider.dart';
+import 'package:method_conf_app/utils/iterable_extensions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _scheduleItemsStorageKey = 'app-schedule-items';
@@ -32,6 +36,11 @@ class ScheduleProvider extends ChangeNotifier {
 
   List<Session> get sessions =>
       schedule?.$1.whereType<Session>().toList() ?? [];
+
+  List<Speaker> get speakers => sessions
+      .expand((session) => session.properties?.speakers ?? <Speaker>[])
+      .distinctBy((speaker) => speaker.id)
+      .toList();
 
   ScheduleProvider({required this.conferenceProvider});
 
@@ -117,5 +126,20 @@ class ScheduleProvider extends ChangeNotifier {
     schedule = newSchedule;
 
     await store(newSchedule);
+  }
+
+  List<Session> getSessionsForSpeaker(Speaker? speaker) {
+    if (speaker == null) {
+      return [];
+    }
+
+    return sessions
+        .where(
+          (session) =>
+              session.properties?.speakers.firstWhereOrNull(
+                  (sessionSpeaker) => sessionSpeaker.id == speaker.id) !=
+              null,
+        )
+        .toList();
   }
 }

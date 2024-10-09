@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:method_conf_app/providers/schedule_provider.dart';
 import 'package:method_conf_app/widgets/app_list_item.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,7 @@ class SpeakersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var speakersProvider = Provider.of<SpeakerProvider>(context);
+    var speakersProvider = Provider.of<ScheduleProvider>(context);
 
     return AppScreen(
         title: 'Speakers',
@@ -20,7 +21,7 @@ class SpeakersScreen extends StatelessWidget {
           children: <Widget>[
             ...speakersProvider.speakers.map((speaker) {
               return AppListItem(
-                text: speaker.name,
+                text: speaker.name ?? '',
                 onTap: () {
                   AppNavigator.pushNamed(
                     '/more/speakers/detail',
