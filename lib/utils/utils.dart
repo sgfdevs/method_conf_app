@@ -49,12 +49,15 @@ Future<void> showErrorDialog({
     builder: (context) {
       return AlertDialog(
         title: Text(title),
-        content: IntrinsicHeight(child: AppHtml(markup: message)),
+        content: Text(
+          message,
+          style: TextStyle(fontSize: 16),
+        ),
         actions: <Widget>[
           TextButton(
             child: const Text(
               'Ok',
-              style: TextStyle(color: AppColors.accent),
+              style: TextStyle(color: AppColors.accent, fontSize: 18),
             ),
             onPressed: () {
               Navigator.of(context).pop();

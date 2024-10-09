@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:method_conf_app/data/umbraco/models/session.dart';
 
 import 'package:method_conf_app/env.dart';
-import 'package:method_conf_app/models/session.dart';
 import 'package:method_conf_app/screens/not_found_screen.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/utils/utils.dart';
@@ -22,6 +22,7 @@ class SessionFeedbackScreen extends StatefulWidget {
 
 class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
   late TextEditingController _commentController;
+  late TextEditingController _emailController;
   int? _speakerRating;
   int? _contentRating;
   int? _venueRating;
@@ -31,19 +32,21 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
   void initState() {
     super.initState();
     _commentController = TextEditingController();
+    _emailController = TextEditingController();
   }
 
   @override
   void dispose() {
     _commentController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    var session = ModalRoute.of(context)!.settings.arguments as Session?;
+    var session = ModalRoute.of(context)!.settings.arguments;
 
-    if (session == null) {
+    if (session is! Session) {
       return const NotFoundScreen();
     }
 
@@ -52,9 +55,36 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: <Widget>[
+          RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black, fontSize: 18),
+              children: [
+                const TextSpan(
+                  text: 'Session: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                TextSpan(text: session.name ?? ''),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black, fontSize: 18),
+              children: [
+                const TextSpan(
+                  text: 'Speaker: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                TextSpan(
+                    text: session.properties?.speakers.firstOrNull?.name ?? ''),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
           const Text(
             'Rate Speaker',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const Text(
             '1 is meh, 5 is freaking amazing',
@@ -71,7 +101,7 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
           const SizedBox(height: 20),
           const Text(
             'Rate Content Relevance',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const Text(
             '1 is meh, 5 is freaking amazing',
@@ -88,7 +118,7 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
           const SizedBox(height: 20),
           const Text(
             'Rate Venue',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const Text(
             '1 is meh, 5 is freaking amazing',
@@ -102,7 +132,7 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
               });
             },
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 18),
           const Text(
             'Comments',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -121,9 +151,29 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
               ),
             ),
           ),
+          const SizedBox(height: 18),
+          const Text(
+            'Email',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const Text('Required for door prize entry',
+              style: TextStyle(fontSize: 12)),
+          const SizedBox(height: 10),
+          HalfBorderBox(
+            child: TextFormField(
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: AppColors.neutralExtraLight,
+                hintText: 'Email',
+                border: InputBorder.none,
+              ),
+            ),
+          ),
           const SizedBox(height: 20),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               TextButton(
                 onPressed: () {
@@ -177,31 +227,36 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
       _processing = true;
     });
 
+    final comment = _commentController.text.trim();
+    final email = _emailController.text.trim();
+
     var data = json.encode({
-      'sessionTitle': session.title,
       'speakerRating': _speakerRating,
       'contentRating': _contentRating,
       'venueRating': _venueRating,
-      'comments': _commentController.text,
+      'comments': comment == '' ? null : comment,
+      'email': email == '' ? null : email,
     });
 
-    late http.Response response;
+    http.Response? response;
 
     try {
       response = await http.post(
-        Uri.parse(Env.feedbackEndpoint),
+        Uri.parse(
+            "${Env.umbracoBaseUrl}/api/v1/session/${session.id}/feedback"),
         body: data,
         headers: {'Content-Type': 'application/json'},
       );
     } catch (err) {
       _requestErrorDialog();
+      return;
     } finally {
       setState(() {
         _processing = false;
       });
     }
 
-    if (response.statusCode < 200 && response.statusCode >= 300) {
+    if (response.statusCode >= 400) {
       _requestErrorDialog();
       return;
     }

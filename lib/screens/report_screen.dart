@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:method_conf_app/env.dart';
+import 'package:method_conf_app/providers/conference_provider.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
 import 'package:method_conf_app/widgets/half_border_box.dart';
 import 'package:method_conf_app/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -138,15 +140,17 @@ class _ReportScreenState extends State<ReportScreen> {
             ),
             const SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
                 TextButton(
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 15),
                     backgroundColor: Colors.black,
                   ),
-                  onPressed: _submitReport,
+                  onPressed: () {
+                    _submitReport(context);
+                  },
                   child: const Text(
                     'SEND',
                     style: TextStyle(
@@ -169,7 +173,7 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Future<void> _submitReport() async {
+  Future<void> _submitReport(BuildContext context) async {
     _formKey.currentState!.save();
 
     if (_message == '') {
@@ -193,35 +197,51 @@ class _ReportScreenState extends State<ReportScreen> {
       'phone': _phone,
     });
 
-    late http.Response response;
+    final conferenceProvider =
+        Provider.of<ConferenceProvider>(context, listen: false);
+    await conferenceProvider.init();
+    final conference = conferenceProvider.conference;
+
+    http.Response? response;
 
     try {
+      if (conference == null) {
+        throw Exception("missing default conference object");
+      }
+
       response = await http.post(
-        Uri.parse(Env.reportEndpoint),
+        Uri.parse(
+            "${Env.umbracoBaseUrl}/api/v1/conference/${conference.id}/issue"),
         body: data,
         headers: {'Content-Type': 'application/json'},
       );
     } catch (err) {
       _requestErrorDialog();
+      return;
     } finally {
       setState(() {
         _processing = false;
       });
     }
 
-    if (response.statusCode < 200 && response.statusCode >= 300) {
+    if (response.statusCode >= 400) {
       _requestErrorDialog();
       return;
     }
 
-    AppNavigator.pushReplacementNamed('/more/report/success');
+    var body = json.decode(response.body) as Map<String, dynamic>;
+
+    var responseMessage = body['responseMarkup'] as String?;
+
+    AppNavigator.pushReplacementNamed('/more/report/success',
+        arguments: responseMessage);
   }
 
   void _requestErrorDialog() {
     showErrorDialog(
       context: context,
       message:
-          'There was an error submitting your report. Please text Shawna Baron at <a href="tel:4178949926">417-894-9926</a>',
+          'There was an error submitting your report. Please text Levi Zitting at 417-808-0501',
     );
   }
 }
