@@ -35,6 +35,7 @@ class ConferenceProperties {
   String? callForSpeakersUrl;
   String? tagline;
   String? location;
+  List<ApiLinkModel> mobileAppLinks;
   @JsonKey(fromJson: utcStringToCst, toJson: cstToUtcString)
   DateTime? surveyAvailableAt;
   @JsonKey(name: 'surveyUrl')
@@ -48,6 +49,7 @@ class ConferenceProperties {
     this.callForSpeakersUrl,
     this.tagline,
     this.location,
+    this.mobileAppLinks = const [],
     this.surveyAvailableAt,
     this.surveyUrlList = const [],
   });

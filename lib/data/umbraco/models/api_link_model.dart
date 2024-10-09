@@ -33,7 +33,7 @@ class ApiLinkModel {
     final u = url;
     return switch (linkType) {
       LinkType.content when path != null => _getWithQs(_withSitePrefix(path)),
-      LinkType.external when u != null => _getWithQs(u),
+      LinkType.external when u != null => u,
       LinkType.media when u != null => _getWithQs(_withCmsPrefix(u)),
       _ => null,
     };
