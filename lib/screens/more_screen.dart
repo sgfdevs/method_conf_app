@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:method_conf_app/env.dart';
 import 'package:method_conf_app/providers/conference_provider.dart';
 import 'package:method_conf_app/utils/utils.dart';
 import 'package:method_conf_app/widgets/app_list_item.dart';
