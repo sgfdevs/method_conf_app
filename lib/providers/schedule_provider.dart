@@ -31,6 +31,15 @@ class ScheduleProvider extends ChangeNotifier {
 
   List<List<String?>> get grid => schedule?.$2 ?? [];
 
+  List<int> get columns =>
+      grid
+          .elementAtOrNull(0)
+          ?.asMap()
+          .entries
+          .map((entry) => entry.key)
+          .toList() ??
+      [];
+
   List<Track> get tracks => schedule?.$1.whereType<Track>().toList() ?? [];
 
   List<Session> get sessions =>

@@ -82,6 +82,21 @@ class ScheduleStateProvider extends ChangeNotifier {
     notifyListeners();
     store(startColumnIndex);
   }
+
+  Track? getTrackAtColumn(int column) {
+    return scheduleProvider.tracks.elementAtOrNull(column);
+  }
+
+  List<Session> getSessionsAtColumn(int column) {
+    return scheduleProvider.grid
+        .map((row) => row.elementAtOrNull(column))
+        .toSet()
+        .whereType<String>()
+        .map((gridId) => scheduleProvider.sessions
+            .firstWhereOrNull((session) => session.gridId == gridId))
+        .whereType<Session>()
+        .toList();
+  }
 }
 
 enum ControlDirection {
