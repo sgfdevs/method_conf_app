@@ -96,8 +96,11 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
               Visibility(
                 visible: _sessionFeedbackVisible(),
                 child: TextButton(
-                  style:
-                      TextButton.styleFrom(backgroundColor: AppColors.accent),
+                  style: TextButton.styleFrom(
+                    backgroundColor: AppColors.accent,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.zero)),
+                  ),
                   onPressed: _sessionFeedbackTapped,
                   child: const Text(
                     'Session Feedback',
@@ -233,6 +236,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
   }
 
   bool _sessionFeedbackVisible() {
-    return widget.session.properties?.start?.isBefore(_currentTime) ?? false;
+    return (widget.session.properties?.isEligibleForFeedback ?? false) &&
+        (widget.session.properties?.start?.isBefore(_currentTime) ?? false);
   }
 }

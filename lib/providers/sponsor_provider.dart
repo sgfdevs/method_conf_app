@@ -81,6 +81,8 @@ class SponsorProvider extends ChangeNotifier {
   }
 
   Future<void> refresh() async {
+    await conferenceProvider.refresh();
+
     final newSponsors = await fetch();
 
     sponsors = newSponsors;

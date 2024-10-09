@@ -129,6 +129,8 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   Future<void> refresh() async {
+    await conferenceProvider.refresh();
+
     final newSchedule = await fetch();
 
     schedule = newSchedule;
@@ -142,12 +144,20 @@ class ScheduleProvider extends ChangeNotifier {
     }
 
     return sessions
-        .where(
-          (session) =>
-              session.properties?.speakers.firstWhereOrNull(
-                  (sessionSpeaker) => sessionSpeaker.id == speaker.id) !=
-              null,
-        )
-        .toList();
+        .where((session) =>
+            session.properties?.speakers.firstWhereOrNull(
+                (sessionSpeaker) => sessionSpeaker.id == speaker.id) !=
+            null)
+        .sorted((a, b) {
+      final aStart = a.properties?.start;
+      final bStart = b.properties?.start;
+
+      return switch ((aStart, bStart)) {
+        _ when aStart != null && bStart != null => aStart.compareTo(bStart),
+        (null, _) => 1,
+        (_, null) => -1,
+        _ => 0,
+      };
+    }).toList();
   }
 }

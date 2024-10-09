@@ -5,7 +5,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import 'package:method_conf_app/theme.dart';
-import 'package:method_conf_app/widgets/app_html.dart';
 
 Future<void> launchUrl(String url) async {
   try {
@@ -49,12 +48,15 @@ Future<void> showErrorDialog({
     builder: (context) {
       return AlertDialog(
         title: Text(title),
-        content: IntrinsicHeight(child: AppHtml(markup: message)),
+        content: Text(
+          message,
+          style: TextStyle(fontSize: 16),
+        ),
         actions: <Widget>[
           TextButton(
             child: const Text(
               'Ok',
-              style: TextStyle(color: AppColors.accent),
+              style: TextStyle(color: AppColors.accent, fontSize: 18),
             ),
             onPressed: () {
               Navigator.of(context).pop();
