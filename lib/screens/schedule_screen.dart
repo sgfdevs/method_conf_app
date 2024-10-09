@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:method_conf_app/data/umbraco/models/conference.dart';
 import 'package:provider/provider.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 
@@ -35,11 +36,18 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   final _scrollController = ScrollController();
   PageController? _pageController;
 
+  late DateTime _currentTime;
+  late Timer _timer;
+
   @override
   void initState() {
     super.initState();
 
     _initFuture = _init();
+
+    _currentTime = DateTime.now();
+
+    _timer = Timer.periodic(const Duration(seconds: 30), _timerHandler);
   }
 
   Future<void> _init() async {
@@ -60,6 +68,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   @override
   void dispose() {
     _scrollController.dispose();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -86,7 +95,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
             padding: const EdgeInsets.symmetric(vertical: 20),
             physics: const AlwaysScrollableScrollPhysics(),
             children: <Widget>[
-              if (eventDate != null) ..._buildBanner(eventDate),
+              if (eventDate != null) ..._buildRegisterBanner(eventDate),
+              ..._buildSurveyBanner(conferenceProvider.conference),
               if (eventDate != null) ...[
                 Padding(
                   padding: _horizontalPadding,
@@ -196,7 +206,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     );
   }
 
-  List<Widget> _buildBanner(DateTime eventDate) {
+  List<Widget> _buildRegisterBanner(DateTime eventDate) {
     if (eventDate.isBefore(DateTime.now())) {
       return [Container()];
     }
@@ -212,6 +222,36 @@ class _ScheduleScreenState extends State<ScheduleScreen>
       ),
       const SizedBox(height: 20),
     ];
+  }
+
+  List<Widget> _buildSurveyBanner(Conference? conference) {
+    final surveyUrl = conference?.properties?.surveyUrl;
+    final fullUrl = surveyUrl?.fullUrl;
+    final surveyAvailableAt = conference?.properties?.surveyAvailableAt;
+
+    if (fullUrl == null ||
+        surveyAvailableAt == null ||
+        _currentTime.isBefore(surveyAvailableAt)) {
+      return [Container()];
+    }
+
+    return [
+      Padding(
+        padding: _horizontalPadding,
+        child: AppBanner(
+          text: 'Tell us what you thought of the conference!',
+          buttonText: surveyUrl?.title ?? '',
+          onButtonPress: () => launchUrl(fullUrl),
+        ),
+      ),
+      const SizedBox(height: 20),
+    ];
+  }
+
+  void _timerHandler(Timer timer) {
+    setState(() {
+      _currentTime = DateTime.now();
+    });
   }
 
   // This is a hacky fix that scrolls by one pixel when there's

@@ -34,13 +34,17 @@ class ApiLinkModel {
     return switch (linkType) {
       LinkType.content when path != null => _getWithQs(_withSitePrefix(path)),
       LinkType.external when u != null => _getWithQs(u),
-      LinkType.media when u != null => _getWithQs(_withSitePrefix(u)),
+      LinkType.media when u != null => _getWithQs(_withCmsPrefix(u)),
       _ => null,
     };
   }
 
-  String _withSitePrefix(String urlStr) {
+  String _withCmsPrefix(String urlStr) {
     return Env.umbracoBaseUrl + urlStr;
+  }
+
+  String _withSitePrefix(String urlStr) {
+    return Env.methodBaseUrl + urlStr;
   }
 
   String _getWithQs(String urlStr) {
