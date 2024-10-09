@@ -18,16 +18,16 @@ class MoreScreen extends StatelessWidget {
         children: <Widget>[
           AppListItem(
             text: 'Location Info',
-            onTap: () => launchUrl('https://methodconf.com/#location'),
+            onTap: () => launchUrl('${Env.methodBaseUrl}/2024/#location'),
           ),
 //          AppListItem(text: 'Floorplan'),
           AppListItem(
             text: 'Code of Conduct',
-            onTap: () => launchUrl('https://methodconf.com/code-of-conduct'),
+            onTap: () => launchUrl('${Env.methodBaseUrl}/2024/code-of-conduct'),
           ),
           AppListItem(
             text: 'Tickets',
-            onTap: () => launchUrl(Env.ticketUrl),
+            onTap: () => launchUrl('${Env.methodBaseUrl}/register'),
           ),
           AppListItem(
             text: 'Speakers',
