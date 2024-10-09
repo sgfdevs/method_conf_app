@@ -14,12 +14,11 @@ class SpeakersScreen extends StatelessWidget {
     var speakersProvider = Provider.of<ScheduleProvider>(context);
 
     return AppScreen(
-        title: 'Speakers',
-        body: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          children: <Widget>[
-            ...speakersProvider.speakers.map((speaker) {
-              return AppListItem(
+      title: 'Speakers',
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        children: <Widget>[
+          ...speakersProvider.speakers.map((speaker) => AppListItem(
                 text: speaker.name ?? '',
                 onTap: () {
                   AppNavigator.pushNamed(
@@ -27,9 +26,9 @@ class SpeakersScreen extends StatelessWidget {
                     arguments: speaker,
                   );
                 },
-              );
-            }),
-          ],
-        ));
+              )),
+        ],
+      ),
+    );
   }
 }
