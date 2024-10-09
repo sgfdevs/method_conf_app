@@ -68,6 +68,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   @override
   void dispose() {
     _scrollController.dispose();
+    _pageController?.dispose();
     _timer.cancel();
     super.dispose();
   }
@@ -96,7 +97,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
             physics: const AlwaysScrollableScrollPhysics(),
             children: <Widget>[
               if (eventDate != null) ..._buildRegisterBanner(eventDate),
-              ..._buildSurveyBanner(conferenceProvider.conference),
+              ..._buildSurveyBanner(
+                  conferenceProvider.conference, _currentTime),
               if (eventDate != null) ...[
                 Padding(
                   padding: _horizontalPadding,
@@ -224,14 +226,15 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     ];
   }
 
-  List<Widget> _buildSurveyBanner(Conference? conference) {
+  List<Widget> _buildSurveyBanner(
+      Conference? conference, DateTime currentTime) {
     final surveyUrl = conference?.properties?.surveyUrl;
     final fullUrl = surveyUrl?.fullUrl;
     final surveyAvailableAt = conference?.properties?.surveyAvailableAt;
 
     if (fullUrl == null ||
         surveyAvailableAt == null ||
-        _currentTime.isBefore(surveyAvailableAt)) {
+        currentTime.isBefore(surveyAvailableAt)) {
       return [Container()];
     }
 
