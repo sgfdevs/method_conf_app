@@ -92,7 +92,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
 
   Widget _buildSponsor(Sponsor sponsor) {
     final url = sponsor.properties?.url;
-    final logoUrl = sponsor.properties?.logo?.firstOrNull?.url;
+    final logoUrl = sponsor.properties?.logo?.url;
     return Container(
       height: 130,
       color: sponsor.properties?.darkBackground == true

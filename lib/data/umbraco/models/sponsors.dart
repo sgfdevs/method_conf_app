@@ -1,13 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:method_conf_app/data/umbraco/models/api_block_list_model.dart';
-import 'package:method_conf_app/data/umbraco/models/api_content_response_model_base.dart';
+import 'package:method_conf_app/data/umbraco/models/api_content_model_base.dart';
 import 'package:method_conf_app/data/umbraco/models/api_link_model.dart';
 import 'package:method_conf_app/data/umbraco/models/sponsor_tier.dart';
 
 part 'sponsors.g.dart';
 
 @JsonSerializable()
-class Sponsors extends ApiContentResponseModelBase {
+class Sponsors extends ApiContentModelBase {
   SponsorsProperties? properties;
 
   Sponsors({
@@ -17,7 +17,6 @@ class Sponsors extends ApiContentResponseModelBase {
     required super.updateDate,
     required super.route,
     required super.id,
-    required super.cultures,
     required this.properties,
   });
 
@@ -35,7 +34,6 @@ class SponsorsProperties {
   @JsonKey(name: 'opportunitiesUrl')
   List<ApiLinkModel> opportunitiesUrlList;
 
-  @JsonKey(includeToJson: false)
   List<SponsorTier> get tiers =>
       tiersBlockList?.items
           .map((item) => item.content)
@@ -43,11 +41,12 @@ class SponsorsProperties {
           .toList() ??
       [];
 
-  @JsonKey(includeToJson: false)
   ApiLinkModel? get opportunitiesUrl => opportunitiesUrlList.firstOrNull;
 
-  SponsorsProperties(
-      {this.tiersBlockList, this.opportunitiesUrlList = const []});
+  SponsorsProperties({
+    this.tiersBlockList,
+    this.opportunitiesUrlList = const [],
+  });
 
   factory SponsorsProperties.fromJson(Map<String, dynamic> json) =>
       _$SponsorsPropertiesFromJson(json);

@@ -50,12 +50,16 @@ class AppBanner extends StatelessWidget {
                 children: <Widget>[
                   Image.asset('assets/method_logo.png', height: 40),
                   const SizedBox(height: 20),
-                  Text(
-                    text,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Text(
+                      text,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   const SizedBox(height: 20),

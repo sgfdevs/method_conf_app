@@ -1,7 +1,7 @@
 import 'package:method_conf_app/data/umbraco/get_items.dart';
-import 'package:method_conf_app/data/umbraco/models/api_content_response_model_base.dart';
+import 'package:method_conf_app/data/umbraco/models/api_content_model_base.dart';
 
-Future<List<ApiContentResponseModelBase>> getChildNodesOfType({
+Future<List<ApiContentModelBase>> getChildNodesOfType({
   required String nodeId,
   required String type,
   int take = 10,
@@ -15,11 +15,11 @@ Future<List<ApiContentResponseModelBase>> getChildNodesOfType({
   return res.items;
 }
 
-Future<ApiContentResponseModelBase> getFirstChildNodeOfType({
+Future<ApiContentModelBase?> getFirstChildNodeOfType({
   required String nodeId,
   required String type,
 }) async {
   var items = await getChildNodesOfType(nodeId: nodeId, type: type);
 
-  return items.first;
+  return items.firstOrNull;
 }

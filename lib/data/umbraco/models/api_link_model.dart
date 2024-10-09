@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:method_conf_app/data/umbraco/models/api_content_response_model_base.dart';
+import 'package:method_conf_app/data/umbraco/models/api_content_model_base.dart';
 import 'package:method_conf_app/data/umbraco/utils.dart';
 import 'package:method_conf_app/env.dart';
 

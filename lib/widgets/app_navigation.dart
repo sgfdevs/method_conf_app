@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:method_conf_app/theme.dart';
-import 'package:method_conf_app/utils/app_icons.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 import 'package:method_conf_app/screens/more_screen.dart';
 import 'package:method_conf_app/screens/not_found_screen.dart';
@@ -38,15 +38,15 @@ class _AppNavigationState extends State<AppNavigation> {
     return [
       _NavigationItem(
         route: '/schedule',
-        item: _buildNavigationBarItem(AppIcons.schedule, 'Schedule'),
+        item: _buildNavigationBarItem(FontAwesomeIcons.calendar, 'Schedule'),
       ),
       _NavigationItem(
         route: '/partners',
-        item: _buildNavigationBarItem(AppIcons.piggyBank, 'Sponsors'),
+        item: _buildNavigationBarItem(FontAwesomeIcons.piggyBank, 'Sponsors'),
       ),
       _NavigationItem(
         route: '/more',
-        item: _buildNavigationBarItem(Icons.more_horiz, 'More'),
+        item: _buildNavigationBarItem(FontAwesomeIcons.ellipsis, 'More'),
       ),
     ];
   }
@@ -70,7 +70,7 @@ class _AppNavigationState extends State<AppNavigation> {
           items: navigationItems.map((i) => i.item).toList(),
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.white,
-          unselectedItemColor: AppColors.primaryLight,
+          unselectedItemColor: AppColors.neutral,
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
           unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
           selectedFontSize: 12,
@@ -83,7 +83,7 @@ class _AppNavigationState extends State<AppNavigation> {
 
   BottomNavigationBarItem _buildNavigationBarItem(IconData icon, String text) {
     return BottomNavigationBarItem(
-      icon: Icon(icon, size: 25),
+      icon: FaIcon(icon, size: 25),
       label: text,
     );
   }

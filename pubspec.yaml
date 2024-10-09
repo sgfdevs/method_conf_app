@@ -49,6 +49,9 @@ dependencies:
   plausible_analytics: ^0.3.0
   http: ^1.2.2
   timezone: ^0.9.4
+  sticky_headers: ^0.3.0+2
+  font_awesome_flutter: ^10.7.0
+  expandable_page_view: ^1.0.17
 
 dev_dependencies:
   flutter_test:
@@ -92,10 +95,6 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: AppIcons
-      fonts:
-        - asset: assets/AppIcons.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

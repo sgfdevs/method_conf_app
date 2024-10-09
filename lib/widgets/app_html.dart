@@ -16,13 +16,21 @@ class AppHtml extends StatelessWidget {
       child: Html(
         data: markup,
         style: {
+          'body': Style(color: Colors.black, margin: Margins.all(0)),
           'a': Style(
             textDecoration: TextDecoration.underline,
             color: AppColors.accent,
-          )
+          ),
+          'li': Style(color: Colors.black, padding: HtmlPaddings.all(0)),
+          'ol': Style(
+              padding: HtmlPaddings.symmetric(horizontal: 15, vertical: 0)),
+          'ul': Style(
+              padding: HtmlPaddings.symmetric(horizontal: 15, vertical: 0)),
         },
         onLinkTap: (url, _, __) {
-          launchUrl(url!);
+          if (url != null) {
+            launchUrl(url);
+          }
         },
       ),
     );

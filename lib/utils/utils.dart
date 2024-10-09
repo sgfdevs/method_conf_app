@@ -11,7 +11,10 @@ Future<void> launchUrl(String url) async {
   try {
     final parsed = Uri.parse(url);
     if (await url_launcher.canLaunchUrl(parsed)) {
-      await url_launcher.launchUrl(parsed);
+      await url_launcher.launchUrl(
+        parsed,
+        mode: url_launcher.LaunchMode.externalApplication,
+      );
       return;
     }
   } catch (e) {

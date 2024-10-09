@@ -24,14 +24,17 @@ class Sponsor extends ApiElementModel {
 @JsonSerializable()
 class SponsorProperties {
   String? title;
-  List<ApiMediaModel>? logo;
+  @JsonKey(name: 'logo')
+  List<ApiMediaModel> logos;
   bool darkBackground;
   bool mobileAppSponsor;
   String? url;
 
+  ApiMediaModel? get logo => logos.firstOrNull;
+
   SponsorProperties({
     this.title,
-    this.logo,
+    this.logos = const [],
     this.darkBackground = false,
     this.mobileAppSponsor = false,
     this.url,

@@ -1,15 +1,22 @@
+import 'dart:async';
+
+import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:method_conf_app/widgets/app_banner.dart';
 import 'package:provider/provider.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 
 import 'package:method_conf_app/env.dart';
-import 'package:method_conf_app/providers/session_provider.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/utils/utils.dart';
 import 'package:method_conf_app/widgets/session_expansion_tile.dart';
 import 'package:method_conf_app/widgets/page_loader.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
+import 'package:method_conf_app/data/umbraco/models/track.dart';
+import 'package:method_conf_app/providers/conference_provider.dart';
+import 'package:method_conf_app/providers/schedule_provider.dart';
+import 'package:method_conf_app/providers/schedule_state_provider.dart';
+import 'package:method_conf_app/widgets/app_banner.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
@@ -18,59 +25,114 @@ class ScheduleScreen extends StatefulWidget {
   State<ScheduleScreen> createState() => _ScheduleScreenState();
 }
 
-class _ScheduleScreenState extends State<ScheduleScreen> {
-  Future? _sessionFuture;
+class _ScheduleScreenState extends State<ScheduleScreen>
+    with TickerProviderStateMixin {
+  static final EdgeInsets _horizontalPadding =
+      const EdgeInsets.symmetric(horizontal: 20);
+
+  Future? _initFuture;
+
+  final _scrollController = ScrollController();
+  PageController? _pageController;
 
   @override
   void initState() {
     super.initState();
 
-    var sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+    _initFuture = _init();
+  }
 
-    _sessionFuture = sessionProvider.fetchInitialSession();
+  Future<void> _init() async {
+    final scheduleProvider =
+        Provider.of<ScheduleProvider>(context, listen: false);
+    final scheduleStateProvider =
+        Provider.of<ScheduleStateProvider>(context, listen: false);
+
+    await Future.wait([
+      scheduleProvider.init(),
+      scheduleStateProvider.init(),
+    ]);
+
+    _pageController =
+        PageController(initialPage: scheduleStateProvider.currentColumnIndex);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    var sessionProvider = Provider.of<SessionProvider>(context);
+    final scheduleProvider = Provider.of<ScheduleProvider>(context);
+    final conferenceProvider = Provider.of<ConferenceProvider>(context);
+    final scheduleStateProvider = Provider.of<ScheduleStateProvider>(context);
 
-    var eventDate = DateTime.parse(Env.eventDate);
-    var dateFormString = 'EEEE, MMMM d\'${daySuffix(eventDate.day)}\', y';
+    final eventDate = conferenceProvider.conference?.properties?.date;
+    final currentTrack = scheduleStateProvider
+        .getTrackAtColumn(scheduleStateProvider.currentColumnIndex);
 
     return AppScreen(
       title: 'Schedule',
       body: PageLoader(
-        future: _sessionFuture,
+        future: _initFuture,
         child: RefreshIndicator(
           onRefresh: () async {
-            await sessionProvider.fetchSessions();
+            await scheduleProvider.refresh();
           },
           child: ListView(
-            padding: const EdgeInsets.all(20),
+            controller: _scrollController,
+            padding: const EdgeInsets.symmetric(vertical: 20),
             physics: const AlwaysScrollableScrollPhysics(),
             children: <Widget>[
-              ..._buildBanner(eventDate),
-              Text(
-                DateFormat(dateFormString).format(eventDate),
-                style: const TextStyle(fontSize: 20),
-              ),
-              const SizedBox(height: 15),
-              _buildSimpleCard(time: '7:45AM', title: 'Check-in/Breakfast'),
-              const SizedBox(height: 15),
-              _buildSimpleCard(time: '8:45AM', title: 'Welcome Announcement'),
-              const SizedBox(height: 15),
-              const Text('Main Track', style: TextStyle(fontSize: 20)),
-              const SizedBox(height: 15),
-              ..._buildMainSessions(context),
-              const Text('Workshop Track', style: TextStyle(fontSize: 20)),
-              const SizedBox(height: 15),
-              ..._buildWorkshopSessions(context),
-              const Text('Keynote', style: TextStyle(fontSize: 20)),
-              const SizedBox(height: 15),
-              ..._buildKeynoteSessions(context),
-              _buildSimpleCard(time: '5:30PM', title: 'Closing Remarks'),
-              const SizedBox(height: 15),
-              _buildSimpleCard(time: '5:45PM', title: 'After-Party'),
+              if (eventDate != null) ..._buildBanner(eventDate),
+              if (eventDate != null) ...[
+                Padding(
+                  padding: _horizontalPadding,
+                  child: Text(
+                    DateFormat('EEEE, MMMM d\'${daySuffix(eventDate.day)}\', y')
+                        .format(eventDate),
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+              StickyHeader(
+                controller: _scrollController,
+                header: currentTrack == null
+                    ? Container()
+                    : _buildTrackHeader(context, currentTrack),
+                content: ExpandablePageView.builder(
+                  controller: _pageController,
+                  animationDuration: Duration(milliseconds: 100),
+                  onPageChanged: (page) {
+                    scheduleStateProvider.currentColumnIndex = page;
+                    _fixStickyHeaderJumpingOnSmallerPages();
+                  },
+                  itemCount:
+                      scheduleProvider.grid.elementAtOrNull(0)?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    final sessions =
+                        scheduleStateProvider.getSessionsAtColumn(index);
+
+                    return Column(
+                      children: [
+                        const SizedBox(height: 15),
+                        ...sessions.expand(
+                          (session) => [
+                            Padding(
+                              padding: _horizontalPadding,
+                              child: SessionExpansionTile(session: session),
+                            ),
+                            const SizedBox(height: 15),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              )
             ],
           ),
         ),
@@ -78,63 +140,60 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     );
   }
 
-  Widget _buildSimpleCard({required String time, required String title}) {
+  Widget _buildTrackHeader(BuildContext context, Track track) {
+    var scheduleStateProvider = Provider.of<ScheduleStateProvider>(context);
+
     return Container(
-      color: AppColors.neutralExtraLight,
-      padding: const EdgeInsets.all(10),
+      color: AppColors.accent,
       child: Row(
-        children: <Widget>[
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildTrackControlIcon(scheduleStateProvider, ControlDirection.prev),
           Text(
-            time,
-            style: const TextStyle(fontSize: 16),
+            track.name ?? '',
+            style: const TextStyle(
+                fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(width: 10),
-          Text(
-            title,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          )
+          _buildTrackControlIcon(scheduleStateProvider, ControlDirection.next),
         ],
       ),
     );
   }
 
-  List<Widget> _buildMainSessions(BuildContext context) {
-    var sessionProvider = Provider.of<SessionProvider>(context);
+  Widget _buildTrackControlIcon(
+      ScheduleStateProvider scheduleStateProvider, ControlDirection direction) {
+    final enabled = direction == ControlDirection.next
+        ? scheduleStateProvider.isNextEnabled
+        : scheduleStateProvider.isPrevEnabled;
 
-    var widgets = <Widget>[];
-
-    for (var session in sessionProvider.mainSessions) {
-      widgets.add(SessionExpansionTile(session: session));
-      widgets.add(const SizedBox(height: 15));
-    }
-
-    return widgets;
-  }
-
-  List<Widget> _buildWorkshopSessions(BuildContext context) {
-    var sessionProvider = Provider.of<SessionProvider>(context);
-
-    var widgets = <Widget>[];
-
-    for (var session in sessionProvider.workshopSessions) {
-      widgets.add(SessionExpansionTile(session: session));
-      widgets.add(const SizedBox(height: 15));
-    }
-
-    return widgets;
-  }
-
-  List<Widget> _buildKeynoteSessions(BuildContext context) {
-    var sessionProvider = Provider.of<SessionProvider>(context);
-
-    var widgets = <Widget>[];
-
-    for (var session in sessionProvider.keynoteSessions) {
-      widgets.add(SessionExpansionTile(session: session));
-      widgets.add(const SizedBox(height: 15));
-    }
-
-    return widgets;
+    return Visibility(
+      visible: enabled,
+      maintainState: true,
+      maintainSize: true,
+      maintainAnimation: true,
+      child: IconButton(
+        onPressed: () {
+          if (enabled) {
+            if (direction == ControlDirection.next) {
+              _pageController?.nextPage(
+                  duration: Duration(milliseconds: 250),
+                  curve: Curves.easeInOutCubic);
+            } else {
+              _pageController?.previousPage(
+                  duration: Duration(milliseconds: 250),
+                  curve: Curves.easeInOutCubic);
+            }
+          }
+        },
+        icon: Icon(
+          direction == ControlDirection.next
+              ? Icons.chevron_right
+              : Icons.chevron_left,
+          color: Colors.white,
+          size: 40,
+        ),
+      ),
+    );
   }
 
   List<Widget> _buildBanner(DateTime eventDate) {
@@ -143,12 +202,49 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     }
 
     return [
-      AppBanner(
-        text: 'Invest Your Yourself By Honing Your Craft',
-        buttonText: 'SEATING IS LIMITED - REGISTER NOW!',
-        onButtonPress: () => launchUrl(Env.ticketUrl),
+      Padding(
+        padding: _horizontalPadding,
+        child: AppBanner(
+          text: 'An immersive day of code, content, and more',
+          buttonText: 'REGISTER NOW!',
+          onButtonPress: () => launchUrl(Env.ticketUrl),
+        ),
       ),
       const SizedBox(height: 20),
     ];
+  }
+
+  // This is a hacky fix that scrolls by one pixel when there's
+  // conditions that will cause the sticky header to jump. This
+  // happens  whenever we're scrolled down below a siblings
+  // page max height  and we switch to that sibling page.
+  void _fixStickyHeaderJumpingOnSmallerPages() {
+    final animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 100),
+    );
+
+    var prevHeight = _scrollController.position.maxScrollExtent;
+
+    animationController.addListener(() {
+      final currentHeight = _scrollController.position.maxScrollExtent;
+
+      final isBottom = _scrollController.position.atEdge &&
+          _scrollController.position.pixels != 0;
+
+      if (currentHeight < prevHeight && isBottom) {
+        _scrollController.jumpTo(_scrollController.offset - 1);
+      }
+
+      prevHeight = currentHeight;
+    });
+
+    animationController.addStatusListener((status) {
+      if (status.isCompleted) {
+        animationController.dispose();
+      }
+    });
+
+    animationController.forward();
   }
 }
