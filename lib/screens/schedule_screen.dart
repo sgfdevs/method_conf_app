@@ -26,27 +26,35 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   static final EdgeInsets _horizontalPadding =
       const EdgeInsets.symmetric(horizontal: 20);
 
-  Future? _scheduleFuture;
+  Future? _initFuture;
 
   final _scrollController = ScrollController();
+  PageController? _pageController;
 
   @override
   void initState() {
     super.initState();
 
+    _initFuture = _init();
+  }
+
+  Future<void> _init() async {
     final scheduleProvider =
         Provider.of<ScheduleProvider>(context, listen: false);
     final scheduleStateProvider =
         Provider.of<ScheduleStateProvider>(context, listen: false);
 
-    _scheduleFuture = Future.wait([
+    await Future.wait([
       scheduleProvider.init(),
       scheduleStateProvider.init(),
     ]);
+
+    _pageController =
+        PageController(initialPage: scheduleStateProvider.currentColumnIndex);
   }
 
   @override
@@ -62,12 +70,13 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     final scheduleStateProvider = Provider.of<ScheduleStateProvider>(context);
 
     final eventDate = conferenceProvider.conference?.properties?.date;
-    final currentTrack = scheduleStateProvider.currentTrack;
+    final currentTrack = scheduleStateProvider
+        .getTrackAtColumn(scheduleStateProvider.currentColumnIndex);
 
     return AppScreen(
       title: 'Schedule',
       body: PageLoader(
-        future: _scheduleFuture,
+        future: _initFuture,
         child: RefreshIndicator(
           onRefresh: () async {
             await scheduleProvider.refresh();
@@ -89,38 +98,41 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                 ),
                 const SizedBox(height: 20),
               ],
-              if (currentTrack != null)
-                StickyHeader(
-                  controller: _scrollController,
-                  header: _buildTrackHeader(context, currentTrack),
-                  content: ExpandablePageView.builder(
-                    animationDuration: Duration(milliseconds: 100),
-                    onPageChanged: (_) {
-                      _fixStickyHeaderJumpingOnSmallerPages();
-                    },
-                    itemCount:
-                        scheduleProvider.grid.elementAtOrNull(0)?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final sessions =
-                          scheduleStateProvider.getSessionsAtColumn(index);
+              StickyHeader(
+                controller: _scrollController,
+                header: currentTrack == null
+                    ? Container()
+                    : _buildTrackHeader(context, currentTrack),
+                content: ExpandablePageView.builder(
+                  controller: _pageController,
+                  animationDuration: Duration(milliseconds: 100),
+                  onPageChanged: (page) {
+                    scheduleStateProvider.currentColumnIndex = page;
+                    _fixStickyHeaderJumpingOnSmallerPages();
+                  },
+                  itemCount:
+                      scheduleProvider.grid.elementAtOrNull(0)?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    final sessions =
+                        scheduleStateProvider.getSessionsAtColumn(index);
 
-                      return Column(
-                        children: [
-                          const SizedBox(height: 15),
-                          ...sessions.expand(
-                            (session) => [
-                              Padding(
-                                padding: _horizontalPadding,
-                                child: SessionExpansionTile(session: session),
-                              ),
-                              const SizedBox(height: 15),
-                            ],
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                )
+                    return Column(
+                      children: [
+                        const SizedBox(height: 15),
+                        ...sessions.expand(
+                          (session) => [
+                            Padding(
+                              padding: _horizontalPadding,
+                              child: SessionExpansionTile(session: session),
+                            ),
+                            const SizedBox(height: 15),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              )
             ],
           ),
         ),
@@ -162,7 +174,15 @@ class _ScheduleScreenState extends State<ScheduleScreen>
       child: IconButton(
         onPressed: () {
           if (enabled) {
-            scheduleStateProvider.handleControl(direction);
+            if (direction == ControlDirection.next) {
+              _pageController?.nextPage(
+                  duration: Duration(milliseconds: 250),
+                  curve: Curves.easeInOutCubic);
+            } else {
+              _pageController?.previousPage(
+                  duration: Duration(milliseconds: 250),
+                  curve: Curves.easeInOutCubic);
+            }
           }
         },
         icon: Icon(

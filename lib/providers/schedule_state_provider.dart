@@ -20,28 +20,22 @@ class ScheduleStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int startColumnIndex = 0;
+  int _startColumnIndex = 0;
 
-  Key get currentKey => ValueKey(startColumnIndex);
+  int get currentColumnIndex => _startColumnIndex;
 
-  Track? get currentTrack =>
-      scheduleProvider.tracks.elementAtOrNull(startColumnIndex);
-
-  List<Session> get currentSessions => scheduleProvider.grid
-      .map((row) => row.elementAtOrNull(startColumnIndex))
-      .toSet()
-      .whereType<String>()
-      .map((gridId) => scheduleProvider.sessions
-          .firstWhereOrNull((session) => session.gridId == gridId))
-      .whereType<Session>()
-      .toList();
+  set currentColumnIndex(int value) {
+    _startColumnIndex = value;
+    notifyListeners();
+    store(_startColumnIndex);
+  }
 
   int get _totalColumns =>
       scheduleProvider.grid.elementAtOrNull(0)?.length ?? 0;
   int get _maxStartIndex => max(_totalColumns - visibleColumns, 0);
 
-  bool get isNextEnabled => startColumnIndex < _maxStartIndex;
-  bool get isPrevEnabled => startColumnIndex != 0;
+  bool get isNextEnabled => currentColumnIndex < _maxStartIndex;
+  bool get isPrevEnabled => currentColumnIndex != 0;
 
   ScheduleStateProvider({required this.scheduleProvider});
 
@@ -49,8 +43,7 @@ class ScheduleStateProvider extends ChangeNotifier {
     final storedStartColumnIndex = await load();
 
     if (storedStartColumnIndex != null) {
-      startColumnIndex = storedStartColumnIndex;
-      notifyListeners();
+      currentColumnIndex = storedStartColumnIndex;
     }
   }
 
@@ -69,18 +62,6 @@ class ScheduleStateProvider extends ChangeNotifier {
     }
 
     await prefs.setInt(_startColumnIndexStorageKey, newStartColumnIndex);
-  }
-
-  Future handleControl(ControlDirection direction) async {
-    final prevIndex = startColumnIndex;
-    if (direction == ControlDirection.next) {
-      startColumnIndex = min(prevIndex + 1, _maxStartIndex);
-    } else {
-      startColumnIndex = max(prevIndex - 1, 0);
-    }
-
-    notifyListeners();
-    store(startColumnIndex);
   }
 
   Track? getTrackAtColumn(int column) {
