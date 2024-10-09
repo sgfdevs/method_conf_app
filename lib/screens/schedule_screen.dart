@@ -218,7 +218,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
         padding: _horizontalPadding,
         child: AppBanner(
           text: 'An immersive day of code, content, and more',
-          buttonText: 'REGISTER NOW!',
+          buttonText: 'GET TICKETS!',
           onButtonPress: () => launchUrl('${Env.methodBaseUrl}/register'),
         ),
       ),
