@@ -5,7 +5,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import 'package:method_conf_app/theme.dart';
-import 'package:method_conf_app/widgets/app_html.dart';
 
 Future<void> launchUrl(String url) async {
   try {
