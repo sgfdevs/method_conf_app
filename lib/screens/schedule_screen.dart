@@ -207,7 +207,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
         child: AppBanner(
           text: 'An immersive day of code, content, and more',
           buttonText: 'REGISTER NOW!',
-          onButtonPress: () => launchUrl(Env.ticketUrl),
+          onButtonPress: () => launchUrl('${Env.methodBaseUrl}/register'),
         ),
       ),
       const SizedBox(height: 20),

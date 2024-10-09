@@ -129,6 +129,8 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   Future<void> refresh() async {
+    await conferenceProvider.refresh();
+
     final newSchedule = await fetch();
 
     schedule = newSchedule;
