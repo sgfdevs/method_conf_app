@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:method_conf_app/data/umbraco/models/api_link_model.dart';
 import 'package:method_conf_app/utils/cst_utils.dart';
 
 import 'package:method_conf_app/data/umbraco/models/api_content_model_base.dart';
@@ -34,13 +35,21 @@ class ConferenceProperties {
   String? callForSpeakersUrl;
   String? tagline;
   String? location;
+  @JsonKey(fromJson: utcStringToCst, toJson: cstToUtcString)
+  DateTime? surveyAvailableAt;
+  @JsonKey(name: 'surveyUrl')
+  List<ApiLinkModel> surveyUrlList;
+
+  ApiLinkModel? get surveyUrl => surveyUrlList.firstOrNull;
 
   ConferenceProperties({
-    required this.date,
-    required this.registerUrl,
-    required this.callForSpeakersUrl,
-    required this.tagline,
-    required this.location,
+    this.date,
+    this.registerUrl,
+    this.callForSpeakersUrl,
+    this.tagline,
+    this.location,
+    this.surveyAvailableAt,
+    this.surveyUrlList = const [],
   });
 
   factory ConferenceProperties.fromJson(Map<String, dynamic> json) =>
