@@ -70,7 +70,7 @@ class _AppNavigationState extends State<AppNavigation> {
           items: navigationItems.map((i) => i.item).toList(),
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.white,
-          unselectedItemColor: AppColors.primaryLight,
+          unselectedItemColor: AppColors.neutral,
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
           unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
           selectedFontSize: 12,

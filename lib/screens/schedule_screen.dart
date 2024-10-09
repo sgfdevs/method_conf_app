@@ -23,6 +23,9 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
+  static final EdgeInsets _horizontalPadding =
+      const EdgeInsets.symmetric(horizontal: 20);
+
   Future? _scheduleFuture;
 
   @override
@@ -58,15 +61,18 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             await scheduleProvider.refresh();
           },
           child: ListView(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(vertical: 20),
             physics: const AlwaysScrollableScrollPhysics(),
             children: <Widget>[
               if (eventDate != null) ..._buildBanner(eventDate),
               if (eventDate != null) ...[
-                Text(
-                  DateFormat('EEEE, MMMM d\'${daySuffix(eventDate.day)}\', y')
-                      .format(eventDate),
-                  style: const TextStyle(fontSize: 20),
+                Padding(
+                  padding: _horizontalPadding,
+                  child: Text(
+                    DateFormat('EEEE, MMMM d\'${daySuffix(eventDate.day)}\', y')
+                        .format(eventDate),
+                    style: const TextStyle(fontSize: 20),
+                  ),
                 ),
                 const SizedBox(height: 20),
               ],
@@ -78,7 +84,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       const SizedBox(height: 15),
                       ...scheduleStateProvider.currentSessions.expand(
                         (session) => [
-                          SessionExpansionTile(session: session),
+                          Padding(
+                            padding: _horizontalPadding,
+                            child: SessionExpansionTile(session: session),
+                          ),
                           const SizedBox(height: 15),
                         ],
                       ),
@@ -100,18 +109,19 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildIcon(scheduleStateProvider, ControlDirection.prev),
+          _buildTrackControlIcon(scheduleStateProvider, ControlDirection.prev),
           Text(
             track.name ?? '',
-            style: const TextStyle(fontSize: 20, color: Colors.white),
+            style: const TextStyle(
+                fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          _buildIcon(scheduleStateProvider, ControlDirection.next),
+          _buildTrackControlIcon(scheduleStateProvider, ControlDirection.next),
         ],
       ),
     );
   }
 
-  Widget _buildIcon(
+  Widget _buildTrackControlIcon(
       ScheduleStateProvider scheduleStateProvider, ControlDirection direction) {
     final enabled = direction == ControlDirection.next
         ? scheduleStateProvider.isNextEnabled
@@ -145,10 +155,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     }
 
     return [
-      AppBanner(
-        text: 'An immersive day of code, content, and more',
-        buttonText: 'REGISTER NOW!',
-        onButtonPress: () => launchUrl(Env.ticketUrl),
+      Padding(
+        padding: _horizontalPadding,
+        child: AppBanner(
+          text: 'An immersive day of code, content, and more',
+          buttonText: 'REGISTER NOW!',
+          onButtonPress: () => launchUrl(Env.ticketUrl),
+        ),
       ),
       const SizedBox(height: 20),
     ];
