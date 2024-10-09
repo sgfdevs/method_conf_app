@@ -9,7 +9,6 @@ import 'package:method_conf_app/data/umbraco/models/session.dart';
 import 'package:method_conf_app/data/umbraco/models/speaker.dart';
 import 'package:method_conf_app/data/umbraco/models/track.dart';
 import 'package:method_conf_app/providers/conference_provider.dart';
-import 'package:method_conf_app/providers/schedule_state_provider.dart';
 import 'package:method_conf_app/utils/iterable_extensions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

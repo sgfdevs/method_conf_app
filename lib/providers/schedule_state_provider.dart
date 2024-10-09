@@ -79,10 +79,8 @@ class ScheduleStateProvider extends ChangeNotifier {
       startColumnIndex = max(prevIndex - 1, 0);
     }
 
-    await store(startColumnIndex).catchError((err) {
-      print(err);
-    });
     notifyListeners();
+    store(startColumnIndex);
   }
 }
 

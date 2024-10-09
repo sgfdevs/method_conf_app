@@ -27,7 +27,7 @@ class SpeakerDetailScreen extends StatelessWidget {
     }
 
     final bio = speaker.properties?.bio?.markup;
-    final profileImageUrl = speaker?.properties?.profileImage?.url;
+    final profileImageUrl = speaker.properties?.profileImage?.url;
 
     return AppScreen(
       title: 'Speaker',

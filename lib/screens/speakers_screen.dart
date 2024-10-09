@@ -4,7 +4,6 @@ import 'package:method_conf_app/widgets/app_list_item.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
 import 'package:provider/provider.dart';
 
-import 'package:method_conf_app/providers/speaker_provider.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
 
 class SpeakersScreen extends StatelessWidget {

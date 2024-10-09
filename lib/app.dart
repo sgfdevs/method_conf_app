@@ -5,8 +5,6 @@ import 'package:method_conf_app/providers/schedule_state_provider.dart';
 import 'package:method_conf_app/providers/sponsor_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'package:method_conf_app/providers/session_provider.dart';
-import 'package:method_conf_app/providers/speaker_provider.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/widgets/app_navigation.dart';
 
@@ -18,11 +16,6 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ConferenceProvider()),
-        ChangeNotifierProvider(create: (context) => SpeakerProvider()),
-        ChangeNotifierProvider(create: (context) {
-          var s = Provider.of<SpeakerProvider>(context, listen: false);
-          return SessionProvider(speakerProvider: s);
-        }),
         ChangeNotifierProvider(create: (context) {
           var c = Provider.of<ConferenceProvider>(context, listen: false);
           return SponsorProvider(conferenceProvider: c);
