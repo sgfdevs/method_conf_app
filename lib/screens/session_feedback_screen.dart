@@ -23,6 +23,7 @@ class SessionFeedbackScreen extends StatefulWidget {
 class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
   late TextEditingController _commentController;
   late TextEditingController _emailController;
+  late TextEditingController _nameController;
   int? _speakerRating;
   int? _contentRating;
   int? _venueRating;
@@ -33,12 +34,14 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
     super.initState();
     _commentController = TextEditingController();
     _emailController = TextEditingController();
+    _nameController = TextEditingController();
   }
 
   @override
   void dispose() {
     _commentController.dispose();
     _emailController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -153,6 +156,25 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
           ),
           const SizedBox(height: 18),
           const Text(
+            'Name',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const Text('Required for door prize entry',
+              style: TextStyle(fontSize: 12)),
+          const SizedBox(height: 10),
+          HalfBorderBox(
+            child: TextFormField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: AppColors.neutralExtraLight,
+                hintText: 'Jane Doe',
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+          const SizedBox(height: 18),
+          const Text(
             'Email',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
@@ -166,7 +188,7 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
               decoration: const InputDecoration(
                 filled: true,
                 fillColor: AppColors.neutralExtraLight,
-                hintText: 'Email',
+                hintText: 'jane.doe@example.com',
                 border: InputBorder.none,
               ),
             ),
@@ -229,12 +251,14 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
 
     final comment = _commentController.text.trim();
     final email = _emailController.text.trim();
+    final name = _nameController.text.trim();
 
     var data = json.encode({
       'speakerRating': _speakerRating,
       'contentRating': _contentRating,
       'venueRating': _venueRating,
       'comments': comment == '' ? null : comment,
+      'name': name == '' ? null : name,
       'email': email == '' ? null : email,
     });
 
