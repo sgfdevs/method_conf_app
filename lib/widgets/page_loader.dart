@@ -16,14 +16,10 @@ class PageLoader extends StatelessWidget {
         }
 
         if (snapshot.hasError) {
-          return const Center(
-            child: Text('Something went wrong.'),
-          );
+          return const Center(child: Text('Something went wrong.'));
         }
 
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }

@@ -19,11 +19,7 @@ class AppBanner extends StatelessWidget {
     return ClipRect(
       child: Stack(
         children: <Widget>[
-          Positioned.fill(
-            child: Container(
-              color: AppColors.accent,
-            ),
-          ),
+          Positioned.fill(child: Container(color: AppColors.accent)),
           Positioned.fill(
             child: Align(
               alignment: Alignment.topCenter,
@@ -34,9 +30,7 @@ class AppBanner extends StatelessWidget {
                   translation: const Offset(-0.31, -0.31),
                   child: Transform.rotate(
                     angle: degreesToRads(-40),
-                    child: Container(
-                      color: AppColors.primary,
-                    ),
+                    child: Container(color: AppColors.primary),
                   ),
                 ),
               ),
@@ -65,9 +59,12 @@ class AppBanner extends StatelessWidget {
                   const SizedBox(height: 20),
                   TextButton(
                     style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 15),
-                        backgroundColor: Colors.black),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 15,
+                      ),
+                      backgroundColor: Colors.black,
+                    ),
                     onPressed: onButtonPress,
                     child: Text(
                       buttonText,

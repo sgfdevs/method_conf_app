@@ -18,15 +18,17 @@ class SpeakersScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         children: <Widget>[
-          ...speakersProvider.speakers.map((speaker) => AppListItem(
-                text: speaker.name ?? '',
-                onTap: () {
-                  AppNavigator.pushNamed(
-                    '/more/speakers/detail',
-                    arguments: speaker,
-                  );
-                },
-              )),
+          ...speakersProvider.speakers.map(
+            (speaker) => AppListItem(
+              text: speaker.name ?? '',
+              onTap: () {
+                AppNavigator.pushNamed(
+                  '/more/speakers/detail',
+                  arguments: speaker,
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

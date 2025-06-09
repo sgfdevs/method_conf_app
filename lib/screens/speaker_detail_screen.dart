@@ -19,8 +19,9 @@ class SpeakerDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var speaker = ModalRoute.of(context)!.settings.arguments as Speaker?;
-    var sessions =
-        Provider.of<ScheduleProvider>(context).getSessionsForSpeaker(speaker);
+    var sessions = Provider.of<ScheduleProvider>(
+      context,
+    ).getSessionsForSpeaker(speaker);
 
     if (speaker == null) {
       return const NotFoundScreen();
@@ -44,7 +45,9 @@ class SpeakerDetailScreen extends StatelessWidget {
                   speaker.name ?? '',
                   textAlign: TextAlign.left,
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Text(
                   speaker.properties?.jobTitle ?? '',
@@ -58,12 +61,16 @@ class SpeakerDetailScreen extends StatelessWidget {
                     if (profileImageUrl != null)
                       Flexible(
                         child: CachedNetworkImage(
-                          imageUrl: imageUrl(profileImageUrl,
-                              width: 300, height: 300),
+                          imageUrl: imageUrl(
+                            profileImageUrl,
+                            width: 300,
+                            height: 300,
+                          ),
                           placeholder: (context, url) {
                             return const CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation(Colors.transparent),
+                              valueColor: AlwaysStoppedAnimation(
+                                Colors.transparent,
+                              ),
                             );
                           },
                           errorWidget: (context, url, error) =>
@@ -71,14 +78,10 @@ class SpeakerDetailScreen extends StatelessWidget {
                         ),
                       ),
                     const SizedBox(width: 20),
-                    Flexible(
-                      child: _buildSocialIcons(speaker),
-                    ),
+                    Flexible(child: _buildSocialIcons(speaker)),
                   ],
                 ),
-                AppHtml(
-                  markup: bio,
-                )
+                AppHtml(markup: bio),
               ],
             ),
           ),
@@ -87,19 +90,20 @@ class SpeakerDetailScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Text(
-                  'Sessions',
-                  style: TextStyle(fontSize: 24),
-                ),
+                const Text('Sessions', style: TextStyle(fontSize: 24)),
                 const SizedBox(height: 15),
-                ...sessions.expand((session) => [
-                      SessionExpansionTile(
-                          session: session, disableSpeakerTap: true),
-                      const SizedBox(height: 15),
-                    ])
+                ...sessions.expand(
+                  (session) => [
+                    SessionExpansionTile(
+                      session: session,
+                      disableSpeakerTap: true,
+                    ),
+                    const SizedBox(height: 15),
+                  ],
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -111,47 +115,63 @@ class SpeakerDetailScreen extends StatelessWidget {
     final xTwitterUrl = speaker.properties?.xTwitterUrl;
 
     if (xTwitterUrl != null) {
-      icons.add(InkWell(
-        onTap: () => launchUrl(xTwitterUrl),
-        child: const FaIcon(FontAwesomeIcons.xTwitter,
-            color: AppColors.accent, size: 35),
-      ));
+      icons.add(
+        InkWell(
+          onTap: () => launchUrl(xTwitterUrl),
+          child: const FaIcon(
+            FontAwesomeIcons.xTwitter,
+            color: AppColors.accent,
+            size: 35,
+          ),
+        ),
+      );
     }
 
     final linkedInUrl = speaker.properties?.linkedInUrl;
 
     if (linkedInUrl != null) {
-      icons.add(InkWell(
-        onTap: () => launchUrl(linkedInUrl),
-        child: const FaIcon(FontAwesomeIcons.linkedin,
-            color: AppColors.accent, size: 35),
-      ));
+      icons.add(
+        InkWell(
+          onTap: () => launchUrl(linkedInUrl),
+          child: const FaIcon(
+            FontAwesomeIcons.linkedin,
+            color: AppColors.accent,
+            size: 35,
+          ),
+        ),
+      );
     }
 
     final instagramUrl = speaker.properties?.instagramUrl;
 
     if (instagramUrl != null) {
-      icons.add(InkWell(
-        onTap: () => launchUrl(instagramUrl),
-        child: const FaIcon(FontAwesomeIcons.instagram,
-            color: AppColors.accent, size: 35),
-      ));
+      icons.add(
+        InkWell(
+          onTap: () => launchUrl(instagramUrl),
+          child: const FaIcon(
+            FontAwesomeIcons.instagram,
+            color: AppColors.accent,
+            size: 35,
+          ),
+        ),
+      );
     }
 
     final websiteUrl = speaker.properties?.websiteUrl;
 
     if (websiteUrl != null) {
-      icons.add(InkWell(
-        onTap: () => launchUrl(websiteUrl),
-        child: const FaIcon(FontAwesomeIcons.globe,
-            color: AppColors.accent, size: 35),
-      ));
+      icons.add(
+        InkWell(
+          onTap: () => launchUrl(websiteUrl),
+          child: const FaIcon(
+            FontAwesomeIcons.globe,
+            color: AppColors.accent,
+            size: 35,
+          ),
+        ),
+      );
     }
 
-    return Wrap(
-      spacing: 30,
-      runSpacing: 30,
-      children: icons,
-    );
+    return Wrap(spacing: 30, runSpacing: 30, children: icons);
   }
 }

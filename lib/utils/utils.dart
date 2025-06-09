@@ -37,7 +37,7 @@ String daySuffix(int day) {
 }
 
 Future<void> showErrorDialog({
-  required context,
+  required BuildContext context,
   required String message,
   String title = 'Whoops',
 }) {
@@ -46,10 +46,7 @@ Future<void> showErrorDialog({
     builder: (context) {
       return AlertDialog(
         title: Text(title),
-        content: Text(
-          message,
-          style: TextStyle(fontSize: 16),
-        ),
+        content: Text(message, style: TextStyle(fontSize: 16)),
         actions: <Widget>[
           TextButton(
             child: const Text(

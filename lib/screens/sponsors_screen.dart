@@ -29,8 +29,10 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
   @override
   void initState() {
     super.initState();
-    final sponsorProvider =
-        Provider.of<SponsorProvider>(context, listen: false);
+    final sponsorProvider = Provider.of<SponsorProvider>(
+      context,
+      listen: false,
+    );
 
     _sponsorsFuture = sponsorProvider.init();
   }
@@ -71,7 +73,9 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                         title,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   if (logoSizes == SponsorTierLogoSize.large)
@@ -119,9 +123,10 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                           imageUrl: imageUrl(logoUrl, height: 75),
                           placeholder: (context, url) =>
                               const CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation(Colors.transparent),
-                          ),
+                                valueColor: AlwaysStoppedAnimation(
+                                  Colors.transparent,
+                                ),
+                              ),
                           errorWidget: (context, url, error) =>
                               const Icon(Icons.error),
                         )
@@ -138,10 +143,12 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
 
   List<Widget> _buildLargeSponsors(List<Sponsor> sponsors) {
     return sponsors
-        .map((sponsor) => Padding(
-              padding: const EdgeInsets.only(bottom: 15),
-              child: _buildSponsor(sponsor),
-            ))
+        .map(
+          (sponsor) => Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: _buildSponsor(sponsor),
+          ),
+        )
         .toList();
   }
 

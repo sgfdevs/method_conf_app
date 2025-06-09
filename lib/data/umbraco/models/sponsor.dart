@@ -8,11 +8,7 @@ part 'sponsor.g.dart';
 class Sponsor extends ApiElementModel {
   SponsorProperties? properties;
 
-  Sponsor({
-    required super.id,
-    required super.contentType,
-    this.properties,
-  });
+  Sponsor({required super.id, required super.contentType, this.properties});
 
   factory Sponsor.fromJson(Map<String, dynamic> json) =>
       _$SponsorFromJson(json);

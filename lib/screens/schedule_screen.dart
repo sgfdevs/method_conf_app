@@ -28,8 +28,9 @@ class ScheduleScreen extends StatefulWidget {
 
 class _ScheduleScreenState extends State<ScheduleScreen>
     with TickerProviderStateMixin {
-  static final EdgeInsets _horizontalPadding =
-      const EdgeInsets.symmetric(horizontal: 20);
+  static final EdgeInsets _horizontalPadding = const EdgeInsets.symmetric(
+    horizontal: 20,
+  );
 
   Future? _initFuture;
 
@@ -51,18 +52,20 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   }
 
   Future<void> _init() async {
-    final scheduleProvider =
-        Provider.of<ScheduleProvider>(context, listen: false);
-    final scheduleStateProvider =
-        Provider.of<ScheduleStateProvider>(context, listen: false);
+    final scheduleProvider = Provider.of<ScheduleProvider>(
+      context,
+      listen: false,
+    );
+    final scheduleStateProvider = Provider.of<ScheduleStateProvider>(
+      context,
+      listen: false,
+    );
 
-    await Future.wait([
-      scheduleProvider.init(),
-      scheduleStateProvider.init(),
-    ]);
+    await Future.wait([scheduleProvider.init(), scheduleStateProvider.init()]);
 
-    _pageController =
-        PageController(initialPage: scheduleStateProvider.currentColumnIndex);
+    _pageController = PageController(
+      initialPage: scheduleStateProvider.currentColumnIndex,
+    );
   }
 
   @override
@@ -80,8 +83,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     final scheduleStateProvider = Provider.of<ScheduleStateProvider>(context);
 
     final eventDate = conferenceProvider.conference?.properties?.date;
-    final currentTrack = scheduleStateProvider
-        .getTrackAtColumn(scheduleStateProvider.currentColumnIndex);
+    final currentTrack = scheduleStateProvider.getTrackAtColumn(
+      scheduleStateProvider.currentColumnIndex,
+    );
 
     return AppScreen(
       title: 'Schedule',
@@ -98,13 +102,16 @@ class _ScheduleScreenState extends State<ScheduleScreen>
             children: <Widget>[
               if (eventDate != null) ..._buildRegisterBanner(eventDate),
               ..._buildSurveyBanner(
-                  conferenceProvider.conference, _currentTime),
+                conferenceProvider.conference,
+                _currentTime,
+              ),
               if (eventDate != null) ...[
                 Padding(
                   padding: _horizontalPadding,
                   child: Text(
-                    DateFormat('EEEE, MMMM d\'${daySuffix(eventDate.day)}\', y')
-                        .format(eventDate),
+                    DateFormat(
+                      'EEEE, MMMM d\'${daySuffix(eventDate.day)}\', y',
+                    ).format(eventDate),
                     style: const TextStyle(fontSize: 20),
                   ),
                 ),
@@ -125,8 +132,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                   itemCount:
                       scheduleProvider.grid.elementAtOrNull(0)?.length ?? 0,
                   itemBuilder: (context, index) {
-                    final sessions =
-                        scheduleStateProvider.getSessionsAtColumn(index);
+                    final sessions = scheduleStateProvider.getSessionsAtColumn(
+                      index,
+                    );
 
                     return Column(
                       children: [
@@ -144,7 +152,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                     );
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -164,7 +172,10 @@ class _ScheduleScreenState extends State<ScheduleScreen>
           Text(
             track.name ?? '',
             style: const TextStyle(
-                fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
+              fontSize: 22,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           _buildTrackControlIcon(scheduleStateProvider, ControlDirection.next),
         ],
@@ -173,7 +184,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   }
 
   Widget _buildTrackControlIcon(
-      ScheduleStateProvider scheduleStateProvider, ControlDirection direction) {
+    ScheduleStateProvider scheduleStateProvider,
+    ControlDirection direction,
+  ) {
     final enabled = direction == ControlDirection.next
         ? scheduleStateProvider.isNextEnabled
         : scheduleStateProvider.isPrevEnabled;
@@ -188,12 +201,14 @@ class _ScheduleScreenState extends State<ScheduleScreen>
           if (enabled) {
             if (direction == ControlDirection.next) {
               _pageController?.nextPage(
-                  duration: Duration(milliseconds: 250),
-                  curve: Curves.easeInOutCubic);
+                duration: Duration(milliseconds: 250),
+                curve: Curves.easeInOutCubic,
+              );
             } else {
               _pageController?.previousPage(
-                  duration: Duration(milliseconds: 250),
-                  curve: Curves.easeInOutCubic);
+                duration: Duration(milliseconds: 250),
+                curve: Curves.easeInOutCubic,
+              );
             }
           }
         },
@@ -227,7 +242,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   }
 
   List<Widget> _buildSurveyBanner(
-      Conference? conference, DateTime currentTime) {
+    Conference? conference,
+    DateTime currentTime,
+  ) {
     final surveyUrl = conference?.properties?.surveyUrl;
     final fullUrl = surveyUrl?.fullUrl;
     final surveyAvailableAt = conference?.properties?.surveyAvailableAt;
@@ -272,7 +289,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     animationController.addListener(() {
       final currentHeight = _scrollController.position.maxScrollExtent;
 
-      final isBottom = _scrollController.position.atEdge &&
+      final isBottom =
+          _scrollController.position.atEdge &&
           _scrollController.position.pixels != 0;
 
       if (currentHeight < prevHeight && isBottom) {

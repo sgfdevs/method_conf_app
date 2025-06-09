@@ -14,23 +14,27 @@ Future<PagedApiContentResponseModel> getItems({
   var url = Uri.parse('${Env.umbracoBaseUrl}/umbraco/delivery/api/v2/content');
 
   if (filter.isNotEmpty) {
-    url = url
-        .replace(queryParameters: {...url.queryParameters, 'filter': filter});
+    url = url.replace(
+      queryParameters: {...url.queryParameters, 'filter': filter},
+    );
   }
 
   if (fetch != null) {
-    url =
-        url.replace(queryParameters: {...url.queryParameters, 'fetch': fetch});
+    url = url.replace(
+      queryParameters: {...url.queryParameters, 'fetch': fetch},
+    );
   }
 
   if (expand != null) {
-    url = url
-        .replace(queryParameters: {...url.queryParameters, 'expand': expand});
+    url = url.replace(
+      queryParameters: {...url.queryParameters, 'expand': expand},
+    );
   }
 
   if (take != null) {
     url = url.replace(
-        queryParameters: {...url.queryParameters, 'take': take.toString()});
+      queryParameters: {...url.queryParameters, 'take': take.toString()},
+    );
   }
 
   final res = await http.get(url);

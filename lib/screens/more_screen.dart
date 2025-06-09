@@ -22,8 +22,10 @@ class _MoreScreenState extends State<MoreScreen> {
   void initState() {
     super.initState();
 
-    final conferenceProvider =
-        Provider.of<ConferenceProvider>(context, listen: false);
+    final conferenceProvider = Provider.of<ConferenceProvider>(
+      context,
+      listen: false,
+    );
 
     _conferenceFuture = conferenceProvider.init();
   }

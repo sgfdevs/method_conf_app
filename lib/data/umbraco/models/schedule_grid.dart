@@ -6,9 +6,7 @@ part 'schedule_grid.g.dart';
 class ScheduleGrid {
   List<List<String?>> scheduleGrid;
 
-  ScheduleGrid({
-    required this.scheduleGrid,
-  });
+  ScheduleGrid({required this.scheduleGrid});
 
   factory ScheduleGrid.fromJson(Map<String, dynamic> json) =>
       _$ScheduleGridFromJson(json);

@@ -99,7 +99,8 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
                   style: TextButton.styleFrom(
                     backgroundColor: AppColors.accent,
                     shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.zero)),
+                      borderRadius: BorderRadius.all(Radius.zero),
+                    ),
                   ),
                   onPressed: _sessionFeedbackTapped,
                   child: const Text(
@@ -121,12 +122,12 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
                 child: Text(
                   name ?? '',
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              const SizedBox(
-                width: 20,
-              ),
+              const SizedBox(width: 20),
               if (description != '')
                 Row(
                   children: <Widget>[
@@ -140,7 +141,7 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
                     ),
                     Icon(expanded ? Icons.expand_less : Icons.expand_more),
                   ],
-                )
+                ),
             ],
           ),
           const SizedBox(height: 8),
@@ -216,17 +217,11 @@ class _SessionExpansionTileState extends State<SessionExpansionTile> {
       return;
     }
 
-    AppNavigator.pushNamed(
-      '/more/speakers/detail',
-      arguments: currentSpeaker,
-    );
+    AppNavigator.pushNamed('/more/speakers/detail', arguments: currentSpeaker);
   }
 
   void _sessionFeedbackTapped() {
-    AppNavigator.pushNamed(
-      '/more/feedback',
-      arguments: widget.session,
-    );
+    AppNavigator.pushNamed('/more/feedback', arguments: widget.session);
   }
 
   void _timerHandler(Timer timer) {

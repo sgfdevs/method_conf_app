@@ -45,7 +45,9 @@ class ConferenceProvider extends ChangeNotifier {
     }
 
     await prefs.setString(
-        _defaultConferenceStorageKey, json.encode(newConference.toJson()));
+      _defaultConferenceStorageKey,
+      json.encode(newConference.toJson()),
+    );
   }
 
   Future<Conference?> fetch() async {

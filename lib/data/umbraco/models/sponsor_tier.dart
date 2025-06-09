@@ -9,11 +9,7 @@ part 'sponsor_tier.g.dart';
 class SponsorTier extends ApiElementModel {
   SponsorTierProperties? properties;
 
-  SponsorTier({
-    required super.id,
-    required super.contentType,
-    this.properties,
-  });
+  SponsorTier({required super.id, required super.contentType, this.properties});
 
   factory SponsorTier.fromJson(Map<String, dynamic> json) =>
       _$SponsorTierFromJson(json);
@@ -54,8 +50,4 @@ class SponsorTierProperties {
 }
 
 @JsonEnum()
-enum SponsorTierLogoSize {
-  large,
-  medium,
-  small,
-}
+enum SponsorTierLogoSize { large, medium, small }

@@ -7,9 +7,6 @@ class NotFoundScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppScreen(
-      title: 'Not Found',
-      body: const Text('Not Found'),
-    );
+    return AppScreen(title: 'Not Found', body: const Text('Not Found'));
   }
 }

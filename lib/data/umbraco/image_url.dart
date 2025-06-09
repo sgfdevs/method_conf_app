@@ -8,8 +8,9 @@ String imageUrl(String url, {int? width, int? height}) {
   }
 
   if (height != null) {
-    parsedUrl =
-        parsedUrl.replace(queryParameters: {'height': height.toString()});
+    parsedUrl = parsedUrl.replace(
+      queryParameters: {'height': height.toString()},
+    );
   }
 
   return parsedUrl.toString();

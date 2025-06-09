@@ -16,18 +16,24 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ConferenceProvider()),
-        ChangeNotifierProvider(create: (context) {
-          var c = Provider.of<ConferenceProvider>(context, listen: false);
-          return SponsorProvider(conferenceProvider: c);
-        }),
-        ChangeNotifierProvider(create: (context) {
-          var c = Provider.of<ConferenceProvider>(context, listen: false);
-          return ScheduleProvider(conferenceProvider: c);
-        }),
-        ChangeNotifierProvider(create: (context) {
-          var s = Provider.of<ScheduleProvider>(context, listen: false);
-          return ScheduleStateProvider(scheduleProvider: s);
-        }),
+        ChangeNotifierProvider(
+          create: (context) {
+            var c = Provider.of<ConferenceProvider>(context, listen: false);
+            return SponsorProvider(conferenceProvider: c);
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            var c = Provider.of<ConferenceProvider>(context, listen: false);
+            return ScheduleProvider(conferenceProvider: c);
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            var s = Provider.of<ScheduleProvider>(context, listen: false);
+            return ScheduleStateProvider(scheduleProvider: s);
+          },
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
