@@ -57,9 +57,10 @@ class AppScreen extends StatelessWidget {
                   title,
                   textAlign: TextAlign.left,
                   style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),

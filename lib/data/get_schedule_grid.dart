@@ -7,7 +7,8 @@ import 'package:method_conf_app/env.dart';
 
 Future<List<List<String?>>> getScheduleGrid(String conferenceId) async {
   var url = Uri.parse(
-      '${Env.umbracoBaseUrl}/api/v1/conference/$conferenceId/schedule');
+    '${Env.umbracoBaseUrl}/api/v1/conference/$conferenceId/schedule',
+  );
 
   final res = await http.get(url);
 

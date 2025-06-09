@@ -8,11 +8,7 @@ class AppListItem extends StatelessWidget {
   final GestureTapCallback? onTap;
   final String text;
 
-  const AppListItem({
-    super.key,
-    this.onTap,
-    required this.text,
-  });
+  const AppListItem({super.key, this.onTap, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +35,10 @@ class AppListItem extends StatelessWidget {
             children: <Widget>[
               Text(
                 text,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const Icon(Icons.chevron_right, size: 24),
             ],

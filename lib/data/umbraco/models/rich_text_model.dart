@@ -8,10 +8,7 @@ class RichTextModel {
   String markup;
   List<ApiBlockItemModel> blocks;
 
-  RichTextModel({
-    required this.markup,
-    this.blocks = const [],
-  });
+  RichTextModel({required this.markup, this.blocks = const []});
 
   factory RichTextModel.fromJson(Map<String, dynamic> json) =>
       _$RichTextModelFromJson(json);

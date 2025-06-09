@@ -4,9 +4,7 @@ import 'package:method_conf_app/utils/analytics.dart';
 import 'package:plausible_analytics/navigator_observer.dart';
 
 class AppNavigator extends StatelessWidget {
-  static var analyticsObserver = PlausibleNavigatorObserver(
-    analytics,
-  );
+  static var analyticsObserver = PlausibleNavigatorObserver(analytics);
   static final _navigatorKey = GlobalKey<NavigatorState>();
 
   final RouteChangeCallBack? onRouteChange;
@@ -74,10 +72,14 @@ class AppNavigator extends StatelessWidget {
     });
   }
 
-  static Future<T?> pushNamed<T extends Object>(String routeName,
-      {Object? arguments}) {
-    return _navigatorKey.currentState!
-        .pushNamed<T>(routeName, arguments: arguments);
+  static Future<T?> pushNamed<T extends Object>(
+    String routeName, {
+    Object? arguments,
+  }) {
+    return _navigatorKey.currentState!.pushNamed<T>(
+      routeName,
+      arguments: arguments,
+    );
   }
 
   static void pop<T extends Object>([T? result]) {

@@ -145,7 +145,9 @@ class _ReportScreenState extends State<ReportScreen> {
                 TextButton(
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 15),
+                      horizontal: 20,
+                      vertical: 15,
+                    ),
                     backgroundColor: Colors.black,
                   ),
                   onPressed: () {
@@ -197,8 +199,10 @@ class _ReportScreenState extends State<ReportScreen> {
       'phone': _phone,
     });
 
-    final conferenceProvider =
-        Provider.of<ConferenceProvider>(context, listen: false);
+    final conferenceProvider = Provider.of<ConferenceProvider>(
+      context,
+      listen: false,
+    );
     await conferenceProvider.init();
     final conference = conferenceProvider.conference;
 
@@ -211,7 +215,8 @@ class _ReportScreenState extends State<ReportScreen> {
 
       response = await http.post(
         Uri.parse(
-            "${Env.umbracoBaseUrl}/api/v1/conference/${conference.id}/issue"),
+          "${Env.umbracoBaseUrl}/api/v1/conference/${conference.id}/issue",
+        ),
         body: data,
         headers: {'Content-Type': 'application/json'},
       );
@@ -233,8 +238,10 @@ class _ReportScreenState extends State<ReportScreen> {
 
     var responseMessage = body['responseMarkup'] as String?;
 
-    AppNavigator.pushReplacementNamed('/more/report/success',
-        arguments: responseMessage);
+    AppNavigator.pushReplacementNamed(
+      '/more/report/success',
+      arguments: responseMessage,
+    );
   }
 
   void _requestErrorDialog() {

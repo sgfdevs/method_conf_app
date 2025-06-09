@@ -9,10 +9,7 @@ class PagedApiContentResponseModel {
   int total;
   List<ApiContentModelBase> items;
 
-  PagedApiContentResponseModel({
-    required this.total,
-    required this.items,
-  });
+  PagedApiContentResponseModel({required this.total, required this.items});
 
   factory PagedApiContentResponseModel.fromJson(Map<String, dynamic> json) =>
       _$PagedApiContentResponseModelFromJson(json);

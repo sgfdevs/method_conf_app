@@ -75,9 +75,11 @@ class ScheduleProvider extends ChangeNotifier {
         .toList();
 
     final grid = gridJson
-        ?.map((row) => (json.decode(row) as List<dynamic>)
-            .map((item) => item as String?)
-            .toList())
+        ?.map(
+          (row) => (json.decode(row) as List<dynamic>)
+              .map((item) => item as String?)
+              .toList(),
+        )
         .toList();
 
     if (items == null || grid == null) {
@@ -144,20 +146,24 @@ class ScheduleProvider extends ChangeNotifier {
     }
 
     return sessions
-        .where((session) =>
-            session.properties?.speakers.firstWhereOrNull(
-                (sessionSpeaker) => sessionSpeaker.id == speaker.id) !=
-            null)
+        .where(
+          (session) =>
+              session.properties?.speakers.firstWhereOrNull(
+                (sessionSpeaker) => sessionSpeaker.id == speaker.id,
+              ) !=
+              null,
+        )
         .sorted((a, b) {
-      final aStart = a.properties?.start;
-      final bStart = b.properties?.start;
+          final aStart = a.properties?.start;
+          final bStart = b.properties?.start;
 
-      return switch ((aStart, bStart)) {
-        _ when aStart != null && bStart != null => aStart.compareTo(bStart),
-        (null, _) => 1,
-        (_, null) => -1,
-        _ => 0,
-      };
-    }).toList();
+          return switch ((aStart, bStart)) {
+            _ when aStart != null && bStart != null => aStart.compareTo(bStart),
+            (null, _) => 1,
+            (_, null) => -1,
+            _ => 0,
+          };
+        })
+        .toList();
   }
 }

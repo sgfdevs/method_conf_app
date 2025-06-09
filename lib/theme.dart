@@ -23,9 +23,11 @@ ThemeData appTheme(BuildContext context) {
     primaryColor: AppColors.primary,
     colorScheme: theme.colorScheme.copyWith(secondary: AppColors.accent),
     textTheme: GoogleFonts.sourceSans3TextTheme(),
-    pageTransitionsTheme: const PageTransitionsTheme(builders: {
-      TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-    }),
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      },
+    ),
   );
 }

@@ -16,9 +16,7 @@ class HalfBorderBox extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: FractionallySizedBox(
               heightFactor: 0.5,
-              child: Container(
-                color: AppColors.primary,
-              ),
+              child: Container(color: AppColors.primary),
             ),
           ),
         ),

@@ -24,7 +24,8 @@ class SponsorProvider extends ChangeNotifier {
   List<SponsorTier> get sponsorTiers =>
       sponsors?.properties?.tiers
           .where(
-              (tier) => tier.properties?.mobileAppSponsors.isNotEmpty ?? false)
+            (tier) => tier.properties?.mobileAppSponsors.isNotEmpty ?? false,
+          )
           .toList() ??
       [];
 
@@ -60,7 +61,9 @@ class SponsorProvider extends ChangeNotifier {
     }
 
     await prefs.setString(
-        _sponsorsStorageKey, json.encode(newSponsors.toJson()));
+      _sponsorsStorageKey,
+      json.encode(newSponsors.toJson()),
+    );
   }
 
   Future<Sponsors?> fetch() async {
@@ -70,8 +73,10 @@ class SponsorProvider extends ChangeNotifier {
       return null;
     }
 
-    var item =
-        await getFirstChildNodeOfType(nodeId: conference.id, type: 'sponsors');
+    var item = await getFirstChildNodeOfType(
+      nodeId: conference.id,
+      type: 'sponsors',
+    );
 
     if (item is! Sponsors) {
       return null;

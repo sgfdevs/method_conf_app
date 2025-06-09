@@ -21,10 +21,7 @@ class ReportSuccessScreen extends StatelessWidget {
             'Your Message Has Been Sent',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          if (responseMessage != null)
-            AppHtml(
-              markup: responseMessage,
-            ),
+          if (responseMessage != null) AppHtml(markup: responseMessage),
         ],
       ),
     );

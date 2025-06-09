@@ -56,10 +56,7 @@ class ApiContentRouteModel {
   String path;
   ApiContentStartItemModel startItem;
 
-  ApiContentRouteModel({
-    required this.path,
-    required this.startItem,
-  });
+  ApiContentRouteModel({required this.path, required this.startItem});
 
   factory ApiContentRouteModel.fromJson(Map<String, dynamic> json) =>
       _$ApiContentRouteModelFromJson(json);
@@ -72,10 +69,7 @@ class ApiContentStartItemModel {
   String id;
   String path;
 
-  ApiContentStartItemModel({
-    required this.id,
-    required this.path,
-  });
+  ApiContentStartItemModel({required this.id, required this.path});
 
   factory ApiContentStartItemModel.fromJson(Map<String, dynamic> json) =>
       _$ApiContentStartItemModelFromJson(json);

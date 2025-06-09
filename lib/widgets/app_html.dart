@@ -23,9 +23,11 @@ class AppHtml extends StatelessWidget {
           ),
           'li': Style(color: Colors.black, padding: HtmlPaddings.all(0)),
           'ol': Style(
-              padding: HtmlPaddings.symmetric(horizontal: 15, vertical: 0)),
+            padding: HtmlPaddings.symmetric(horizontal: 15, vertical: 0),
+          ),
           'ul': Style(
-              padding: HtmlPaddings.symmetric(horizontal: 15, vertical: 0)),
+            padding: HtmlPaddings.symmetric(horizontal: 15, vertical: 0),
+          ),
         },
         onLinkTap: (url, _, __) {
           if (url != null) {

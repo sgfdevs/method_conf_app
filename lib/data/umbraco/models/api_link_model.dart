@@ -58,8 +58,4 @@ class ApiLinkModel {
   Map<String, dynamic> toJson() => _$ApiLinkModelToJson(this);
 }
 
-enum LinkType {
-  content,
-  external,
-  media,
-}
+enum LinkType { content, external, media }

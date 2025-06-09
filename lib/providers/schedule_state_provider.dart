@@ -73,14 +73,14 @@ class ScheduleStateProvider extends ChangeNotifier {
         .map((row) => row.elementAtOrNull(column))
         .toSet()
         .whereType<String>()
-        .map((gridId) => scheduleProvider.sessions
-            .firstWhereOrNull((session) => session.gridId == gridId))
+        .map(
+          (gridId) => scheduleProvider.sessions.firstWhereOrNull(
+            (session) => session.gridId == gridId,
+          ),
+        )
         .whereType<Session>()
         .toList();
   }
 }
 
-enum ControlDirection {
-  prev,
-  next,
-}
+enum ControlDirection { prev, next }

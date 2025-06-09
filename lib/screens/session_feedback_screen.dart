@@ -80,7 +80,8 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 TextSpan(
-                    text: session.properties?.speakers.firstOrNull?.name ?? ''),
+                  text: session.properties?.speakers.firstOrNull?.name ?? '',
+                ),
               ],
             ),
           ),
@@ -159,8 +160,10 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
             'Name',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          const Text('Required for door prize entry',
-              style: TextStyle(fontSize: 12)),
+          const Text(
+            'Required for door prize entry',
+            style: TextStyle(fontSize: 12),
+          ),
           const SizedBox(height: 10),
           HalfBorderBox(
             child: TextFormField(
@@ -178,8 +181,10 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
             'Email',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          const Text('Required for door prize entry',
-              style: TextStyle(fontSize: 12)),
+          const Text(
+            'Required for door prize entry',
+            style: TextStyle(fontSize: 12),
+          ),
           const SizedBox(height: 10),
           HalfBorderBox(
             child: TextFormField(
@@ -202,9 +207,12 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
                   _submitFeedback(session);
                 },
                 style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 15),
-                    backgroundColor: Colors.black),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 15,
+                  ),
+                  backgroundColor: Colors.black,
+                ),
                 child: const Text(
                   'SEND FEEDBACK',
                   style: TextStyle(
@@ -267,7 +275,8 @@ class _SessionFeedbackScreenState extends State<SessionFeedbackScreen> {
     try {
       response = await http.post(
         Uri.parse(
-            "${Env.umbracoBaseUrl}/api/v1/session/${session.id}/feedback"),
+          "${Env.umbracoBaseUrl}/api/v1/session/${session.id}/feedback",
+        ),
         body: data,
         headers: {'Content-Type': 'application/json'},
       );
