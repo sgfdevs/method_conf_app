@@ -7,13 +7,6 @@ updates:
     groups:
       pub:
         patterns: ["*"]
-  - package-ecosystem: cocoapods
-    directory: /ios
-    schedule:
-      interval: weekly
-    groups:
-      ios:
-        patterns: ["*"]
   - package-ecosystem: gradle
     directory: /android
     schedule:
