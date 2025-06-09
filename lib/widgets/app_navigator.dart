@@ -23,7 +23,7 @@ class AppNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvokedWithResult: (_, __) {
+      onPopInvokedWithResult: (_, _) {
         if (_navigatorKey.currentState!.canPop()) {
           _navigatorKey.currentState!.pop();
           return;

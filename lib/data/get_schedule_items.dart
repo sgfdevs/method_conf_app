@@ -4,9 +4,9 @@ import 'package:method_conf_app/data/umbraco/models/api_content_model_base.dart'
 import 'package:method_conf_app/data/umbraco/models/session.dart';
 import 'package:method_conf_app/data/umbraco/models/track.dart';
 
-const maximumScheduleItems = 100;
+const int maximumScheduleItems = 100;
 
-Future<List<ApiContentModelBase>> getScheduleItems(conferenceId) async {
+Future<List<ApiContentModelBase>> getScheduleItems(String conferenceId) async {
   final sessions = await getFirstChildNodeOfType(
     nodeId: conferenceId,
     type: 'sessions',

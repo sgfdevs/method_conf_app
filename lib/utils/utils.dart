@@ -37,7 +37,7 @@ String daySuffix(int day) {
 }
 
 Future<void> showErrorDialog({
-  required context,
+  required BuildContext context,
   required String message,
   String title = 'Whoops',
 }) {

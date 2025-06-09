@@ -25,7 +25,7 @@ class Rating extends StatelessWidget {
     );
   }
 
-  _buildButton(int value) {
+  Widget _buildButton(int value) {
     var selected = currentValue == value;
 
     return RawMaterialButton(

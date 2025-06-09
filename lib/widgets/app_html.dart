@@ -29,7 +29,7 @@ class AppHtml extends StatelessWidget {
             padding: HtmlPaddings.symmetric(horizontal: 15, vertical: 0),
           ),
         },
-        onLinkTap: (url, _, __) {
+        onLinkTap: (url, _, _) {
           if (url != null) {
             launchUrl(url);
           }
