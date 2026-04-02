@@ -24,9 +24,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  sentry_flutter: ^9.9.1
+  sentry_flutter: ^9.16.0
   provider: ^6.1.5+1
-  google_fonts: ^6.3.3
+  google_fonts: ^8.0.2
   url_launcher: ^6.3.2
   fluttertoast: ^9.0.0
   # Using custom version of this library that makes the ConfigurableExpansionTileState class public
@@ -36,27 +36,27 @@ dependencies:
       url: https://github.com/glitchedmob/configurable_expansion_tile.git
       ref: 14e81924987e0c9dd7be832b35d8493184112935
   intl: ^0.20.2
-  json_annotation: ^4.9.0
+  json_annotation: ^4.11.0
   cached_network_image: ^3.4.1
   flutter_html: ^3.0.0-beta.2
-  shared_preferences: ^2.5.4
+  shared_preferences: ^2.5.5
   quiver: ^3.2.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
+  cupertino_icons: ^1.0.9
   collection: ^1.19.1
   plausible_analytics: ^0.3.0
   http: ^1.6.0
-  timezone: ^0.10.1
+  timezone: ^0.11.0
   sticky_headers: ^0.3.0+2
-  font_awesome_flutter: ^10.12.0
-  expandable_page_view: ^1.2.0
+  font_awesome_flutter: ^11.0.0
+  expandable_page_view: ^1.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.10.4
+  build_runner: ^2.13.1
   json_serializable: ^6.11.0
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
