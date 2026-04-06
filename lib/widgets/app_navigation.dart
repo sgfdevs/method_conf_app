@@ -81,7 +81,10 @@ class _AppNavigationState extends State<AppNavigation> {
     );
   }
 
-  BottomNavigationBarItem _buildNavigationBarItem(IconData icon, String text) {
+  BottomNavigationBarItem _buildNavigationBarItem(
+    FaIconData icon,
+    String text,
+  ) {
     return BottomNavigationBarItem(icon: FaIcon(icon, size: 25), label: text);
   }
 
