@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
+import 'package:method_conf_app/app.dart';
 import 'package:method_conf_app/theme.dart';
 
 Future<void> launchUrl(String url) async {
@@ -18,11 +18,26 @@ Future<void> launchUrl(String url) async {
     // ignore errors
   }
 
-  Fluttertoast.showToast(
-    msg: 'Could not open url $url',
-    toastLength: Toast.LENGTH_SHORT,
-    gravity: ToastGravity.BOTTOM,
-  );
+  final messenger = appScaffoldMessengerKey.currentState;
+  if (messenger == null) {
+    return;
+  }
+
+  messenger
+    ..hideCurrentSnackBar()
+    ..showSnackBar(
+      SnackBar(
+        content: Text(
+          'Could not open url $url',
+          style: const TextStyle(color: Colors.white),
+        ),
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        backgroundColor: Colors.black.withValues(alpha: 0.88),
+      ),
+    );
 }
 
 String daySuffix(int day) {

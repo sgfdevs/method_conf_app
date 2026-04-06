@@ -8,6 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:method_conf_app/theme.dart';
 import 'package:method_conf_app/widgets/app_navigation.dart';
 
+final GlobalKey<ScaffoldMessengerState> appScaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
+
 class App extends StatelessWidget {
   const App({super.key});
 
@@ -37,6 +40,7 @@ class App extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        scaffoldMessengerKey: appScaffoldMessengerKey,
         theme: appTheme(context),
         home: const AppNavigation(),
       ),
