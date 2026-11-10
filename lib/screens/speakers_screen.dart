@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:method_conf_app/providers/schedule_provider.dart';
 import 'package:method_conf_app/widgets/app_list_item.dart';
 import 'package:method_conf_app/widgets/app_navigator.dart';
