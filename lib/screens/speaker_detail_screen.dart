@@ -19,9 +19,8 @@ class SpeakerDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var speaker = ModalRoute.of(context)!.settings.arguments as Speaker?;
-    var sessions = Provider.of<ScheduleProvider>(
-      context,
-    ).getSessionsForSpeaker(speaker);
+    var sessions = Provider.of<ScheduleProvider>(context)
+        .getSessionsForSpeaker(speaker);
 
     if (speaker == null) {
       return const NotFoundScreen();

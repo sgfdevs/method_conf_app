@@ -1,6 +1,12 @@
 # method_conf_app
 
-A new Flutter project.
+Method Conference's Flutter app.
+
+## Toolchain
+
+Use Flutter **3.47.9 stable**, which includes Dart **3.13.7**, to match CI.
+The native projects follow the Android and iOS templates from this release.
+The minimum iOS version is **15.0**.
 
 ## Getting Started
 
