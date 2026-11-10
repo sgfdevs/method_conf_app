@@ -6,7 +6,7 @@ Method Conference's Flutter app.
 
 Use Flutter **3.47.9 stable**, which includes Dart **3.13.7**, to match CI.
 The native projects follow the Android and iOS templates from this release.
-The minimum iOS version is **15.0**.
+The minimum supported versions are **iOS 15.0** and **Android 8.0, API 26**.
 
 ## Getting Started
 

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:method_conf_app/providers/conference_provider.dart';
 import 'package:method_conf_app/providers/schedule_provider.dart';
 import 'package:method_conf_app/providers/schedule_state_provider.dart';
@@ -42,6 +42,11 @@ class App extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         scaffoldMessengerKey: appScaffoldMessengerKey,
         theme: appTheme(context),
+        builder: (context, child) {
+          // flutter_html still reads themes and localizations from the SDK library.
+          // ignore: deprecated_member_use
+          return MaterialUiCompatibilityBridge(child: child!);
+        },
         home: const AppNavigation(),
       ),
     );
