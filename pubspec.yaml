@@ -25,39 +25,43 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  sentry_flutter: ^9.16.0
+  sentry_flutter: ^10.3.0
   provider: ^6.1.5+1
-  google_fonts: ^8.0.2
-  url_launcher: ^6.3.2
+  google_fonts: ^9.0.0
+  url_launcher: ^6.3.3
   # Using custom version of this library that makes the ConfigurableExpansionTileState class public
   # as well as it's handleTap method. This allows outside widgets programmatic control
   configurable_expansion_tile:
     git:
       url: https://github.com/glitchedmob/configurable_expansion_tile.git
       ref: 14e81924987e0c9dd7be832b35d8493184112935
-  intl: ^0.20.2
-  json_annotation: ^4.11.0
-  cached_network_image: ^3.4.1
-  flutter_html: ^3.0.0-beta.2
-  shared_preferences: ^2.5.5
+  intl: ^0.20.3
+  json_annotation: ^4.12.0
+  cached_network_image: ^4.0.6
+  flutter_html: ^3.0.0
+  # flutter_html 3.0.0 calls qs.matches, which html 0.15.7 removed.
+  html: 0.15.6
+  shared_preferences: ^2.5.6
   quiver: ^3.2.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.9
+  cupertino_icons: ^2.0.0
   collection: ^1.19.1
-  plausible_analytics: ^0.3.0
+  plausible_analytics: ^0.4.1
   http: ^1.6.0
-  timezone: ^0.11.0
+  timezone: ^0.11.2
   sticky_headers: ^0.3.0+2
   font_awesome_flutter: ^11.0.0
   expandable_page_view: ^1.3.0
+  material_ui: ^1.11.0
+  cupertino_ui: ^1.1.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.13.1
-  json_serializable: ^6.13.1
+  build_runner: ^2.17.1
+  json_serializable: ^6.15.2
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
 

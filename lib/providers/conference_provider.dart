@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:method_conf_app/data/get_default_conference.dart';
 import 'package:method_conf_app/data/umbraco/models/conference.dart';
 import 'package:shared_preferences/shared_preferences.dart';

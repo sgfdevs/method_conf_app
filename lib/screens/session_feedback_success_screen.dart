@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'package:method_conf_app/widgets/app_html.dart';
 import 'package:method_conf_app/widgets/app_screen.dart';
