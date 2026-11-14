@@ -109,9 +109,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                 Padding(
                   padding: _horizontalPadding,
                   child: Text(
-                    DateFormat(
-                      'EEEE, MMMM d\'${daySuffix(eventDate.day)}\', y',
-                    ).format(eventDate),
+                    DateFormat('EEEE, MMMM d\'${daySuffix(eventDate.day)}\', y')
+                        .format(eventDate),
                     style: const TextStyle(fontSize: 20),
                   ),
                 ),

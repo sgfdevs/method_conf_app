@@ -181,8 +181,7 @@ class _ReportScreenState extends State<ReportScreen> {
     if (_message == '') {
       showErrorDialog(
         context: context,
-        message:
-            'Looks like there are some required fields not filled out in the form. Please go back and try again.',
+        message: 'Looks like there are some required fields not filled out in the form. Please go back and try again.',
       );
       return;
     }
@@ -247,8 +246,7 @@ class _ReportScreenState extends State<ReportScreen> {
   void _requestErrorDialog() {
     showErrorDialog(
       context: context,
-      message:
-          'There was an error submitting your report. Please text Levi Zitting at 417-808-0501',
+      message: 'There was an error submitting your report. Please text Levi Zitting at 417-808-0501',
     );
   }
 }
