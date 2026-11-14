@@ -43,7 +43,6 @@ class App extends StatelessWidget {
         scaffoldMessengerKey: appScaffoldMessengerKey,
         theme: appTheme(context),
         builder: (context, child) {
-          // ignore: deprecated_member_use
           return MaterialUiCompatibilityBridge(child: child!);
         },
         home: const AppNavigation(),
