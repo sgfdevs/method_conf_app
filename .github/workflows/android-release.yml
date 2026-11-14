@@ -50,7 +50,7 @@ jobs:
           version: 3.47.9
           cache-sdk: true
 
-      - name: Prepare signing key
+      - name: Prepare signing key and properties
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -66,7 +66,22 @@ jobs:
           umask 077
           keystore_path="$RUNNER_TEMP/android-release.jks"
           printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$keystore_path"
-          echo "ANDROID_KEYSTORE_PATH=$keystore_path" >> "$GITHUB_ENV"
+          write_property() {
+            local value=$2
+            value=${value//\\/\\\\}
+            value=${value//$'\n'/\\n}
+            value=${value//$'\r'/\\r}
+            value=${value//$'\t'/\\t}
+            value=${value//$'\f'/\\f}
+            value=${value// /\\ }
+            printf '%s=%s\n' "$1" "$value"
+          }
+          {
+            write_property storeFile "$keystore_path"
+            write_property storePassword "$ANDROID_KEYSTORE_PASSWORD"
+            write_property keyAlias "$ANDROID_KEY_ALIAS"
+            write_property keyPassword "$ANDROID_KEY_PASSWORD"
+          } > android/key.properties
 
       - name: Install dependencies and generate code
         run: |
@@ -77,9 +92,6 @@ jobs:
 
       - name: Build signed app bundle and APK
         env:
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           METHOD_BASE_URL: https://www.methodconf.com
           UMBRACO_BASE_URL: https://cms.methodconf.com
           PLAUSIBLE_SERVER_URL: https://plausible.sgf.dev
@@ -126,4 +138,4 @@ jobs:
 
       - name: Remove signing key and app configuration
         if: always()
-        run: rm -f "$RUNNER_TEMP/android-release.jks" lib/env.dart
+        run: rm -f "$RUNNER_TEMP/android-release.jks" android/key.properties lib/env.dart
