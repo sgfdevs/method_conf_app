@@ -5,8 +5,8 @@ jobs:
   lint-analyze:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: flutter-actions/setup-flutter@v3
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: flutter-actions/setup-flutter@c7fdb36b173fc3e88e5c5a3733c2b66bd9ac91a1 # v3.7
         with:
           channel: stable
           version: 3.47.9
