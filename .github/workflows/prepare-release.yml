@@ -16,7 +16,7 @@ on:
         type: boolean
         default: true
       ios:
-        description: iOS
+        description: 'iOS (release only, no binary build yet)'
         type: boolean
         default: false
       draft:
@@ -35,31 +35,114 @@ jobs:
   prepare:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    env:
+      VERSION: ${{ inputs.version }}
+      BUILD_NUMBER: ${{ inputs.build_number }}
+      SOURCE_BRANCH: ${{ github.ref_name }}
     outputs:
-      android_tag: ${{ steps.release.outputs.android_tag }}
-      ios_tag: ${{ steps.release.outputs.ios_tag }}
+      android_tag: ${{ steps.plan.outputs.android_tag }}
+      ios_tag: ${{ steps.plan.outputs.ios_tag }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
 
-      - name: Prepare commit, tags, and releases
-        id: release
+      - name: Validate release inputs
         env:
-          GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ inputs.version }}
-          BUILD_NUMBER: ${{ inputs.build_number }}
           ANDROID: ${{ inputs.android }}
           IOS: ${{ inputs.ios }}
-          DRAFT: ${{ inputs.draft }}
-          SOURCE_BRANCH: ${{ github.ref_name }}
         run: |
-          if [[ "$GITHUB_REF_TYPE" != branch ]]; then
-            echo '::error::Run release preparation from a branch, not a tag.'
+          if [[ "$GITHUB_REF_TYPE" != branch || ( "$ANDROID" == false && "$IOS" == false ) ]]; then
+            echo '::error::Run from a branch and select at least one platform.'
             exit 1
           fi
-          bash .github/scripts/prepare-release.sh
+          version_pattern='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'
+          if [[ ! "$VERSION" =~ $version_pattern ]]; then
+            echo '::error::Version must use x.y.z, for example 1.0.15.'
+            exit 1
+          fi
+          if [[ ! "$BUILD_NUMBER" =~ ^[1-9][0-9]{0,9}$ ]] || (( 10#$BUILD_NUMBER > 2100000000 )); then
+            echo '::error::Build number must be an integer from 1 to 2100000000.'
+            exit 1
+          fi
+
+      - name: Select tags and release notes baselines
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ANDROID: ${{ inputs.android }}
+          IOS: ${{ inputs.ios }}
+        run: |
+          releases=$(gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100" | jq -s 'add')
+          platforms=()
+          [[ "$ANDROID" != true ]] || platforms+=(android)
+          [[ "$IOS" != true ]] || platforms+=(ios)
+          for platform in "${platforms[@]}"; do
+            tag="$platform/v$VERSION+$BUILD_NUMBER"
+            if git show-ref --verify --quiet "refs/tags/$tag" \
+              || jq -e --arg tag "$tag" 'any(.[]; .tag_name == $tag)' <<< "$releases" >/dev/null; then
+              echo "::error::$tag already exists. Use a new version/build, or retry only the failed build job."
+              exit 1
+            fi
+            previous=$(jq -r --arg prefix "$platform/" '
+              [.[] | select(.draft == false and (.tag_name | startswith($prefix)))]
+              | max_by(.published_at) | .tag_name // empty
+            ' <<< "$releases")
+            if [[ -z "$previous" ]] || ! git merge-base --is-ancestor "refs/tags/$previous" HEAD; then
+              echo "::error::No published $platform baseline exists on this branch."
+              exit 1
+            fi
+            echo "${platform}_tag=$tag" >> "$GITHUB_OUTPUT"
+            echo "${platform}_previous_tag=$previous" >> "$GITHUB_OUTPUT"
+          done
+
+      - name: Commit version and push tags
+        id: commit
+        env:
+          ANDROID_TAG: ${{ steps.plan.outputs.android_tag }}
+          IOS_TAG: ${{ steps.plan.outputs.ios_tag }}
+        run: |
+          grep -q '^version:' pubspec.yaml
+          sed -i.bak "s/^version:.*/version: $VERSION+$BUILD_NUMBER/" pubspec.yaml
+          rm pubspec.yaml.bak
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- pubspec.yaml
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: bump app version to $VERSION+$BUILD_NUMBER"
+          fi
+          refs=("HEAD:refs/heads/$SOURCE_BRANCH")
+          for tag in "$ANDROID_TAG" "$IOS_TAG"; do
+            if [[ -n "$tag" ]]; then
+              git tag "$tag"
+              refs+=("refs/tags/$tag")
+            fi
+          done
+          git push --atomic origin "${refs[@]}"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Create Android release
+        if: inputs.android
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.plan.outputs.android_tag }}
+          commit: ${{ steps.commit.outputs.sha }}
+          name: android ${{ inputs.version }} (${{ inputs.build_number }})
+          draft: ${{ inputs.draft }}
+          generateReleaseNotes: true
+          generateReleaseNotesPreviousTag: ${{ steps.plan.outputs.android_previous_tag }}
+
+      - name: Create iOS release
+        if: inputs.ios
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.plan.outputs.ios_tag }}
+          commit: ${{ steps.commit.outputs.sha }}
+          name: ios ${{ inputs.version }} (${{ inputs.build_number }})
+          draft: ${{ inputs.draft }}
+          generateReleaseNotes: true
+          generateReleaseNotesPreviousTag: ${{ steps.plan.outputs.ios_previous_tag }}
 
   android:
     needs: prepare
