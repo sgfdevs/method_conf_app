@@ -1,0 +1,70 @@
+name: Prepare release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version, for example 1.0.15'
+        type: string
+        required: true
+      build_number:
+        description: 'Build number, for example 42'
+        type: string
+        required: true
+      android:
+        description: Android
+        type: boolean
+        default: true
+      ios:
+        description: iOS
+        type: boolean
+        default: false
+      draft:
+        description: Create as drafts
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prepare-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      android_tag: ${{ steps.release.outputs.android_tag }}
+      ios_tag: ${{ steps.release.outputs.ios_tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Prepare commit, tags, and releases
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+          BUILD_NUMBER: ${{ inputs.build_number }}
+          ANDROID: ${{ inputs.android }}
+          IOS: ${{ inputs.ios }}
+          DRAFT: ${{ inputs.draft }}
+          SOURCE_BRANCH: ${{ github.ref_name }}
+        run: |
+          if [[ "$GITHUB_REF_TYPE" != branch ]]; then
+            echo '::error::Run release preparation from a branch, not a tag.'
+            exit 1
+          fi
+          bash .github/scripts/prepare-release.sh
+
+  android:
+    needs: prepare
+    if: ${{ !inputs.draft && needs.prepare.outputs.android_tag != '' }}
+    uses: ./.github/workflows/android-release.yml
+    with:
+      release_tag: ${{ needs.prepare.outputs.android_tag }}
+    secrets: inherit

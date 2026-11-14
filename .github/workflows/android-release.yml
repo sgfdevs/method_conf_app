@@ -3,26 +3,43 @@ name: Android release
 on:
   release:
     types: [published]
+  workflow_call:
+    inputs:
+      release_tag:
+        description: Published Android release tag
+        required: true
+        type: string
+    secrets:
+      ANDROID_KEYSTORE_BASE64:
+        required: true
+      ANDROID_KEYSTORE_PASSWORD:
+        required: true
+      ANDROID_KEY_ALIAS:
+        required: true
+      ANDROID_KEY_PASSWORD:
+        required: true
+      SENTRY_DSN:
+        required: true
 
 permissions:
   contents: write
 
 concurrency:
-  group: android-release-${{ github.event.release.tag_name }}
+  group: android-release-${{ inputs.release_tag || github.event.release.tag_name }}
   cancel-in-progress: false
 
 jobs:
   build:
-    # Platform release tags use android/v1.2.3 or ios/v1.2.3.
-    if: startsWith(github.event.release.tag_name, 'android/')
+    # Platform release tags use android/v1.2.3+42 or ios/v1.2.3+42.
+    if: startsWith(inputs.release_tag || github.event.release.tag_name, 'android/')
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
-      RELEASE_TAG: ${{ github.event.release.tag_name }}
+      RELEASE_TAG: ${{ inputs.release_tag || github.event.release.tag_name }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ env.RELEASE_TAG }}
 
       - name: Validate release version
         run: |
@@ -35,8 +52,8 @@ jobs:
           fi
           build_name=${version%+*}
           build_number=${version##*+}
-          if [[ "$RELEASE_TAG" != "android/v$build_name" ]]; then
-            echo "::error::Android release tag must be android/v$build_name to match pubspec.yaml"
+          if [[ "$RELEASE_TAG" != "android/v$version" ]]; then
+            echo "::error::Android release tag must be android/v$version to match pubspec.yaml"
             exit 1
           fi
           echo "ARTIFACT_PREFIX=method-conf-$build_name-$build_number" >> "$GITHUB_ENV"
