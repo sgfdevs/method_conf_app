@@ -1,0 +1,160 @@
+name: Android release
+
+on:
+  release:
+    types: [published]
+  workflow_call:
+    inputs:
+      release_tag:
+        description: Published Android release tag
+        required: true
+        type: string
+    secrets:
+      ANDROID_KEYSTORE_BASE64:
+        required: true
+      ANDROID_KEYSTORE_PASSWORD:
+        required: true
+      ANDROID_KEY_ALIAS:
+        required: true
+      ANDROID_KEY_PASSWORD:
+        required: true
+      SENTRY_DSN:
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-release-${{ inputs.release_tag || github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    # Platform release tags use android/v1.2.3+42 or ios/v1.2.3+42.
+    if: startsWith(inputs.release_tag || github.event.release.tag_name, 'android/')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      RELEASE_TAG: ${{ inputs.release_tag || github.event.release.tag_name }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+
+      - name: Validate release version
+        run: |
+          version=$(awk '/^version:/ { print $2; exit }' pubspec.yaml)
+          version=${version%$'\r'}
+          version_pattern='^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?\+[0-9]+$'
+          if [[ ! "$version" =~ $version_pattern ]]; then
+            echo '::error::pubspec.yaml must contain version: x.y.z+buildNumber'
+            exit 1
+          fi
+          build_name=${version%+*}
+          build_number=${version##*+}
+          if [[ "$RELEASE_TAG" != "android/v$version" ]]; then
+            echo "::error::Android release tag must be android/v$version to match pubspec.yaml"
+            exit 1
+          fi
+          echo "ARTIFACT_PREFIX=method-conf-$build_name-$build_number" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: flutter-actions/setup-flutter@0e3ac53a5126c46be01612423cf26b5d59018adc # v5.0
+        with:
+          channel: stable
+          version: 3.47.9
+          cache-sdk: true
+
+      - name: Prepare signing key and properties
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          for name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD; do
+            if [[ -z "${!name}" ]]; then
+              echo "::error::Missing required secret: $name"
+              exit 1
+            fi
+          done
+          umask 077
+          keystore_path="$RUNNER_TEMP/android-release.jks"
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$keystore_path"
+          write_property() {
+            local value=$2
+            value=${value//\\/\\\\}
+            value=${value//$'\n'/\\n}
+            value=${value//$'\r'/\\r}
+            value=${value//$'\t'/\\t}
+            value=${value//$'\f'/\\f}
+            value=${value// /\\ }
+            printf '%s=%s\n' "$1" "$value"
+          }
+          {
+            write_property storeFile "$keystore_path"
+            write_property storePassword "$ANDROID_KEYSTORE_PASSWORD"
+            write_property keyAlias "$ANDROID_KEY_ALIAS"
+            write_property keyPassword "$ANDROID_KEY_PASSWORD"
+          } > android/key.properties
+
+      - name: Install dependencies and generate code
+        run: |
+          flutter config --jdk-dir "$JAVA_HOME"
+          flutter pub get --enforce-lockfile
+          cp lib/env.dart.example lib/env.dart
+          dart run build_runner build
+
+      - name: Build signed app bundle and APK
+        env:
+          METHOD_BASE_URL: https://www.methodconf.com
+          UMBRACO_BASE_URL: https://cms.methodconf.com
+          PLAUSIBLE_SERVER_URL: https://plausible.sgf.dev
+          PLAUSIBLE_DOMAIN: mobile.methodconf.com
+          ENABLE_ERROR_TRACKING: 'true'
+          ENABLE_ANALYTICS: 'true'
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: |
+          if [[ -z "$SENTRY_DSN" ]]; then
+            echo "::error::Missing required secret: SENTRY_DSN"
+            exit 1
+          fi
+          defines=(
+            "--dart-define=METHOD_BASE_URL=$METHOD_BASE_URL"
+            "--dart-define=UMBRACO_BASE_URL=$UMBRACO_BASE_URL"
+            "--dart-define=PLAUSIBLE_SERVER_URL=$PLAUSIBLE_SERVER_URL"
+            "--dart-define=PLAUSIBLE_DOMAIN=$PLAUSIBLE_DOMAIN"
+            "--dart-define=ENABLE_ERROR_TRACKING=$ENABLE_ERROR_TRACKING"
+            "--dart-define=ENABLE_ANALYTICS=$ENABLE_ANALYTICS"
+            "--dart-define=SENTRY_DSN=$SENTRY_DSN"
+          )
+          flutter build appbundle --release "${defines[@]}"
+          flutter build apk --release "${defines[@]}"
+
+      - name: Verify signatures and stage release assets
+        run: |
+          apk=build/app/outputs/flutter-apk/app-release.apk
+          aab=build/app/outputs/bundle/release/app-release.aab
+          build_tools=$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)
+          "$build_tools/apksigner" verify --verbose "$apk"
+          # jarsigner can exit successfully for unsigned archives, so check its result text too.
+          LC_ALL=C jarsigner -verify "$aab" | tee "$RUNNER_TEMP/aab-verification.txt"
+          grep -q 'jar verified\.' "$RUNNER_TEMP/aab-verification.txt"
+          mkdir -p dist
+          cp "$aab" "dist/$ARTIFACT_PREFIX.aab"
+          cp "$apk" "dist/$ARTIFACT_PREFIX.apk"
+
+      - name: Attach binaries to GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "$RELEASE_TAG" dist/*.aab dist/*.apk \
+            --repo "$GITHUB_REPOSITORY" --clobber
+
+      - name: Remove signing key and app configuration
+        if: always()
+        run: rm -f "$RUNNER_TEMP/android-release.jks" android/key.properties lib/env.dart
