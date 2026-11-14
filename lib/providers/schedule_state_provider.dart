@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:method_conf_app/data/umbraco/models/session.dart';
 import 'package:method_conf_app/data/umbraco/models/track.dart';
 import 'package:method_conf_app/providers/schedule_provider.dart';

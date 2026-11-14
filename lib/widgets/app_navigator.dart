@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:method_conf_app/utils/analytics.dart';
 import 'package:plausible_analytics/navigator_observer.dart';

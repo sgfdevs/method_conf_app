@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:method_conf_app/data/get_schedule_grid.dart';
 import 'package:method_conf_app/data/get_schedule_items.dart';
 import 'package:method_conf_app/data/umbraco/models/api_content_model_base.dart';
