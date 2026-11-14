@@ -13,6 +13,8 @@ concurrency:
 
 jobs:
   build:
+    # Platform release tags use android/v1.2.3 or ios/v1.2.3.
+    if: startsWith(github.event.release.tag_name, 'android/')
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
@@ -33,8 +35,8 @@ jobs:
           fi
           build_name=${version%+*}
           build_number=${version##*+}
-          if [[ "$RELEASE_TAG" != "v$build_name" ]]; then
-            echo "::error::Release tag must be v$build_name to match pubspec.yaml"
+          if [[ "$RELEASE_TAG" != "android/v$build_name" ]]; then
+            echo "::error::Android release tag must be android/v$build_name to match pubspec.yaml"
             exit 1
           fi
           echo "ARTIFACT_PREFIX=method-conf-$build_name-$build_number" >> "$GITHUB_ENV"
