@@ -1,4 +1,5 @@
 default_platform(:android)
+skip_docs
 
 platform :android do
   metadata = File.expand_path("metadata/android", __dir__)
