@@ -147,6 +147,9 @@ jobs:
   android:
     needs: prepare
     if: ${{ !inputs.draft && needs.prepare.outputs.android_tag != '' }}
+    permissions:
+      actions: write
+      contents: write
     uses: ./.github/workflows/android-release.yml
     with:
       release_tag: ${{ needs.prepare.outputs.android_tag }}

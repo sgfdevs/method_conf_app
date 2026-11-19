@@ -7,12 +7,12 @@ on:
         description: Google Play operation
         type: choice
         required: true
-        default: deploy_internal
+        default: deploy
         options:
-          - deploy_internal
+          - deploy
           - sync_listing
       release_tag:
-        description: Published Android release tag (required for deploy_internal)
+        description: Published Android release tag (required for deploy)
         type: string
 
 permissions:
@@ -20,7 +20,7 @@ permissions:
 
 concurrency:
   group: google-play
-  cancel-in-progress: false
+  queue: max
 
 jobs:
   play:
@@ -39,7 +39,7 @@ jobs:
           persist-credentials: false
 
       - name: Download the published app bundle
-        if: inputs.operation == 'deploy_internal'
+        if: inputs.operation == 'deploy'
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ inputs.release_tag }}
@@ -52,12 +52,21 @@ jobs:
 
           version_code=${BASH_REMATCH[3]}
           asset="method-conf-${BASH_REMATCH[1]}-$version_code.aab"
-          draft=$(gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft)
+          draft=$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft)
           if [[ "$draft" != false ]]; then
             echo '::error::The GitHub release must be published before deploying to Play.'
             exit 1
           fi
-          gh release download "$RELEASE_TAG" --pattern "$asset" --output "$RUNNER_TEMP/play-release.aab"
+
+          tag_ref=$(jq -nr --arg ref "refs/tags/$RELEASE_TAG" '$ref | @uri')
+          status=$(gh api "repos/$GITHUB_REPOSITORY/compare/$GITHUB_SHA...$tag_ref" --jq .status)
+          if [[ "$status" != behind && "$status" != identical ]]; then
+            echo '::error::The Android release tag must be on main or one of its ancestors.'
+            exit 1
+          fi
+
+          gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
+            --pattern "$asset" --output "$RUNNER_TEMP/play-release.aab"
           echo "PLAY_VERSION_CODE=$version_code" >> "$GITHUB_ENV"
 
       - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
@@ -72,10 +81,10 @@ jobs:
           service_account: method-play-store@sgfdevs-method-conf.iam.gserviceaccount.com
 
       - name: Deploy to internal testing
-        if: inputs.operation == 'deploy_internal'
+        if: inputs.operation == 'deploy'
         working-directory: android
         run: |
-          bundle exec fastlane android deploy_internal \
+          bundle exec fastlane android deploy \
             "aab:$RUNNER_TEMP/play-release.aab" "version_code:$PLAY_VERSION_CODE"
 
       - name: Sync the store listing

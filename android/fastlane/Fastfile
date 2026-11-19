@@ -5,7 +5,7 @@ platform :android do
   metadata = File.expand_path("metadata/android", __dir__)
 
   desc "Upload a signed app bundle to the internal testing track"
-  lane :deploy_internal do |options|
+  lane :deploy do |options|
     bundle = options[:aab]
     UI.user_error!("Provide the path to a signed AAB") unless bundle && File.file?(bundle)
 
