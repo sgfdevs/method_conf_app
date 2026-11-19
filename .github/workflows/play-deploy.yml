@@ -1,0 +1,102 @@
+name: Google Play
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Google Play operation
+        type: choice
+        required: true
+        default: import_listing
+        options:
+          - import_listing
+          - deploy_internal
+          - sync_listing
+      release_tag:
+        description: Published Android release tag (required for deploy_internal)
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: google-play
+  cancel-in-progress: false
+
+jobs:
+  play:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      FASTLANE_SKIP_UPDATE_CHECK: '1'
+      FASTLANE_OPT_OUT_USAGE: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download the published app bundle
+        if: inputs.operation == 'deploy_internal'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          tag_pattern='^android/v([0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?)\+([0-9]+)$'
+          if [[ ! "$RELEASE_TAG" =~ $tag_pattern ]]; then
+            echo '::error::Enter an Android release tag such as android/v1.0.15+15.'
+            exit 1
+          fi
+
+          version_code=${BASH_REMATCH[3]}
+          asset="method-conf-${BASH_REMATCH[1]}-$version_code.aab"
+          draft=$(gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft)
+          if [[ "$draft" != false ]]; then
+            echo '::error::The GitHub release must be published before deploying to Play.'
+            exit 1
+          fi
+          gh release download "$RELEASE_TAG" --pattern "$asset" --output "$RUNNER_TEMP/play-release.aab"
+          echo "PLAY_VERSION_CODE=$version_code" >> "$GITHUB_ENV"
+
+      - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
+        with:
+          ruby-version: '4.0.6'
+          working-directory: android
+          bundler-cache: true
+
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          workload_identity_provider: projects/203440754645/locations/global/workloadIdentityPools/method-play/providers/github
+          service_account: method-play-store@sgfdevs-method-conf.iam.gserviceaccount.com
+
+      - name: Import the live store listing
+        if: inputs.operation == 'import_listing'
+        working-directory: android
+        run: |
+          bundle exec fastlane supply init \
+            --package_name com.sgfdevs.methodConfApp \
+            --track production \
+            --metadata_path "$RUNNER_TEMP/play-listing"
+
+      - name: Save the imported listing
+        if: inputs.operation == 'import_listing'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: play-listing
+          path: ${{ runner.temp }}/play-listing/
+          if-no-files-found: error
+
+      - name: Deploy to internal testing
+        if: inputs.operation == 'deploy_internal'
+        working-directory: android
+        run: |
+          bundle exec fastlane android deploy_internal \
+            "aab:$RUNNER_TEMP/play-release.aab" "version_code:$PLAY_VERSION_CODE"
+
+      - name: Sync the store listing
+        if: inputs.operation == 'sync_listing'
+        working-directory: android
+        run: bundle exec fastlane android sync_listing

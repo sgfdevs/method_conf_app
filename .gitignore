@@ -53,3 +53,9 @@ env.dart
 ios/Runner/GoogleService-Info.plist
 android/app/google-services.json
 ios/Runner/Config.xcconfig
+
+# Fastlane and Google GitHub Actions auth
+/android/.bundle/
+/android/vendor/bundle/
+/android/fastlane/report.xml
+gha-creds-*.json
