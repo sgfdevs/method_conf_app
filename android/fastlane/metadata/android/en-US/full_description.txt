@@ -1,0 +1,10 @@
+Method Conference Springfield, MO is an immersive one-day conference with multiple tracks, workshops and a keynote with an intense focus on digital development, design, UX, content, code, and more.
+
+Whether you're a junior dev or senior dev, digital designer, team leader, CEO, product owner, community manager, or weekend tinkerer, there's something for you at Method Conference.
+
+With the official Method Conf app you can:
+- View the full agenda
+- Communicate concerns or safety issues directly to conference organizers
+- Discover information about sessions and the presenters
+- See all event sponsors
+- Access venue and other location details

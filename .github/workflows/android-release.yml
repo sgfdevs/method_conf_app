@@ -158,3 +158,19 @@ jobs:
       - name: Remove signing key and app configuration
         if: always()
         run: rm -f "$RUNNER_TEMP/android-release.jks" android/key.properties lib/env.dart
+
+  queue-play:
+    name: Queue Google Play deployment
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_TAG: ${{ inputs.release_tag || github.event.release.tag_name }}
+    steps:
+      # Dispatch on main so the release tag selects the AAB, not the Play workflow code.
+      - run: |
+          gh workflow run play-deploy.yml --repo "$GITHUB_REPOSITORY" --ref main \
+            --raw-field operation=deploy --raw-field release_tag="$RELEASE_TAG"

@@ -1,0 +1,42 @@
+default_platform(:android)
+skip_docs
+
+platform :android do
+  metadata = File.expand_path("metadata/android", __dir__)
+
+  desc "Upload a signed app bundle to the internal testing track"
+  lane :deploy do |options|
+    bundle = options[:aab]
+    UI.user_error!("Provide the path to a signed AAB") unless bundle && File.file?(bundle)
+
+    version_code = options[:version_code]
+    changelogs = Dir.glob(File.join(metadata, "*/changelogs/{#{version_code},default}.txt"))
+
+    upload_to_play_store(
+      aab: bundle,
+      track: "internal",
+      release_status: "completed",
+      metadata_path: metadata,
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: changelogs.empty?
+    )
+  end
+
+  desc "Sync the committed store listing without uploading a build"
+  lane :sync_listing do
+    if Dir.glob(File.join(metadata, "*/title.txt")).empty?
+      UI.user_error!("Import and commit the store listing before syncing it")
+    end
+
+    upload_to_play_store(
+      metadata_path: metadata,
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_changelogs: true,
+      sync_image_upload: true
+    )
+  end
+end
