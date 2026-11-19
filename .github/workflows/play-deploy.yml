@@ -7,9 +7,8 @@ on:
         description: Google Play operation
         type: choice
         required: true
-        default: import_listing
+        default: deploy_internal
         options:
-          - import_listing
           - deploy_internal
           - sync_listing
       release_tag:
@@ -71,23 +70,6 @@ jobs:
         with:
           workload_identity_provider: projects/203440754645/locations/global/workloadIdentityPools/method-play/providers/github
           service_account: method-play-store@sgfdevs-method-conf.iam.gserviceaccount.com
-
-      - name: Import the live store listing
-        if: inputs.operation == 'import_listing'
-        working-directory: android
-        run: |
-          bundle exec fastlane supply init \
-            --package_name com.sgfdevs.methodConfApp \
-            --track production \
-            --metadata_path "$RUNNER_TEMP/play-listing"
-
-      - name: Save the imported listing
-        if: inputs.operation == 'import_listing'
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: play-listing
-          path: ${{ runner.temp }}/play-listing/
-          if-no-files-found: error
 
       - name: Deploy to internal testing
         if: inputs.operation == 'deploy_internal'
