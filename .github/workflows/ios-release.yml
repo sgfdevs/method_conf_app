@@ -132,8 +132,6 @@ jobs:
             --dart-define=ENABLE_ANALYTICS=true \
             --dart-define="SENTRY_DSN=$SENTRY_DSN"
 
-          # Ad hoc signing records bundle identifiers without a development profile.
-          # Cloud export replaces these signatures with Apple Distribution signatures.
           xcodebuild archive -quiet \
             -workspace ios/Runner.xcworkspace \
             -scheme Runner -configuration Release \
