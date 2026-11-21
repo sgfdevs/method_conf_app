@@ -16,9 +16,9 @@ on:
         type: boolean
         default: true
       ios:
-        description: iOS (TestFlight)
+        description: iOS
         type: boolean
-        default: false
+        default: true
       draft:
         description: Create as drafts
         type: boolean
