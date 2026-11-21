@@ -117,13 +117,13 @@ jobs:
           cp ios/Runner/Config.xcconfig.example ios/Runner/Config.xcconfig
           dart run build_runner build
 
-      - name: Build unsigned iOS archive
+      - name: Build iOS archive
         working-directory: ${{ env.RELEASE_SOURCE }}
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
           : "${SENTRY_DSN:?Configure the SENTRY_DSN secret}"
-          flutter build ipa --release --no-pub --no-codesign \
+          flutter build ios --config-only --release --no-pub --no-codesign \
             --dart-define=METHOD_BASE_URL=https://www.methodconf.com \
             --dart-define=UMBRACO_BASE_URL=https://cms.methodconf.com \
             --dart-define=PLAUSIBLE_SERVER_URL=https://plausible.sgf.dev \
@@ -131,6 +131,16 @@ jobs:
             --dart-define=ENABLE_ERROR_TRACKING=true \
             --dart-define=ENABLE_ANALYTICS=true \
             --dart-define="SENTRY_DSN=$SENTRY_DSN"
+
+          xcodebuild archive -quiet \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RELEASE_SOURCE/build/ios/archive/Runner.xcarchive" \
+            -derivedDataPath "$RUNNER_TEMP/ios-derived-data" \
+            -clonedSourcePackagesDirPath "$RELEASE_SOURCE/build/ios/SourcePackages" \
+            CODE_SIGN_IDENTITY=- AD_HOC_CODE_SIGNING_ALLOWED=YES \
+            CODE_SIGNING_REQUIRED=NO PROVISIONING_PROFILE_REQUIRED=NO
 
       - name: Save SwiftPM downloads
         if: steps.swiftpm-cache.outputs.cache-hit != 'true'
