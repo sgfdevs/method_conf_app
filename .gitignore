@@ -55,7 +55,10 @@ android/app/google-services.json
 ios/Runner/Config.xcconfig
 
 # Fastlane and Google GitHub Actions auth
+/.bundle/
+/vendor/bundle/
 /android/.bundle/
 /android/vendor/bundle/
 /android/fastlane/report.xml
+/ios/fastlane/report.xml
 gha-creds-*.json
