@@ -3,14 +3,16 @@ name: Prepare release
 on:
   workflow_dispatch:
     inputs:
+      auto_increment:
+        description: Auto increment patch version and build number
+        type: boolean
+        default: false
       version:
-        description: 'Version, for example 1.0.15'
+        description: 'Version, for example 1.0.15 (leave blank to auto increment)'
         type: string
-        required: true
       build_number:
-        description: 'Build number, for example 42'
+        description: 'Build number, for example 42 (leave blank to auto increment)'
         type: string
-        required: true
       android:
         description: Android
         type: boolean
@@ -36,8 +38,6 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
-      VERSION: ${{ inputs.version }}
-      BUILD_NUMBER: ${{ inputs.build_number }}
       SOURCE_BRANCH: ${{ github.ref_name }}
     outputs:
       android_tag: ${{ steps.plan.outputs.android_tag }}
@@ -45,13 +45,17 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.sha }}
+          # Use the branch tip after any earlier Prepare release run has finished.
+          ref: ${{ github.ref }}
           fetch-depth: 0
 
-      - name: Validate release inputs
+      - name: Resolve release version
         env:
           ANDROID: ${{ inputs.android }}
           IOS: ${{ inputs.ios }}
+          AUTO_INCREMENT: ${{ inputs.auto_increment }}
+          VERSION: ${{ inputs.version }}
+          BUILD_NUMBER: ${{ inputs.build_number }}
         run: |
           if [[ "$GITHUB_REF_TYPE" != branch || ( "$ANDROID" == false && "$IOS" == false ) ]]; then
             echo '::error::Run from a branch and select at least one platform.'
@@ -60,6 +64,15 @@ jobs:
           if [[ "$IOS" == true && "$GITHUB_REF" != refs/heads/main ]]; then
             echo '::error::Prepare iOS releases from main.'
             exit 1
+          fi
+          if [[ "$AUTO_INCREMENT" == true ]]; then
+            if [[ -n "$VERSION" || -n "$BUILD_NUMBER" ]]; then
+              echo '::error::Leave Version and Build number blank when using Auto increment.'
+              exit 1
+            fi
+            current=$(awk '/^version:/ { print $2; exit }' pubspec.yaml)
+            VERSION=${current%+*}
+            BUILD_NUMBER=${current##*+}
           fi
           version_pattern='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'
           if [[ ! "$VERSION" =~ $version_pattern ]]; then
@@ -70,6 +83,20 @@ jobs:
             echo '::error::Build number must be an integer from 1 to 2100000000.'
             exit 1
           fi
+          if [[ "$AUTO_INCREMENT" == true ]]; then
+            patch=${VERSION##*.}
+            if (( ${#patch} > 18 || BUILD_NUMBER == 2100000000 )); then
+              echo '::error::The current version or build number is too large to auto increment.'
+              exit 1
+            fi
+            VERSION="${VERSION%.*}.$((patch + 1))"
+            BUILD_NUMBER=$((BUILD_NUMBER + 1))
+          fi
+          {
+            echo "VERSION=$VERSION"
+            echo "BUILD_NUMBER=$BUILD_NUMBER"
+          } >> "$GITHUB_ENV"
+          echo "Preparing version $VERSION+$BUILD_NUMBER"
 
       - name: Select tags and release notes baselines
         id: plan
@@ -132,7 +159,7 @@ jobs:
         with:
           tag: ${{ steps.plan.outputs.android_tag }}
           commit: ${{ steps.commit.outputs.sha }}
-          name: android ${{ inputs.version }} (${{ inputs.build_number }})
+          name: android ${{ env.VERSION }} (${{ env.BUILD_NUMBER }})
           draft: ${{ inputs.draft }}
           generateReleaseNotes: true
           generateReleaseNotesPreviousTag: ${{ steps.plan.outputs.android_previous_tag }}
@@ -143,7 +170,7 @@ jobs:
         with:
           tag: ${{ steps.plan.outputs.ios_tag }}
           commit: ${{ steps.commit.outputs.sha }}
-          name: ios ${{ inputs.version }} (${{ inputs.build_number }})
+          name: ios ${{ env.VERSION }} (${{ env.BUILD_NUMBER }})
           draft: ${{ inputs.draft }}
           generateReleaseNotes: true
           generateReleaseNotesPreviousTag: ${{ steps.plan.outputs.ios_previous_tag }}
