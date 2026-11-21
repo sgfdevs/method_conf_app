@@ -132,6 +132,14 @@ jobs:
             --dart-define=ENABLE_ANALYTICS=true \
             --dart-define="SENTRY_DSN=$SENTRY_DSN"
 
+          # Cloud export otherwise derives the static Sentry stub's requirement from its Mach-O name.
+          sentry_framework=build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app/Frameworks/Sentry.framework
+          if [[ -d "$sentry_framework" ]]; then
+            bundle_id=$(/usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' "$sentry_framework/Info.plist")
+            codesign --force --sign - --identifier "$bundle_id" \
+              --requirements "=designated => identifier \"$bundle_id\"" "$sentry_framework"
+          fi
+
       - name: Save SwiftPM downloads
         if: steps.swiftpm-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
