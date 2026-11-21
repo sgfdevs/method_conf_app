@@ -31,7 +31,7 @@ jobs:
   testflight:
     name: Build iOS release and upload to TestFlight
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
-    runs-on: macos-26
+    runs-on: xcode-27
     timeout-minutes: 45
     environment: testflight
     permissions:
@@ -39,7 +39,7 @@ jobs:
     concurrency:
       group: testflight-${{ inputs.release_tag }}
     env:
-      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+      FLUTTER_VERSION: '3.47.9'
       RELEASE_TAG: ${{ inputs.release_tag }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -81,8 +81,33 @@ jobs:
       - uses: flutter-actions/setup-flutter@0e3ac53a5126c46be01612423cf26b5d59018adc # v5.0
         with:
           channel: stable
-          version: 3.47.9
+          version: ${{ env.FLUTTER_VERSION }}
           cache-sdk: true
+
+      - name: Compute SwiftPM cache key
+        id: swiftpm-key
+        working-directory: ${{ env.RELEASE_SOURCE }}
+        shell: bash
+        run: |
+          xcode_version=$(xcodebuild -version)
+          printf '%s\n' "$xcode_version"
+          fingerprint=$(
+            {
+              printf '%s\n' "$xcode_version"
+              printf 'Flutter %s\n' "$FLUTTER_VERSION"
+              git ls-files -z pubspec.lock 'ios/**/Package.resolved' | xargs -0 shasum -a 256
+            } | shasum -a 256 | awk '{print $1}'
+          )
+          echo "key=swiftpm-$RUNNER_OS-$RUNNER_ARCH-$fingerprint" >> "$GITHUB_OUTPUT"
+
+      - name: Restore SwiftPM downloads
+        id: swiftpm-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/Library/Caches/org.swift.swiftpm/repositories
+            ~/Library/Caches/org.swift.swiftpm/artifacts
+          key: ${{ steps.swiftpm-key.outputs.key }}
 
       - name: Install dependencies and generate code
         working-directory: ${{ env.RELEASE_SOURCE }}
@@ -106,6 +131,15 @@ jobs:
             --dart-define=ENABLE_ERROR_TRACKING=true \
             --dart-define=ENABLE_ANALYTICS=true \
             --dart-define="SENTRY_DSN=$SENTRY_DSN"
+
+      - name: Save SwiftPM downloads
+        if: steps.swiftpm-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/Library/Caches/org.swift.swiftpm/repositories
+            ~/Library/Caches/org.swift.swiftpm/artifacts
+          key: ${{ steps.swiftpm-cache.outputs.cache-primary-key }}
 
       - name: Cloud-sign and export the IPA
         env:
@@ -137,6 +171,24 @@ jobs:
             exit 1
           fi
           mv "${ipas[0]}" "$IPA_PATH"
+
+      - name: Verify the exported IPA signatures
+        shell: bash
+        run: |
+          verify_dir=$(mktemp -d "$RUNNER_TEMP/ipa-verify.XXXXXX")
+          trap 'rm -rf "$verify_dir"' EXIT
+          ditto -x -k "$IPA_PATH" "$verify_dir"
+          apps=("$verify_dir/Payload/"*.app)
+          if [[ ${#apps[@]} != 1 || ! -d "${apps[0]}" ]]; then
+            echo '::error::Expected one app in the exported IPA.'
+            exit 1
+          fi
+          codesign --verify --deep --strict --verbose=2 "${apps[0]}"
+          # Deep verification alone can miss a framework's own designated requirement.
+          for framework in "${apps[0]}"/Frameworks/*.framework; do
+            [[ -d "$framework" ]] || continue
+            codesign --verify --strict --verbose=2 "$framework"
+          done
 
       - name: Attach the IPA to the GitHub release
         env:
