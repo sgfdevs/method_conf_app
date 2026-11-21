@@ -11,7 +11,7 @@ jobs:
           channel: stable
           version: 3.47.9
           cache-sdk: true
-      - run: flutter pub get
+      - run: flutter pub get --enforce-lockfile
       - run: dart format --set-exit-if-changed .
       - run: cp ./lib/env.dart.example ./lib/env.dart
       - run: dart run build_runner build

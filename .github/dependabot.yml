@@ -4,6 +4,9 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    ignore:
+      # Keep the compatibility pin until flutter_html stops using the removed selector API.
+      - dependency-name: html
     groups:
       pub:
         patterns: ["*"]

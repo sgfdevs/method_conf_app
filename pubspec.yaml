@@ -39,7 +39,8 @@ dependencies:
   json_annotation: ^4.12.0
   cached_network_image: ^4.0.7
   flutter_html: ^3.0.0
-  html: 0.15.7
+  # flutter_html 3.0.0 uses a selector API that html 0.15.7 removed.
+  html: 0.15.6
   shared_preferences: ^2.5.6
   quiver: ^3.2.2
 
