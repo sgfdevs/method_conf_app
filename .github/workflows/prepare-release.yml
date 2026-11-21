@@ -16,7 +16,7 @@ on:
         type: boolean
         default: true
       ios:
-        description: 'iOS (release only, no binary build yet)'
+        description: iOS (TestFlight)
         type: boolean
         default: false
       draft:
@@ -55,6 +55,10 @@ jobs:
         run: |
           if [[ "$GITHUB_REF_TYPE" != branch || ( "$ANDROID" == false && "$IOS" == false ) ]]; then
             echo '::error::Run from a branch and select at least one platform.'
+            exit 1
+          fi
+          if [[ "$IOS" == true && "$GITHUB_REF" != refs/heads/main ]]; then
+            echo '::error::Prepare iOS releases from main.'
             exit 1
           fi
           version_pattern='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'
@@ -154,3 +158,17 @@ jobs:
     with:
       release_tag: ${{ needs.prepare.outputs.android_tag }}
     secrets: inherit
+
+  ios:
+    name: Queue TestFlight upload
+    needs: prepare
+    if: ${{ !inputs.draft && needs.prepare.outputs.ios_tag != '' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_TAG: ${{ needs.prepare.outputs.ios_tag }}
+    steps:
+      - run: gh workflow run ios-release.yml --repo "$GITHUB_REPOSITORY" --ref main --raw-field release_tag="$RELEASE_TAG"
