@@ -29,13 +29,13 @@ jobs:
       - run: gh workflow run ios-release.yml --repo "$GITHUB_REPOSITORY" --ref main --raw-field release_tag="$RELEASE_TAG"
 
   testflight:
-    name: Build and upload to TestFlight
+    name: Build iOS release and upload to TestFlight
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: macos-26
     timeout-minutes: 45
     environment: testflight
     permissions:
-      contents: read
+      contents: write
     concurrency:
       group: testflight-${{ inputs.release_tag }}
     env:
@@ -65,12 +65,18 @@ jobs:
             echo '::error::The iOS release tag must point to main or one of its ancestors.'
             exit 1
           fi
-          git switch --detach "$release_sha"
-          version=$(awk '/^version:/ { print $2; exit }' pubspec.yaml)
+          # Keep the signing options and Fastlane lane at the workflow's main commit.
+          release_source="$RUNNER_TEMP/ios-release-source"
+          git worktree add --detach "$release_source" "$release_sha"
+          version=$(awk '/^version:/ { print $2; exit }' "$release_source/pubspec.yaml")
           if [[ "$RELEASE_TAG" != "ios/v$version" ]]; then
             echo '::error::The iOS release tag does not match pubspec.yaml.'
             exit 1
           fi
+          {
+            echo "RELEASE_SOURCE=$release_source"
+            echo "IPA_PATH=$RUNNER_TEMP/method-conf-${version%+*}-${version##*+}.ipa"
+          } >> "$GITHUB_ENV"
 
       - uses: flutter-actions/setup-flutter@0e3ac53a5126c46be01612423cf26b5d59018adc # v5.0
         with:
@@ -79,6 +85,7 @@ jobs:
           cache-sdk: true
 
       - name: Install dependencies and generate code
+        working-directory: ${{ env.RELEASE_SOURCE }}
         run: |
           flutter pub get --enforce-lockfile
           cp lib/env.dart.example lib/env.dart
@@ -86,6 +93,7 @@ jobs:
           dart run build_runner build
 
       - name: Build unsigned iOS archive
+        working-directory: ${{ env.RELEASE_SOURCE }}
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
@@ -99,7 +107,7 @@ jobs:
             --dart-define=ENABLE_ANALYTICS=true \
             --dart-define="SENTRY_DSN=$SENTRY_DSN"
 
-      - name: Cloud-sign and upload to internal TestFlight
+      - name: Cloud-sign and export the IPA
         env:
           APP_STORE_CONNECT_API_KEY_P8: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8 }}
           APP_STORE_CONNECT_KEY_ID: ${{ vars.APP_STORE_CONNECT_KEY_ID }}
@@ -112,13 +120,40 @@ jobs:
           key_dir=$(mktemp -d "$RUNNER_TEMP/app-store-connect.XXXXXX")
           trap 'rm -rf "$key_dir"' EXIT
           printf '%s\n' "$APP_STORE_CONNECT_API_KEY_P8" > "$key_dir/AuthKey.p8"
-          git show "$GITHUB_SHA:ios/ExportOptions.plist" > "$key_dir/ExportOptions.plist"
-
+          unset APP_STORE_CONNECT_API_KEY_P8
+          export_dir="$RUNNER_TEMP/ipa-export"
           xcodebuild -exportArchive \
-            -archivePath build/ios/archive/Runner.xcarchive \
-            -exportOptionsPlist "$key_dir/ExportOptions.plist" \
-            -exportPath "$RUNNER_TEMP/testflight" \
+            -archivePath "$RELEASE_SOURCE/build/ios/archive/Runner.xcarchive" \
+            -exportOptionsPlist ios/ExportOptions.plist \
+            -exportPath "$export_dir" \
             -allowProvisioningUpdates \
             -authenticationKeyPath "$key_dir/AuthKey.p8" \
             -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" \
             -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"
+
+          ipas=("$export_dir"/*.ipa)
+          if [[ ${#ipas[@]} != 1 || ! -f "${ipas[0]}" ]]; then
+            echo '::error::Expected one signed IPA from Xcode export.'
+            exit 1
+          fi
+          mv "${ipas[0]}" "$IPA_PATH"
+
+      - name: Attach the IPA to the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$RELEASE_TAG" "$IPA_PATH" --repo "$GITHUB_REPOSITORY" --clobber
+
+      - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
+        with:
+          ruby-version: '4.0.6'
+          bundler-cache: true
+
+      - name: Upload the IPA to TestFlight
+        working-directory: ios
+        env:
+          APP_STORE_CONNECT_API_KEY_P8: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8 }}
+          APP_STORE_CONNECT_KEY_ID: ${{ vars.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ vars.APP_STORE_CONNECT_ISSUER_ID }}
+          FASTLANE_SKIP_UPDATE_CHECK: '1'
+          FASTLANE_OPT_OUT_USAGE: '1'
+        run: bundle exec fastlane ios deploy "ipa:$IPA_PATH"
